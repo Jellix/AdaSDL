@@ -1,0 +1,25 @@
+project Adasdl is
+
+   for Source_Dirs use (".", "AdaGL\GL", "AdaSDL", "AdaSDL_image", "AdaSDL_mixer", "AdaSDL_ttf", "demos\gears");
+
+   package Binder is
+      for Default_Switches ("ada") use ("-g");
+   end Binder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g");
+   end Builder;
+
+   for Languages use ("Ada", "C");
+   for Source_Files use ("adagl.adb", "adagl.ads", "compile.adb", "glu_h.ads", "gl_h.ads", "lib_c.ads", "sdl-active.ads", "sdl-audio-extra.ads", "sdl-audio.adb", "sdl-audio.ads", "sdl-byteorder-extra.ads", "sdl-byteorder.adb", 
+"sdl-byteorder.ads", "sdl-cdrom.adb", "sdl-cdrom.ads", "sdl-error.adb", "sdl-error.ads", "sdl-events.adb", "sdl-events.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads", "sdl-keysym.ads", "sdl-mouse.adb", "sdl-mouse.ads", 
+"sdl-mutex.adb", "sdl-mutex.ads", "sdl-quit.ads", "sdl-rwops.adb", "sdl-rwops.ads", "sdl-thread.ads", "sdl-timer.ads", "sdl-types.adb", "sdl-types.ads", "sdl-version.adb", "sdl-version.ads", "sdl-video.adb", "sdl-video.ads", "sdl.ads", 
+"uintn_ptrops.ads", "sdl_image.adb", "sdl_image.ads", "showimage.adb", "playmus.adb", "playmus_sprogs.adb", "playmus_sprogs.ads", "playwave.adb", "playwave_sprogs.adb", "playwave_sprogs.ads", "sdl_mixer.adb", "sdl_mixer.ads", "sdl_ttf.adb", 
+"sdl_ttf.ads", "showfont.adb", "gears.adb");
+
+end Adasdl;
+

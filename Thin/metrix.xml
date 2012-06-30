@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<global>
+   <file name="c:\local\ada\adasdl\thin\adasdl\sdl.ads">
+      <metric name="all_lines">101</metric>
+      <metric name="code_lines">25</metric>
+      <metric name="comment_lines">59</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="blank_lines">17</metric>
+      <unit name="SDL" kind="package" line="44" col="1">
+         <metric name="all_lines">58</metric>
+         <metric name="code_lines">24</metric>
+         <metric name="comment_lines">20</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="blank_lines">14</metric>
+         <metric name="public_types">1</metric>
+         <metric name="all_types">1</metric>
+         <metric name="public_subprograms">6</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">22</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">22</metric>
+      </unit>
+   </file>
+<metric name="all_lines">101</metric>
+<metric name="code_lines">25</metric>
+<metric name="comment_lines">59</metric>
+<metric name="eol_comments">0</metric>
+<metric name="blank_lines">17</metric>
+<metric name="all_stmts">0</metric>
+<metric name="all_dcls">22</metric>
+<metric name="lsloc">22</metric>
+<metric name="public_subprograms">6</metric>
+<metric name="all_subprograms">0</metric>
+<metric name="public_types">1</metric>
+<metric name="all_types">1</metric>
+</global>

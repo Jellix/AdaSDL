@@ -1,0 +1,44 @@
+|------------------------------------------------|
+| IGNORE THIS IF YOU ARE NOT AN EMACS POWER USER |
+|------------------------------------------------|
+| AdaSdl  Project                                |
+| Thin Binding                                   |
+|------------------------------------------------|
+| This is an emacs file for org-mode             |
+| with little fragments of elisp code that       |
+| I use occasionally/frequently.                 |
+|                                                |
+| Do C-X C-E on the end of this individual       |
+| fragments to run the pieces of code            |
+| (if you know what you are doing).              |
+|------------------------------------------------|
+
+* Build/rebuild tags
+;; After this (in a ada source file): 
+;; `M-.’ to find a tag. 
+;; `C-u M-.' next alternate.
+;; `C-u - M-.' go previous.
+(progn
+  (defun create-tags (dir-name)
+    "Create tags file."
+    (interactive "DDirectory: ")
+    (eshell-command 
+     (format "find %s -type f -name \"*.ad[bs]\" | etags -" dir-name)))
+  (create-tags "."))
+
+* Main Thin Makefile
+(progn
+  (split-window-horizontally)
+  (other-window 1)
+  (find-file "makefile")
+  (toggle-read-only)
+  (split-window-vertically)
+  (other-window 1)
+  (eshell)
+)
+
+* Return to the main menu
+(progn
+  (find-file "../main.org")
+  (hide-sublevels 3)
+  (toggle-read-only))

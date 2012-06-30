@@ -1,0 +1,28 @@
+Metrics computed for c:\local\ada\adasdl\thin\adasdl\sdl.ads
+containing package SDL
+
+=== Code line metrics ===
+  all lines           : 101
+  code lines          : 25
+  comment lines       : 59
+  end-of-line comments: 0
+  blank lines         : 17
+
+SDL (package - library item at lines  44: 101)
+
+=== Code line metrics ===
+   all lines           : 58
+   code lines          : 24
+   comment lines       : 20
+   end-of-line comments: 0
+   blank lines         : 14
+
+=== Element metrics ===
+   public types             : 1
+   all type definitions     : 1
+   public subprograms       : 6
+   all statements           : 0
+   all declarations         : 22
+   maximal unit nesting     : 1
+   maximal construct nesting: 1
+   logical SLOC             : 22
