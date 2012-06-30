@@ -2,7 +2,9 @@ INC+=-I../../AdaSDL
 
 include ../../make.conf
 
-all: eventrecsize test_enumerations test_endianess
+NAMES= eventrecsize test_enumerations test_endianess
+
+all: $(NAMES)
 
 eventrecsize: eventrecsize.adb
 	gnatmake -O3 -gnaty -gnatnfvU $@  $(INC) -largs $(LIBS)
@@ -17,4 +19,4 @@ clean:
 	rm -f *.o *.ali
 
 cleandist: clean
-	rm -f test_enumerations test_endianess eventrecsize 
+	rm -f $(NAMES) $(NAMES:=.exe)

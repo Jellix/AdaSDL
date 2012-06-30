@@ -4,7 +4,7 @@ help:
 	@echo "* make [conf2w32] [conf2x11] [all] [bindings] [clean]                 *"
 	@echo "*      [cleandist] [tbz2 [VERSION=version] [tgz [VERSION=version]]    *"
 	@echo "*      [gnathatml]                                                    *"
-	@echo "* conf2w32:       Prepare the system for compilation on windows       *" 
+	@echo "* conf2w32:       Prepare the system for compilation on windows       *"
 	@echo "* conf2x11:       Prepare the system for compilation on X11           *"
 	@echo "* all:            Compilation of the:  binding, GL, examples and test *"
 	@echo "* bindings:       Compilation of the bind and GL files                *"
@@ -52,7 +52,7 @@ bindings:
 	make -C AdaSDL_ttf
 
 all: bindings
-	make -C demos  all
+	make -C demos all
 	make -C tests all
 	make -C tutorials all
 
