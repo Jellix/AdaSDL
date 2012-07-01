@@ -1,6 +1,6 @@
 project Adasdl is
 
-   for Source_Dirs use (".", "AdaGL\GL", "AdaSDL", "AdaSDL_image", "AdaSDL_mixer", "AdaSDL_ttf", "demos\gears");
+   for Source_Dirs use (".", "AdaGL/GL", "AdaSDL", "AdaSDL_image", "AdaSDL_mixer", "AdaSDL_ttf", "demos/gears");
 
    package Binder is
       for Default_Switches ("ada") use ("-g");
