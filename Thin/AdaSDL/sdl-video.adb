@@ -5,7 +5,7 @@
 --                Copyright (C) 2001-2007  A.M.F.Vargas              --
 --                Antonio M. M. Ferreira Vargas                      --
 --                Manhente - Barcelos - Portugal                     --
---                http://amvf.no.sapo.pt                             --
+--                http://www.chavedigital.net                            --
 --                E-mail: amfv@sapo.pt                               --
 -- ----------------------------------------------------------------- --
 --                                                                   --
