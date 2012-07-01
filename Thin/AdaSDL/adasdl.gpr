@@ -1,0 +1,13 @@
+project Adasdl is
+
+   for Source_Files use ("compile.adb", "lib_c.ads", "sdl-active.ads", "sdl.ads", "sdl-audio.adb", "sdl-audio.ads", "sdl-audio-extra.ads", "sdl-byteorder.adb", "sdl-byteorder.ads", "sdl-byteorder-extra.ads", "sdl-cdrom.adb", "sdl-cdrom.ads", 
+      "sdl-error.adb", "sdl-error.ads", "sdl-events.adb", "sdl-events.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads", "sdl-keysym.ads", "sdl-mouse.adb", "sdl-mouse.ads", "sdl-mutex.adb", "sdl-mutex.ads", "sdl-quit.ads", 
+      "sdl-rwops.adb", "sdl-rwops.ads", "sdl-thread.ads", "sdl-timer.ads", "sdl-types.adb", "sdl-types.ads", "sdl-version.adb", "sdl-version.ads", "sdl-video.adb", "sdl-video.ads", "uintn_ptrops.ads");
+   for Library_Name use "libadasdl";
+
+   package Make is
+      for Makefile use "Makefile";
+   end Make;
+
+end Adasdl;
+
