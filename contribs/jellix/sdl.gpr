@@ -1,0 +1,20 @@
+project Sdl is
+
+   for Source_Dirs use ("src/thin", "src/support", "tests", "demos/pong");
+   for Object_Dir use "obj";
+   for Main use ("main.adb", "pong_demo.adb");
+
+   package Linker is
+      for Default_Switches ("ada") use ("-lSDL", "-g");
+   end Linker;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2", "-g");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatw.e", "-g", "-gnat95", "-gnato");
+   end Compiler;
+
+end Sdl;
+

@@ -1,0 +1,9 @@
+obj/*.adb
+obj/*.ads
+obj/*.ali
+obj/*.exe
+obj/*.o
+tests/test-data/test.bmp
+gnatcheck.out
+gnatcheck-source-list.out
+
