@@ -187,6 +187,11 @@ package SDL_Mixer is
    pragma Import (C, HookMusic, "Mix_HookMusic");
 
    type Music_Finished_Type is access procedure;
+   pragma Convention (Convention => C,
+                      Entity     => Music_Finished_Type);
+   --  Convention pragma to keep compiler happy.
+   --  Not really necessary, but it doesn't hurt, neither.
+
    --  Add your own callback when the music has finished playing.
    procedure HookMusicFinished (
       music_finished : Music_Finished_Type);
