@@ -54,8 +54,9 @@ package body SDL.Error is
 
    --  ======================================
    procedure Set_Error (fmt : String) is
+      Fmt_CString : aliased C.char_array := C.To_C (fmt);
    begin
-      SetError (CS.New_String (fmt));
+      SetError (CS.To_Chars_Ptr (Fmt_CString'Unchecked_Access));
    end Set_Error;
 
    --  ======================================

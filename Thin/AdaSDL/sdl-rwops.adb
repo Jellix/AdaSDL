@@ -116,8 +116,11 @@ package body SDL.RWops is
       file : String;
       mode : String)
       return RWops_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
+      Mode_CString : aliased C.char_array := C.To_C (mode);
    begin
-      return RWFromFile (CS.New_String (file), CS.New_String (mode));
+      return RWFromFile (CS.To_Chars_Ptr (File_CString'Unchecked_Access),
+                         CS.To_Chars_Ptr (Mode_CString'Unchecked_Access));
    end RW_From_File;
 
    --  ======================================

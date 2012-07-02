@@ -45,6 +45,11 @@ with SDL.Byteorder.Extra;
 
 package body SDL.Audio is
 
+   --  Mode strings.
+   --  "rb"
+   Mode_RB     : aliased  C.char_array := C.To_C ("rb");
+   Mode_RB_Ptr : constant C.Strings.chars_ptr := C.Strings.To_Chars_Ptr (Mode_RB'Access);
+
    use type C.int;
 
    -------------
@@ -63,7 +68,7 @@ package body SDL.Audio is
       return LoadWAV_RW (
                 RWFromFile (
                    file,
-                   C.Strings.New_String ("rb")),
+                   Mode_RB_Ptr),
                 1,
                 spec,
                 audio_buf,
@@ -87,7 +92,7 @@ package body SDL.Audio is
       Audio_Spec_Pointer := LoadWAV_RW (
          RWFromFile (
             file,
-            C.Strings.New_String ("rb")),
+            Mode_RB_Ptr),
          1,
          spec,
          audio_buf,
@@ -97,7 +102,7 @@ package body SDL.Audio is
       --     Audio_Spec_Pointer,
       --     RWFromFile (
       --        file,
-      --        C.Strings.New_String ("rb")),
+      --        Mode_RB_Ptr ("rb")),
       --     1,
       --     spec,
       --     audio_buf,

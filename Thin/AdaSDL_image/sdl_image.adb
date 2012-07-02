@@ -39,8 +39,9 @@ package body SDL_Image is
 
    --  =================================================
    function Load (file : String) return V.Surface_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
-      return Load (CS.New_String (file));
+      return Load (CS.To_Chars_Ptr (File_CString'Unchecked_Access));
    end Load;
 
    --  =================================================
@@ -48,8 +49,11 @@ package body SDL_Image is
                           freesrc : C.int;
                           the_type : String)
                           return V.Surface_ptr is
+      Type_CString : aliased C.char_array := C.To_C (the_type);
    begin
-      return LoadTyped_RW (src, freesrc, CS.New_String (the_type));
+      return LoadTyped_RW (src,
+                           freesrc,
+                           CS.To_Chars_Ptr (Type_CString'Unchecked_Access));
    end LoadTyped_RW;
 
    --  =================================================

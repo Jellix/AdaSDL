@@ -44,6 +44,14 @@ with Lib_C;
 package body SDL.Video is
    use type CS.chars_ptr;
 
+   --  Mode strings.
+   --  "rb"
+   Mode_RB     : aliased  C.char_array := C.To_C ("rb");
+   Mode_RB_Ptr : constant C.Strings.chars_ptr := C.Strings.To_Chars_Ptr (Mode_RB'Access);
+   --  "wb"
+   Mode_WB     : aliased  C.char_array := C.To_C ("wb");
+   Mode_WB_Ptr : constant C.Strings.chars_ptr := C.Strings.To_Chars_Ptr (Mode_WB'Access);
+
    -----------------
    --  Set_Colors --
    -----------------
@@ -76,17 +84,18 @@ package body SDL.Video is
       return LoadBMP_RW (
                 src     => SDL.RWops.RWFromFile (
                               file => file,
-                              mode => C.Strings.New_String ("rb")),
+                              mode => Mode_RB_Ptr),
                 freesrc => 1);
    end LoadBMP;
 
    --  ===================================================================
    function LoadBMP (file : String) return Surface_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
       return LoadBMP_RW (
                 src     => SDL.RWops.RWFromFile (
-                              file => C.Strings.New_String (file),
-                              mode => C.Strings.New_String ("rb")),
+                              file => C.Strings.To_Chars_Ptr (File_CString'Unchecked_Access),
+                              mode => Mode_RB_Ptr),
                 freesrc => 1);
    end LoadBMP;
 
@@ -105,7 +114,7 @@ package body SDL.Video is
                 surface => surface,
                 dst     => SDL.RWops.RWFromFile (
                               file => file,
-                              mode => C.Strings.New_String ("wb")),
+                              mode => Mode_WB_Ptr),
                 freedst => 1);
    end SaveBMP;
 
@@ -130,8 +139,9 @@ package body SDL.Video is
       file    : String)
       return C.int
    is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
-      return SaveBMP (surface, C.Strings.New_String (file));
+      return SaveBMP (surface, CS.To_Chars_Ptr (File_CString'Unchecked_Access));
    end Save_BMP;
 
    -------------
@@ -141,9 +151,10 @@ package body SDL.Video is
       surface : Surface_ptr;
       file    : String)
    is
+      File_CString : aliased C.char_array := C.To_C (file);
       dummy : C.int;
    begin
-      dummy := SaveBMP (surface, C.Strings.New_String (file));
+      dummy := SaveBMP (surface, CS.To_Chars_Ptr (File_CString'Unchecked_Access));
    end Save_BMP;
 
    --------------
@@ -182,22 +193,29 @@ package body SDL.Video is
       title : in String;
       icon  : in String)
    is
+      Title_CString : aliased C.char_array := C.To_C (title);
+      Icon_CString  : aliased C.char_array := C.To_C (icon);
    begin
-      WM_SetCaption (CS.New_String (title), CS.New_String (icon));
+      WM_SetCaption (CS.To_Chars_Ptr (Title_CString'Unchecked_Access),
+                     CS.To_Chars_Ptr (Icon_CString'Unchecked_Access));
    end WM_Set_Caption;
 
    --  ======================================
    procedure WM_Set_Caption_Title (title : in String)
    is
+      Title_CString : aliased C.char_array := C.To_C (title);
    begin
-      WM_SetCaption (CS.New_String (title), CS.Null_Ptr);
+      WM_SetCaption (CS.To_Chars_Ptr (Title_CString'Unchecked_Access),
+                     CS.Null_Ptr);
    end WM_Set_Caption_Title;
 
    --  ======================================
    procedure WM_Set_Caption_Icon (icon  : in String)
    is
+      Icon_CString : aliased C.char_array := C.To_C (icon);
    begin
-      WM_SetCaption (CS.Null_Ptr, CS.New_String (icon));
+      WM_SetCaption (CS.Null_Ptr,
+                     CS.To_Chars_Ptr (Icon_CString'Unchecked_Access));
    end WM_Set_Caption_Icon;
 
    --  ======================================

@@ -39,12 +39,17 @@
 
 package body SDL_Mixer is
 
+   --  Mode strings.
+   --  "rb"
+   Mode_RB     : aliased  C.char_array := C.To_C ("rb");
+   Mode_RB_Ptr : constant C.Strings.chars_ptr := C.Strings.To_Chars_Ptr (Mode_RB'Access);
+
    use type C.int;
 
    --  ======================================
    function LoadWAV (file : CS.chars_ptr) return Chunk_ptr is
    begin
-      return LoadWAV_RW (RW.RWFromFile (file, CS.New_String ("rb")), 1);
+      return LoadWAV_RW (RW.RWFromFile (file, Mode_RB_Ptr), 1);
    end LoadWAV;
 
    --  ======================================
@@ -55,8 +60,9 @@ package body SDL_Mixer is
 
    --  ======================================
    function Load_MUS (file : String) return Music_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
-      return LoadMUS (CS.New_String (file));
+      return LoadMUS (CS.To_Chars_Ptr (File_CString'Unchecked_Access));
    end Load_MUS;
 
    --  ======================================
@@ -98,7 +104,12 @@ package body SDL_Mixer is
       if command = "" then
          return Integer (SetMusicCMD (CS.Null_Ptr));
       else
-         return Integer (SetMusicCMD (CS.New_String (command)));
+         declare
+            Cmd_CString : aliased C.char_array := C.To_C (command);
+         begin
+            return
+              Integer (SetMusicCMD (CS.To_Chars_Ptr (Cmd_CString'Unchecked_Access)));
+         end;
       end if;
    end Set_Music_CMD;
 
@@ -108,7 +119,11 @@ package body SDL_Mixer is
       if command = "" then
          SetMusicCMD (CS.Null_Ptr);
       else
-         SetMusicCMD (CS.New_String (command));
+         declare
+            Cmd_CString : aliased C.char_array := C.To_C (command);
+         begin
+            SetMusicCMD (CS.To_Chars_Ptr (Cmd_CString'Unchecked_Access));
+         end;
       end if;
    end Set_Music_CMD;
    --  ======================================

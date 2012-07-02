@@ -83,7 +83,6 @@ procedure showfont is
    rendertype : Render_Type := RENDER_LATIN1;
    type string_access_type is access string;
    filename,
-   the_string,
    message : string_access_type;
 
 --  ####################################################
@@ -354,13 +353,20 @@ begin  -- showfont procedure
    V.UpdateRect (screen, 0, 0, 0, 0);
 
    --  Show which font file wr're looking at
-   the_string := new string'("Font file: " & filename.all);
-   if rendersolid then
-      text := Render_Text_Solid (font, the_string.all, forecol.all);
-   else
-      --  text := Render_Text_Shaded (font, the_string.all, forecol.all, backcol.all);
-      text := RenderText_Shaded (font, CS.New_String (the_string.all), forecol.all, backcol.all);
-   end if;
+   declare
+      File_String   : constant String       := "Font file: " & filename.all;
+      C_File_String : aliased  C.char_array := C.To_C (File_String);
+   begin
+      if rendersolid then
+         text := Render_Text_Solid (font, File_string, forecol.all);
+      else
+         --  text := Render_Text_Shaded (font, the_string, forecol.all, backcol.all);
+         text := RenderText_Shaded (font,
+                                    CS.To_Chars_Ptr (C_File_String'Unchecked_Access),
+                                    forecol.all,
+                                    backcol.all);
+      end if;
+   end;
 
    if text /= V.null_Surface_ptr then
       dstrect := (x => 4, y => 4,
@@ -381,8 +387,15 @@ begin  -- showfont procedure
          if rendersolid then
             text := Render_Text_Solid (font, message.all, forecol.all);
          else
-            --  text := Render_Text_Shaded (font, message.all, forecol.all, backcol.all);
-            text := RenderText_Shaded (font, CS.New_String (message.all), forecol.all, backcol.all);
+            declare
+               Msg_CString : aliased C.char_array := C.To_C (message.all);
+            begin
+               --  text := Render_Text_Shaded (font, message.all, forecol.all, backcol.all);
+               text := RenderText_Shaded (font,
+                                          CS.To_Chars_Ptr (Msg_CString'Unchecked_Access),
+                                          forecol.all,
+                                          backcol.all);
+            end;
          end if;
       when RENDER_UTF8 =>
          if rendersolid then

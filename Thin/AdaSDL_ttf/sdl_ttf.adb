@@ -41,8 +41,10 @@ package body SDL_ttf is
 
    --  ====================================
    function Open_Font (file : String; ptsize : C.int) return Font_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
-      return OpenFont (CS.New_String (file), ptsize);
+      return OpenFont (CS.To_Chars_Ptr (File_CString'Unchecked_Access),
+                       ptsize);
    end Open_Font;
 
 
@@ -50,8 +52,11 @@ package body SDL_ttf is
    function Open_Font_Index (file : String;
                              ptsize : C.int; index : C.long)
                              return Font_ptr is
+      File_CString : aliased C.char_array := C.To_C (file);
    begin
-      return OpenFontIndex (CS.New_String (file), ptsize, index);
+      return OpenFontIndex (CS.To_Chars_Ptr (File_CString'Unchecked_Access),
+                            ptsize,
+                            index);
    end Open_Font_Index;
 
    --  ====================================
@@ -69,57 +74,79 @@ package body SDL_ttf is
    --  ====================================
    function Size_Text (font : Font_ptr; text : String;
                        w, h : C.int) return C.int is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return (SizeText (font, CS.New_String (text), w, h));
+      return (SizeText (font, CS.To_Chars_Ptr (Text_CString'Unchecked_Access), w, h));
    end Size_Text;
 
    --  ====================================
    function Size_UTF8 (font : Font_ptr; text : String;
                        w, h : C.int) return C.int is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return (SizeUTF8 (font, CS.New_String (text), w, h));
+      return (SizeUTF8 (font, CS.To_Chars_Ptr (Text_CString'Unchecked_Access), w, h));
    end Size_UTF8;
 
    --  ====================================
    function Render_Text_Solid (font : Font_ptr; text : String;
                               fg : V.Color) return V.Surface_ptr is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderText_Solid (font, CS.New_String (text), fg);
+      return RenderText_Solid (font,
+                               CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                               fg);
    end Render_Text_Solid;
 
    --  ====================================
    function Render_UTF8_Solid (font : Font_ptr; text : String;
                               fg : V.Color) return V.Surface_ptr is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderUTF8_Solid (font, CS.New_String (text), fg);
+      return RenderUTF8_Solid (font,
+                               CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                               fg);
    end Render_UTF8_Solid;
 
    --  ====================================
    function Render_Text_Shaded (font : Font_ptr; text : String;
                         fg : V.Color; bg : V.Color) return V.Surface_ptr is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderText_Shaded (font, CS.New_String (text), fg, bg);
+      return RenderText_Shaded (font,
+                                CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                                fg,
+                                bg);
    end Render_Text_Shaded;
 
    --  ====================================
    function Render_UTF8_Shaded (font : Font_ptr; text : String;
                         fg : V.Color; bg : V.Color) return V.Surface_ptr is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderUTF8_Shaded (font, CS.New_String (text), fg, bg);
+      return RenderUTF8_Shaded (font,
+                                CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                                fg,
+                                bg);
    end Render_UTF8_Shaded;
 
    --  ====================================
    function Render_Text_Blended (font : Font_ptr; text : String;
                                 fg : V.Color) return V.Surface is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderText_Blended (font, CS.New_String (text), fg);
+      return RenderText_Blended (font,
+                                 CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                                 fg);
    end Render_Text_Blended;
 
    --  ====================================
    function Render_UTF8_Blended (font : Font_ptr; text : String;
                                 fg : V.Color) return V.Surface is
+      Text_CString : aliased C.char_array := C.To_C (text);
    begin
-      return RenderUTF8_Blended (font, CS.New_String (text), fg);
+      return RenderUTF8_Blended (font,
+                                 CS.To_Chars_Ptr (Text_CString'Unchecked_Access),
+                                 fg);
    end Render_UTF8_Blended;
 
    --  ====================================
