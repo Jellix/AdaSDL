@@ -41,6 +41,8 @@
 --  SDL header files.                                                --
 --  **************************************************************** --
 
+with System;
+
 package body SDL.Byteorder is
 
    --------------------
@@ -48,8 +50,9 @@ package body SDL.Byteorder is
    --------------------
 
    function Get_Byte_Order return C.int is
+      use type System.Bit_Order;
    begin
-      if Standard'Default_Bit_Order = 1 then return 1234;
+      if System.Default_Bit_Order = System.Low_Order_First then return 1234;
       else return 4321;
       end if;
    end Get_Byte_Order;
