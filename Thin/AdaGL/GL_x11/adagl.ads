@@ -40,24 +40,24 @@
 with gl_h; use gl_h;
 
 package AdaGL is
-   
+
    function glGetString (Chars_Ref : GLenum) return String;
-   
+
    type Three_GLfloat_Vector is array (0 .. 2) of GLfloat;
    pragma Convention (C, Three_GLFloat_Vector);
-   
+
    type Four_GLfloat_Vector is array (0 .. 3) of GLfloat;
    pragma Convention (C, Four_GLFloat_Vector);
-   
+
    type Three_GLint_Vector is array (0 .. 2) of GLint;
    pragma Convention (C, Three_GLint_Vector);
-   
+
    type Four_GLint_Vector is array (0 .. 3) of GLint;
    pragma Convention (C, Four_GLint_Vector);
-   
+
    procedure glVertex3fv (v : Three_GLFloat_Vector);
-   pragma Import (C, glVertex3fv, "glVertex3fv"); 
-  
+   pragma Import (C, glVertex3fv, "glVertex3fv");
+
    procedure glColor3fv (v : Three_GLFloat_Vector);
    pragma Import (C, glColor3fv, "glColor3fv");
 
@@ -107,7 +107,7 @@ package AdaGL is
    procedure glMaterialfv (face   : GLenum;
                            pname  : GLenum;
                            params : Four_GLfloat_Vector);
-                           
+
    -- To be used with pname receiving:
    --  GL_COLOR_INDEXES
    procedure glMaterialfv (face   : GLenum;
@@ -121,14 +121,14 @@ package AdaGL is
                            params : in out GLfloat); -- pseudo in
 
    pragma Import (C, glMaterialfv, "glMaterialfv");
-   
+
    -- To be used with pname receiving:
    --  GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION
    --  GL_AMBIENT_AND_DIFFUSE
    procedure glMaterialiv (face   : GLenum;
                            pname  : GLenum;
                            params : Four_GLint_Vector);
-                           
+
    -- To be used with pname receiving:
    --  GL_COLOR_INDEXES
    procedure glMaterialiv (face   : GLenum;
@@ -154,9 +154,9 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLubyte_Array);
-   
+
    type GLbyte_Array is array (Integer range <>) of GLbyte;
-   
+
    --  type_Id = GL_BYTE
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -166,9 +166,9 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLbyte_Array);
-   
+
    type GLushort_Array is array (Integer range <>) of GLushort;
-   
+
    --  type_Id = GL_UNSIGNED_SHORT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -180,7 +180,7 @@ package AdaGL is
                            pixels         : GLushort_Array);
 
    type GLshort_Array is array (Integer range <>) of GLshort;
-   
+
    --  type_Id = GL_SHORT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -192,7 +192,7 @@ package AdaGL is
                            pixels         : GLshort_Array);
 
    type GLuint_Array is array (Integer range <>) of GLuint;
-   
+
    --  type_Id = GL_UNSIGNED_INT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -204,7 +204,7 @@ package AdaGL is
                            pixels         : GLuint_Array);
 
    type GLint_Array is array (Integer range <>) of GLint;
-   
+
    --  type_Id = GL_INT;
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -216,7 +216,7 @@ package AdaGL is
                            pixels         : GLint_Array);
 
    type GLfloat_Array is array (Integer range <>) of GLfloat;
-  
+
    --  type_Id = GL_FLOAT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -228,7 +228,7 @@ package AdaGL is
                            pixels         : GLfloat_Array);
 
    pragma Import (C, glTexImage1D, "glTexImage1D");
- 
+
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glTexImage2D (target         : GLenum;
                            level          : GLint;
@@ -239,7 +239,7 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLubyte_Array);
-   
+
    --  type_Id = GL_BYTE
    procedure glTexImage2D (target         : GLenum;
                            level          : GLint;
@@ -250,7 +250,7 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLbyte_Array);
-   
+
    --  type_Id = GL_UNSIGNED_SHORT
    procedure glTexImage2D (target         : GLenum;
                            level          : GLint;
@@ -284,7 +284,7 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLuint_Array);
 
-                           
+
    --  type_Id = GL_INT
    procedure glTexImage2D (target         : GLenum;
                            level          : GLint;
@@ -295,7 +295,7 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLint_Array);
-                           
+
    --  type_Id = GL_FLOAT
    procedure glTexImage2D (target         : GLenum;
                            level          : GLint;
@@ -306,9 +306,9 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLfloat_Array);
-                           
+
    pragma Import (C, glTexImage2D, "glTexImage2D");
-   
+
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
@@ -322,42 +322,42 @@ package AdaGL is
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLbyte_Array);
-			   
+
    --  type_Id = GL_UNSIGNED_SHORT
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLushort_Array);
-			   
+
    --  type_Id = GL_SHORT
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLshort_Array);
-			   
+
    --  type_Id = GL_UNSIGNED_INT
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLuint_Array);
-			   
+
    --  type_Id = GL_INT
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLint_Array);
-			   
+
    --  type_Id = GL_FLOAT
    procedure glDrawPixels (width   : GLsizei;
                            height  : GLsizei;
                            format  : GLenum;
                            type_Id : GLenum;
                            pixels  : GLfloat_Array);
-			   
+
    pragma Import (C, glDrawPixels, "glDrawPixels");
 
 end AdaGL;

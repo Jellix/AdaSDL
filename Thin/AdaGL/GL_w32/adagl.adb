@@ -41,18 +41,18 @@ with Interfaces.C.Strings;
 use Interfaces.C.Strings;
 with Ada.Unchecked_Conversion;
 package body AdaGL is
-   
+
    package CS  renames Interfaces.C.Strings;
-   
+
    function To_chars_ptr is new Ada.Unchecked_Conversion (
       GLubyte_Ptr, CS.chars_ptr);
-   
+
    --  ======================================
    function Get_chars_ptr (Chars_Ref : GLenum) return CS.chars_ptr is
    begin
       return To_chars_ptr (glGetString (Chars_Ref));
    end Get_chars_ptr;
-   
+
    --  ======================================
    function glGetString (Chars_Ref : GLenum) return String is
       temp_chars_ptr : CS.chars_ptr;
@@ -64,6 +64,6 @@ package body AdaGL is
          return "";
       end if;
    end glGetString;
-   
+
    --  ======================================
 end AdaGL;
