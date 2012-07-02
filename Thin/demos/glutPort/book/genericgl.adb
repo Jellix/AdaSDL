@@ -53,7 +53,7 @@ procedure GenericGL is
    begin
       null;
    end init;
-   
+
    --  ===================================================================
    procedure draw is
    begin
@@ -68,13 +68,13 @@ procedure GenericGL is
       Vd.GL_SwapBuffers;
 
    end draw;
-   
+
    --  ===================================================================
    procedure idle is
    begin
       null;
    end idle;
-   
+
    --  ===================================================================
    --  New window size of exposure
    procedure reshape (width : C.int; height : C.int) is
@@ -103,7 +103,7 @@ procedure GenericGL is
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
-   
+
    --  ===================================================================
    procedure Manage_Command_Line is
    begin
@@ -133,7 +133,7 @@ procedure GenericGL is
          end if;
       end loop;
    end Manage_Command_Line;
-   
+
    --  ===================================================================
    procedure Main_System_Loop is
    begin
@@ -146,7 +146,7 @@ procedure GenericGL is
             loop
                Ev.PollEventVP (PollEvent_Result, event);
                exit when PollEvent_Result = 0;
-            
+
                case event.the_type is
                   when Ev.VIDEORESIZE =>
                      screen := Vd.SetVideoMode (
@@ -166,7 +166,7 @@ procedure GenericGL is
                end case;
             end loop;
             keys := Kb.GetKeyState (null);
-         
+
             if Kb.Is_Key_Pressed (keys, Ks.K_ESCAPE) then
                done := True;
             end if;
@@ -175,21 +175,21 @@ procedure GenericGL is
          end; -- declare
       end loop;
    end Main_System_Loop;
-   
+
    --  ===================================================================
    --                         Gears Procedure body
    --  ===================================================================
 begin
-   
+
    Manage_Command_Line;
-  
+
    Initialization_Flags := SDL.INIT_VIDEO;
-   
+
    if SDL.Init (Initialization_Flags) < 0 then
       Put_Line ("Couldn't load SDL: " & Er.Get_Error);
       GNAT.OS_Lib.OS_Exit (1);
    end if;
-   
+
    Video_Flags := Vd.OPENGL or Vd.RESIZABLE;
    if Full_Screen then
          Video_Flags := Video_Flags or Vd.FULLSCREEN;
@@ -209,8 +209,8 @@ begin
 
    reshape (screen.w, screen.h);
    done := False;
- 
+
    Main_System_Loop;
-   
+
    SDL.SDL_Quit;
 end GenericGL;

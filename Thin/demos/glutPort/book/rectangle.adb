@@ -2,8 +2,8 @@
 --     Copyright (C) by:
 --     Antonio M. Ferreira de Vargas
 --     Manhente - Barcelos - Portugal
---     Email: amfv@sapo.pt  
---     http://ada.chavedigital.net   
+--     Email: amfv@sapo.pt
+--     http://ada.chavedigital.net
 --  -----------------------------------------------------
 
 --  This program is in the public domain

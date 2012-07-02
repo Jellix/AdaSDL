@@ -2,8 +2,8 @@
 --     Copyright (C) by:
 --     Antonio M. Ferreira Vargas
 --     Manhente - Barcelos - Portugal
---     Email: amfv@sapo.pt 
---     http://ada.chavedigital.net   
+--     Email: amfv@sapo.pt
+--     http://ada.chavedigital.net
 --  -----------------------------------------------------
 
 --  This program is in the public domain
@@ -50,11 +50,11 @@ procedure Double is
    package Kb  renames SDL.Keyboard;
    package Ks  renames SDL.Keysym;
    use type Ks.SDLMod;
-  
+
    --  ===================================================================
    procedure Display (Surface : Vd.Surface_ptr) is
    begin
-      
+
       --  Clear all pixels
       glClear (GL_COLOR_BUFFER_BIT);
 
@@ -63,15 +63,15 @@ procedure Double is
       glColor3f (1.0, 1.0, 1.0);
       glRectf (-25.0, -25.0, 25.0, 25.0);
       glPopMatrix;
-      
+
       --  don't wait!
       --  start processing bufferd OpenGL routines.
       --  glFlush;
       --  glFinish;
       Vd.GL_SwapBuffers;
-         
+
    end Display;
-   
+
    --  ===================================================================
    procedure init (info : Boolean) is
    begin
@@ -81,11 +81,11 @@ procedure Double is
       glShadeModel (GL_FLAT);
 
    end init;
-  
+
    --  ===================================================================
    type Idle_Proc_Type is access procedure;
    Idle : Idle_Proc_Type := Null_Spin'Access;
-   
+
    --  ===================================================================
    --  New window size of exposure
    procedure reshape (Surface : Vd.Surface_ptr) is
@@ -98,7 +98,7 @@ procedure Double is
       glOrtho (-50.0, 50.0, -50.0, 50.0, -1.0, 1.0);
 
       glMatrixMode (GL_MODELVIEW);
-      
+
       glLoadIdentity;
       --  draw (Surface);
 
@@ -118,7 +118,7 @@ procedure Double is
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
-   
+
    --  ===================================================================
    procedure Manage_Command_Line is
    begin
@@ -152,7 +152,7 @@ procedure Double is
          end if;
       end loop;
    end Manage_Command_Line;
-   
+
    --  ===================================================================
    procedure mouse (Button : Uint8; x, y : Uint16) is
    begin
@@ -163,7 +163,7 @@ procedure Double is
             Idle := Null_Spin'Access;
       end case;
    end mouse;
-   
+
    --  ===================================================================
    procedure Main_System_Loop (Surface : Vd.Surface_ptr) is
    begin
@@ -176,7 +176,7 @@ procedure Double is
             loop
                Ev.PollEventVP (PollEvent_Result, event);
                exit when PollEvent_Result = 0;
-            
+
                case event.the_type is
                   when Ev.MOUSEBUTTONDOWN =>
                      mouse (event.button.button, event.button.x, event.button.y);
@@ -198,7 +198,7 @@ procedure Double is
                end case;
             end loop;
             keys := Kb.GetKeyState (null);
-         
+
             if Kb.Is_Key_Pressed (keys, Ks.K_ESCAPE) then
                done := True;
             end if;
@@ -211,21 +211,21 @@ procedure Double is
          end; -- declare
       end loop;
    end Main_System_Loop;
-   
+
    --  ===================================================================
    --                         'Double'  Procedure body
    --  ===================================================================
 begin
-   
+
    Manage_Command_Line;
-  
+
    Initialization_Flags := SDL.INIT_VIDEO;
-   
+
    if SDL.Init (Initialization_Flags) < 0 then
       Put_Line ("Couldn't load SDL: " & Er.Get_Error);
       GNAT.OS_Lib.OS_Exit (1);
    end if;
-   
+
    Video_Flags := Vd.OPENGL or Vd.RESIZABLE;
    if Full_Screen then
          Video_Flags := Video_Flags or Vd.FULLSCREEN;
@@ -246,6 +246,6 @@ begin
    done := False;
 
    Main_System_Loop (screen);
-   
+
    SDL.SDL_Quit;
 end Double;
