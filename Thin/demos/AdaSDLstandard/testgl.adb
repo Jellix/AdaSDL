@@ -37,10 +37,10 @@ procedure TestGL is
    use type V.Surface_Flags;
    package Int_IO is new Integer_IO (C.int);
    package CFloat_IO is new Float_IO (C.C_float);
-   logo     : Boolean := False;
+   logo     : Boolean := True;
    numtests : C.int := 1;
    bpp      : C.int := 0;
-   slowly   : Boolean := False;
+   slowly   : Boolean := True;
    gamma    : C.C_float := 0.0;
    argc     : Integer := CL.Argument_Count;
    video_flags : V.Surface_Flags := 0;
@@ -67,11 +67,11 @@ begin
       elsif CL.Argument (argc) = "-twice" then
          numtests := numtests + 1;
          argc := argc - 1;
-      elsif CL.Argument (argc) = "-logo" then
-         logo := True;
+      elsif CL.Argument (argc) = "-nologo" then
+         logo := False;
          argc := argc -1;
-      elsif CL.Argument (argc) = "-slow" then
-         slowly := True;
+      elsif CL.Argument (argc) = "-fast" then
+         slowly := False;
          argc := argc - 1;
       elsif CL.Argument (argc) = "-fullscreen" then
          video_flags := video_flags or V.FULLSCREEN;
@@ -79,7 +79,7 @@ begin
       elsif CL.Argument (argc) = "-h" then
          Put_Line ("Usage: " & CL.Command_Name & " " &
                    "[-bpp N] [-gamma] [-twice] " &
-                   "[-logo] [-slow] [-fullscreen]");
+                   "[-logo] [-fast] [-fullscreen]");
          argc := argc - 1;
          GNAT.OS_Lib.OS_Exit (0);
       else
