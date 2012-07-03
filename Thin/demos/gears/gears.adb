@@ -14,15 +14,15 @@
 
 --  -----------------------------------------------------
 --  Command line options:
---      -info      Print GL implementation information
---                 (this is the original option).
---      -slow      To slow down velocity under acelerated
---                 hardware.
---      -window    GUI window. Fullscreen is the default.
---      -nosound   To play without sound.
---      -800x600   To create a video display of 800 by 600
---                 the default mode is 640x480
---      -1024x768  To create a video display of 1024 by 768
+--      -info        Print GL implementation information
+--                   (this is the original option).
+--      -faster      To go faster velocity under unacelerated
+--                   hardware.
+--      -fullscreen  Start in fullscreen. GUI Window is the default.
+--      -nosound     To play without sound.
+--      -800x600     To create a video display of 800 by 600
+--                   the default mode is 640x480
+--      -1024x768    To create a video display of 1024 by 768
 --  -----------------------------------------------------
 with Interfaces.C;
 with Ada.Numerics.Generic_Elementary_Functions;
@@ -381,9 +381,9 @@ procedure gears is
    Screen_Width : C.int := 640;
    Screen_Hight : C.int := 480;
 
-   Slowly      : Boolean := False;
+   Slowly      : Boolean := True;
    Info        : Boolean := False;
-   Full_Screen : Boolean := True;
+   Full_Screen : Boolean := False;
    Sound       : Boolean := True;
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
@@ -393,10 +393,10 @@ procedure gears is
    procedure Manage_Command_Line is
    begin
       while argc > 0 loop
-         if CL.Argument (argc) = "-slow" then
+         if CL.Argument (argc) = "-fastr" then
             Slowly := True;
             argc := argc - 1;
-         elsif CL.Argument (argc) = "-window" then
+         elsif CL.Argument (argc) = "-fullscreen" then
             Full_Screen := False;
             argc := argc - 1;
          elsif CL.Argument (argc) = "-1024x768" then
@@ -415,10 +415,10 @@ procedure gears is
             argc := argc - 1;
          else
             Put_Line ("Usage: " & CL.Command_Name & " " &
-                      "[-slow] [-nosound] [-window] [-h] " &
+                      "[-slow] [-nosound] [-fullscreen] [-h] " &
                       "[[-800x600] | [-1024x768]]");
             argc := argc - 1;
-            GNAT.OS_Lib.OS_Exit (0);
+            GNAT.OS_Lib.OS_Exit (0); -- This gnat dependence should be removed
          end if;
       end loop;
    end Manage_Command_Line;
@@ -436,10 +436,10 @@ procedure gears is
             GNAT.OS_Lib.OS_Exit (2);
          end if;
 
-         Load_Sound (Gears_Working_Wave, "gears_working.wav");
+         Load_Sound (Gears_Working_Wave, "resources/gears_working.wav");
          Mix.PlayChannel (0, Gears_Working_Wave, -1);
 
-         Load_Sound (System_Rotation_Wave, "system_rotation.wav");
+         Load_Sound (System_Rotation_Wave, "resources/system_rotation.wav");
       end if; -- Sound
    end Initialize_Sound;
 
@@ -549,7 +549,7 @@ begin
       GNAT.OS_Lib.OS_Exit (2);
    end if;
 
-   Vd.WM_Set_Caption ("Gears", "gears");
+   Vd.WM_Set_Caption ("Gears Key: -up -down -left -right; Esc: Quit ", "gears");
 
    Initialize_Sound;
 

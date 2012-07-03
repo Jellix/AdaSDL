@@ -2,7 +2,7 @@
 SDL_gears port
 
 This software depends on AdaSDL binding.
-Get it from http://ada.chavedigital.net.
+Get it from http://adasld.sourceforge.net
 
 In windows do:
    make conf2w32
