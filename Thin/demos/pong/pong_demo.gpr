@@ -4,6 +4,7 @@ project Pong_Demo is
 
    for Main use ("pong_demo.adb");
    for Source_Dirs use (".");
+   for Object_Dir use "obj";
 
    package Ide is
       for Vcs_Kind use "Auto";
@@ -21,7 +22,7 @@ project Pong_Demo is
       for Default_Switches ("ada") use ("-lSDL", "-g");
    end Linker;
 
-   for Object_Dir use "obj";
+   for Exec_Dir use ".";
 
 end Pong_Demo;
 

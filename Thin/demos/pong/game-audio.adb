@@ -82,11 +82,11 @@ package body Game.Audio is
 
    procedure Load_Data is
       WAV_Spec    : aliased SDL.Audio.AudioSpec;
-      Ping_Name   : aliased Interfaces.C.char_array := Interfaces.C.To_C ("../data/ping.wav");
+      Ping_Name   : aliased Interfaces.C.char_array := Interfaces.C.To_C ("data/ping.wav");
       Ping_Buffer : aliased SDL.Types.Uint8_ptr;
       for Ping_Buffer'Address use WAV_Ping.Buffer'Address;
       pragma Import (Convention => Ada, Entity => Ping_Buffer);
-      Pong_Name   : aliased Interfaces.C.char_array := Interfaces.C.To_C ("../data/pong.wav");
+      Pong_Name   : aliased Interfaces.C.char_array := Interfaces.C.To_C ("data/pong.wav");
       Pong_Buffer : aliased SDL.Types.Uint8_ptr;
       for Pong_Buffer'Address use WAV_Pong.Buffer'Address;
       pragma Import (Convention => Ada, Entity => Pong_Buffer);
