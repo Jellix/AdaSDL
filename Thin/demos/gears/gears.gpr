@@ -1,0 +1,29 @@
+with "../../adasdl.gpr";
+
+project Gears is
+
+   for Main use ("gears.adb");
+   for Source_Dirs use (".");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+
+   package Ide is
+      for Vcs_Kind use "Auto";
+   end Ide;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2", "-k", "-g", "-s");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU","-g");
+   end Linker;
+
+   for Source_Files use ("gears.adb");
+
+end Gears;
+
