@@ -352,10 +352,10 @@ package SDL.Video is
          h           at 4  range 0 .. 31;
          w           at 8  range 0 .. 31;
          planes      at 12 range 0 .. 31;
-         pitches     at 16 range 0 .. 63;
-         pixels      at 24 range 0 .. 63;
-         hwfuncs     at 32 range 0 .. 63;
-         hwdata      at 40 range 0 .. 63;
+         pitches     at 16 range 0 .. (System.Word_Size-1);
+         pixels      at 24 range 0 .. (System.Word_Size-1);
+         hwfuncs     at 32 range 0 .. (System.Word_Size-1);
+         hwdata      at 40 range 0 .. (System.Word_Size-1);
          hw_overlay  at 48 range 0 ..  0;
          UnusedBits  at 48 range 1 .. 31;
       end record;
