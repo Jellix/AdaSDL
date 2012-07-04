@@ -117,7 +117,7 @@ package body  TestPalette_Sprogs is
                   begin
                      newPixel := Uint8 (
                        startcol + abs C.int (
-                         (Unsigned_32 (v) and Unsigned_32 (63))
+                         (Unsigned_32 (abs v) and Unsigned_32 (63))
                         ));
                      Object_Pointer (
                         Uint8_PtrOps.Pointer (p) + C.ptrdiff_t (j)
