@@ -109,10 +109,18 @@ procedure graywin is
       --   end if;
 
       --  Get the bounds of the rectangle
-      area.w := Uint16 (Random (Width_Generator));
-      area.h := Uint16 (Random (Height_Generator));
-      area.x := Sint16 (Uint16 (X) - (area.w / 2));
-      area.y := Sint16 (Uint16 (Y) - (area.h / 2));
+      begin
+         area.w := Uint16 (Random (Width_Generator));
+         area.h := Uint16 (Random (Height_Generator));
+         area.x := Sint16 (Uint16 (X) - (area.w / 2));
+         area.y := Sint16 (Uint16 (Y) - (area.h / 2));
+      exception
+         when Constraint_Error =>
+            Ada.Text_IO.Put ("w=" & Uint16'Image(area.w));
+            Ada.Text_IO.Put ("; h=" & Uint16'Image(area.h));
+            Ada.Text_IO.Put ("; x=" & Sint16'Image(area.x));
+            Ada.Text_IO.Put_Line ("; y=" & Sint16'Image(area.y));
+      end;
       color  := Uint32 (Random (Color_Generator));
       Put_Line ("Color: " & Uint32'Image (color) & ";   " &
                 "x: " & Sint16'Image (area.x) & ";   " &
