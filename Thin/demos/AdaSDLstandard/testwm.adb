@@ -76,6 +76,8 @@ procedure testwm is
    package  Q  renames SDL.Quit;
 
    --  =============================================
+   Event_Error : exception;
+
    Screen_Width  : constant := 640;
    Screen_Height : constant := 480;
 
@@ -214,15 +216,19 @@ begin
    --  Loop, wait for QUIT
    loop
       Ev.Wait_Event (Wait_Event_Result,event);
-      exit when Wait_Event_Result = 0;
+
+      if Wait_Event_Result = 0 then
+         raise Event_Error;
+      end if;
+
       case event.the_type is
          when Ev.ISUSEREVENT =>
             Put_Line ("Handling internal quit request");
             Put_Line ("Bye bye..");
-            return;
+            exit;
          when Ev.QUIT =>
             Put_Line ("Bye bye..");
-            return;
+            exit;
          when others =>
             --  this should never happen
             Put_Line("Warning: Event " &
@@ -230,6 +236,10 @@ begin
                      " wasn't filtered");
       end case;
    end loop;
-   Put_Line ("WaitEvent error: " & Er.Get_Error);
+
    GNAT.OS_Lib.OS_Exit (0);
+exception
+   when Event_Error =>
+      Put_Line ("WaitEvent error: " & Er.Get_Error);
+      GNAT.OS_Lib.OS_Exit (1);
 end testwm;
