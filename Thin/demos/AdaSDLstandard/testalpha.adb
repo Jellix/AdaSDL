@@ -193,10 +193,18 @@ procedure Testalpha is
       ticks2   : Uint32;
    begin
       --  Easy, center light
-      position.x := Sint16 (x - Uint16 (light.w / 2));
-      position.y := Sint16 (y - Uint16 (light.h / 2));
-      position.w := Uint16 (light.w);
-      position.h := Uint16 (light.h);
+      begin
+         position.x := Sint16 (x - Uint16 (light.w / 2)); -- BUG 2
+         position.y := Sint16 (y - Uint16 (light.h / 2)); -- BUG 2
+         position.w := Uint16 (light.w);
+         position.h := Uint16 (light.h);
+      exception
+         when Constraint_Error =>
+            Ada.Text_IO.Put ("x=" & Sint16'Image(position.x));
+            Ada.Text_IO.Put ("; y=" & Sint16'Image(position.y));
+            Ada.Text_IO.Put ("; w=" & Uint16'Image(position.w));
+            Ada.Text_IO.Put_Line ("; h=" & Uint16'Image(position.h));
+      end;
       ticks1     := T.GetTicks;
       V.BlitSurface(light, null, screen, position);
       ticks2     := T.GetTicks;
@@ -307,7 +315,9 @@ procedure Testalpha is
       --  without being overwriten by the saved area behing the sprite
       if light /= null then
          declare
-            x, y : C.int;
+            -- x, y : C.int;
+            x: C.int:=0;
+            y: C.int :=0;
             State : M.Mouse_State;
          begin
             M.Get_Mouse_State (State, x, y);
@@ -335,7 +345,16 @@ procedure Testalpha is
       elsif (C.int (alpha) + alpha_vel) > 255 then
          alpha_vel := -alpha_vel;
       end if;
-      V.SetAlpha (sprite, V.SRCALPHA, alpha + Uint8 (alpha_vel));
+
+      begin
+         -- BUG 1 --> V.SetAlpha (sprite, V.SRCALPHA, alpha + Uint8 (alpha_vel));
+         V.SetAlpha (sprite, V.SRCALPHA, alpha);
+      exception
+         when Constraint_Error =>
+            Ada.Text_IO.Put_Line ("x="
+                             & " " & Uint8'Image(alpha)
+                             & " " & "Problem adding : Uint8'Image(alpha_vel)");
+      end;
 
       --  Save the area behind the sprite
       updates (1) := position;

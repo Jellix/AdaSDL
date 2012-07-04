@@ -1,7 +1,7 @@
 project Adasdl is
 
    for Source_Dirs use (".", "AdaSDL", "AdaSDL_image", "AdaSDL_mixer", "AdaSDL_ttf", "AdaGL/GL");
-   for Languages use ("Ada", "C");
+   for Languages use ("Ada");
    for Source_Files use ("adagl.adb", "adagl.ads", "gl_h.ads", "glu_h.ads", "lib_c.ads", "playmus.adb", "playmus_sprogs.adb", "playmus_sprogs.ads", "playwave.adb", "playwave_sprogs.adb", "playwave_sprogs.ads", "sdl-active.ads", "sdl.ads", 
       "sdl-audio.adb", "sdl-audio.ads", "sdl-audio-extra.ads", "sdl-byteorder.adb", "sdl-byteorder.ads", "sdl-byteorder-extra.ads", "sdl-cdrom.adb", "sdl-cdrom.ads", "sdl-error.adb", "sdl-error.ads", "sdl-events.adb", "sdl-events.ads", 
       "sdl_image.adb", "sdl_image.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads", "sdl-keysym.ads", "sdl_mixer.adb", "sdl_mixer.ads", "sdl-mouse.adb", "sdl-mouse.ads", "sdl-mutex.adb", "sdl-mutex.ads", "sdl-quit.ads", 
