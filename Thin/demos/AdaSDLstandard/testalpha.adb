@@ -553,8 +553,8 @@ begin
                   declare
                      area : V.Rect;
                   begin
-                     area.x := Sint16 (event.button.x - 16);
-                     area.y := Sint16 (event.button.y - 16);
+                     area.x := Sint16 (event.button.x) - 16;
+                     area.y := Sint16 (event.button.y) - 16;
                      area.w := 32;
                      area.h := 32;
                      V.FillRect (screen, area, 0);
