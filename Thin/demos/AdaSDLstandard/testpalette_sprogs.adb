@@ -59,6 +59,7 @@ package body  TestPalette_Sprogs is
    use Random_Integer;
 
 
+
    --  ======================================
    procedure sdlerr (when_err : String) is
    begin
@@ -104,24 +105,82 @@ package body  TestPalette_Sprogs is
                   v := C.int'Min (v, 2);
                   if i > 0 then -- ?
                      v := v
-                          + C.int (Object_Pointer (
-                                    Uint8_PtrOps.Pointer (p) - C.ptrdiff_t (bg.pitch)
-                                  ).all)
-                          + 65
-                          - startcol;
+                       + C.int (Object_Pointer (
+                       Uint8_PtrOps.Pointer (p) - C.ptrdiff_t (bg.pitch)
+                      ).all)
+                       + 65
+                       - startcol;
                   end if;
-                  Object_Pointer (
-                     Uint8_PtrOps.Pointer (p) + C.ptrdiff_t (j)
-                  ).all := Uint8 (
-                     startcol + C.int (
-                        (Unsigned_32 (v) and Unsigned_32 (63))));
-                  d := d
-                       + C.int (
-                           It.Shift_Right (
-                              It.Unsigned_32 (Random (Integer_Generator)),
-                              3)
-                           mod 3)
-                       - 1;
+
+                  declare
+                     newPixel: Uint8;
+                  begin
+                     newPixel := Uint8 (
+                       startcol + abs C.int (
+                         (Unsigned_32 (v) and Unsigned_32 (63))
+                        ));
+                     Object_Pointer (
+                        Uint8_PtrOps.Pointer (p) + C.ptrdiff_t (j)
+                     ).all := newPixel;
+
+--                    Object_Pointer (
+--                       Uint8_PtrOps.Pointer (p) + C.ptrdiff_t (j)
+--                    ).all := Uint8 (
+--                       startcol + C.int (
+--                        (Unsigned_32 (v) and Unsigned_32 (63))
+--                    ));
+                  exception
+                     when Constraint_Error =>
+                        Put_Line( "Primeiro Inferno");
+                  end;
+
+                  declare
+
+                     random_Int: Integer;
+
+                     random_Int_Shifted3: It.Unsigned_32;
+
+                     random_Int_mod3 : It.Unsigned_32;
+
+                     inc_Int: C.Int;
+
+                  begin -- DEBUG
+                     random_Int := abs Random(Integer_Generator);
+
+
+                     random_Int_Shifted3 :=
+                       It.Shift_Right (It.Unsigned_32 (random_Int),3);
+
+
+                     random_Int_mod3 := It.Unsigned_32 (random_Int_Shifted3) mod 3;
+
+                     inc_Int := C.int ( random_Int_mod3 );
+
+--                       C.int (
+--                         It.Shift_Right (
+--                           It.Unsigned_32 (Random (Integer_Generator)),
+--                           3)
+--                         mod 3);
+
+                     d := d + inc_Int - 1;
+
+                  exception
+                     when Constraint_Error =>
+                        Put_Line( "Segundo Inferno");
+                     Put_Line("random_Int = "
+                              & Integer'Image(random_Int)
+                              & " (size: " & Integer'Image(Integer'Size) & ")");
+                     Put_Line("random_Int_Shifted3 = "
+                                & It.Unsigned_32'Image(random_Int_Shifted3));
+                     Put_Line("random_Int_mod3 = "
+                              & It.Unsigned_32'Image(random_Int_mod3)
+                              & " (size: " & Integer'Image(It.Unsigned_32'Size) & ")");
+                     Put_Line( "int_Int = "
+                              & C.int'Image(inc_Int)
+                              & " (size: " & Integer'Image(C.int'Size) & ")");
+                     Put_Line("d = " & C.int'Image(d));
+                  end; -- DEBUG
+
                end;
             end loop;
          end;
@@ -164,6 +223,9 @@ package body  TestPalette_Sprogs is
       return z;
    end hflip;
    --  ======================================
+begin
+
+   Reset(Integer_Generator);
 
 end TestPalette_Sprogs;
 

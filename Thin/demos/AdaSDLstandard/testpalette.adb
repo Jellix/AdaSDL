@@ -39,6 +39,7 @@
 --  ----------------------------------------------------------------- --
 
 
+with System.Address_Image; -- Just for Debugging
 with Interfaces.C;
 with Ada.Command_Line;
 with Ada.Text_IO; use Ada.Text_IO;
@@ -88,6 +89,7 @@ procedure TestPalette is
    argc : Integer := CL.Argument_Count;
 
 begin
+   Reset(Integer_Generator);
    if SDL.Init (SDL.INIT_VIDEO) < 0 then
       sdlerr ("initializing SDL");
    end if;
@@ -118,11 +120,12 @@ begin
 
    --  Ask explicitly for 8bpp and a hardware palette
    screen := V.SetVideoMode (SCRW, SCRH, 8, vidflags or V.HWPALETTE);
-   if screen = null then
+   if screen = null then -- BUG 1
       Put_Line ("error setting " & Integer'Image (SCRW) & " " &
-                Integer'Image (SCRH) & " " & Er.Get_Error);
+                  Integer'Image (SCRH) & " " & Er.Get_Error);
       GNAT.OS_Lib.OS_Exit (1);
    end if;
+
 
    boat (0) := V.LoadBMP (CS.New_String ("sail.bmp"));
    if  boat (0) = null then
@@ -175,7 +178,7 @@ begin
       boaty (i)   := C.int (i) * (SCRH - boat (0).h) / (NBOATS - 1);
       boatdir (i) := C.int (
                         It.Shift_Right (
-                           It.Unsigned_32 (Random (Integer_Generator)),
+                           It.Unsigned_32 (abs Random (Integer_Generator)),
                            5)
                         and 1)
                      * 2 - 1;
@@ -327,4 +330,5 @@ begin
                 / Float (T.GetTicks - Uint32 (start))
               ,3, 2, 0);
    Put_Line (" fps");
+
 end TestPalette;
