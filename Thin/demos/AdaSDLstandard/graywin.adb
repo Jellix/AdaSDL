@@ -109,11 +109,13 @@ procedure graywin is
       --   end if;
 
       --  Get the bounds of the rectangle
+      declare
+         use type SInt16;
       begin
          area.w := Uint16 (Random (Width_Generator));
          area.h := Uint16 (Random (Height_Generator));
-         area.x := Sint16 (Uint16 (X) - (area.w / 2));
-         area.y := Sint16 (Uint16 (Y) - (area.h / 2));
+         area.x := SInt16 (X) - SInt16 (area.w / 2);
+         area.y := SInt16 (Y) - SInt16 (area.h / 2);
       exception
          when Constraint_Error =>
             Ada.Text_IO.Put ("w=" & Uint16'Image(area.w));
