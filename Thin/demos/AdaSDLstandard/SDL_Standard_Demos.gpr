@@ -3,14 +3,15 @@ with "../../adasdl.gpr";
 project SDL_Standard_Demos is
 
    for Main use ("checkkeys.adb", "graywin.adb", "loopwave.adb", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", "testerror.adb", "testgl.adb", "testhread.adb", "testjoystick.adb", "testkeys.adb", "testlock.adb", "testpalette.adb", 
-      "testsem.adb", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", "threadwin.adb", "torturethread.adb");
+      "testsem.adb", "testsprite.adb", "testtimer.adb", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", "threadwin.adb", "torturethread.adb");
    for Source_Dirs use (".");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Source_Files use ("checkkeys.adb", "graywin.adb", "loopwave.adb", "loopwave_callback.adb", "loopwave_callback.ads", "picture_xbm.ads", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", "testerror.adb", "testerror_tfunc.adb", 
-      "testerror_tfunc.ads", "testgl.adb", "testgl_sprogs.adb", "testgl_sprogs.ads", "testhread.adb", "testhread_sprogs.adb", "testhread_sprogs.ads", "testhread_sprogs.ads", "testjoystick.adb", "testkeys.adb", "testlock.adb", 
-      "testlock_sprogs.adb", "testpalette.adb", "testpalette_sprogs.adb", "testpalette_sprogs.ads", "testsem.adb", "testsem_sprogs.adb", "testsem_sprogs.ads", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", 
-      "testwm_sprogs.adb", "testwm_sprogs.ads", "threadwin.adb", "threadwin_sprogs.adb", "threadwin_sprogs.ads", "torturethread.adb", "torturethread_sprogs.adb", "torturethread_sprogs.ads");
+   for Source_Files use ("checkkeys.adb", "checkkeys.adb", "graywin.adb", "loopwave.adb", "loopwave_callback.adb", "loopwave_callback.ads", "picture_xbm.ads", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", "testerror.adb", 
+      "testerror_tfunc.adb", "testerror_tfunc.ads", "testgl.adb", "testgl_sprogs.adb", "testgl_sprogs.ads", "testhread.adb", "testhread_sprogs.adb", "testhread_sprogs.ads", "testhread_sprogs.ads", "testjoystick.adb", "testkeys.adb", 
+      "testlock.adb", "testlock_sprogs.adb", "testpalette.adb", "testpalette_sprogs.adb", "testpalette_sprogs.ads", "testsem.adb", "testsem_sprogs.adb", "testsem_sprogs.ads", "testsprite.adb", "testtimer.adb", "testtimer_sprogs.adb", 
+      "testtimer_sprogs.ads", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", "testwm_sprogs.adb", "testwm_sprogs.ads", "threadwin.adb", "threadwin_sprogs.adb", "threadwin_sprogs.ads", "torturethread.adb", 
+      "torturethread_sprogs.adb", "torturethread_sprogs.ads");
 
    package Ide is
       for Vcs_Kind use "Auto";
