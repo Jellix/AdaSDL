@@ -346,18 +346,21 @@ package SDL.Video is
          UnusedBits : bits31;
       end record;
 
+   NBits : constant := System.Word_Size;
+   NBytes : constant := System.Word_Size/8;
+
    for Overlay use
       record
-         format      at 0  range 0 .. 31;
-         h           at 4  range 0 .. 31;
-         w           at 8  range 0 .. 31;
-         planes      at 12 range 0 .. 31;
-         pitches     at 16 range 0 .. (System.Word_Size-1);
-         pixels      at 24 range 0 .. (System.Word_Size-1);
-         hwfuncs     at 32 range 0 .. (System.Word_Size-1);
-         hwdata      at 40 range 0 .. (System.Word_Size-1);
-         hw_overlay  at 48 range 0 ..  0;
-         UnusedBits  at 48 range 1 .. 31;
+         format      at 0*4 range 0 .. 31;
+         h           at 1*4 range 0 .. 31;
+         w           at 2*4 range 0 .. 31;
+         planes      at 3*4 range 0 .. 31;
+         pitches     at 4*4 range 0 .. (NBits-1);
+         pixels      at 4*4 + 1*NBytes range 0 .. (NBits-1);
+         hwfuncs     at 4*4 + 2*NBytes range 0 .. (NBits-1);
+         hwdata      at 4*4 + 3*NBytes range 0 .. (NBits-1);
+         hw_overlay  at 4*4 + 3*NBytes + 8 range 0 ..  0;
+         UnusedBits  at 4*4 + 3*NBytes + 8 range 1 .. 31;
       end record;
    pragma Convention (C, Overlay);
 
