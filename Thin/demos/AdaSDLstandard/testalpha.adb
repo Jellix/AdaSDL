@@ -193,18 +193,11 @@ procedure Testalpha is
       ticks2   : Uint32;
    begin
       --  Easy, center light
-      begin
-         position.x := Sint16 (x - Uint16 (light.w / 2)); -- BUG 2
-         position.y := Sint16 (y - Uint16 (light.h / 2)); -- BUG 2
-         position.w := Uint16 (light.w);
-         position.h := Uint16 (light.h);
-      exception
-         when Constraint_Error =>
-            Ada.Text_IO.Put ("x=" & Sint16'Image(position.x));
-            Ada.Text_IO.Put ("; y=" & Sint16'Image(position.y));
-            Ada.Text_IO.Put ("; w=" & Uint16'Image(position.w));
-            Ada.Text_IO.Put_Line ("; h=" & Uint16'Image(position.h));
-      end;
+      position.x := Sint16 (x) - SInt16 (light.w / 2);
+      position.y := Sint16 (y) - Sint16 (light.h / 2);
+      position.w := Uint16 (light.w);
+      position.h := Uint16 (light.h);
+
       ticks1     := T.GetTicks;
       V.BlitSurface(light, null, screen, position);
       ticks2     := T.GetTicks;
@@ -346,15 +339,7 @@ procedure Testalpha is
          alpha_vel := -alpha_vel;
       end if;
 
-      begin
-         -- BUG 1 --> V.SetAlpha (sprite, V.SRCALPHA, alpha + Uint8 (alpha_vel));
-         V.SetAlpha (sprite, V.SRCALPHA, alpha);
-      exception
-         when Constraint_Error =>
-            Ada.Text_IO.Put_Line ("x="
-                             & " " & Uint8'Image(alpha)
-                             & " " & "Problem adding : Uint8'Image(alpha_vel)");
-      end;
+      V.SetAlpha (sprite, V.SRCALPHA, UInt8 (C.Int (alpha) + alpha_vel));
 
       --  Save the area behind the sprite
       updates (1) := position;
