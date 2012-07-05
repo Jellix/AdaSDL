@@ -2,7 +2,7 @@
 -- ----------------------------------------------------------------- --
 --                AdaSDL                                             --
 --                Thin binding to Simple Direct Media Layer          --
---                Copyright (C) 2001-2007  A.M.F.Vargas              --
+--                Copyright (C) 2001-2012  A.M.F.Vargas              --
 --                Antonio M. M. Ferreira Vargas                      --
 --                Manhente - Barcelos - Portugal                     --
 --                http://sdl.sourceforge.net                         --
@@ -297,9 +297,9 @@ package SDL.Video is
          UnusedBits3  at 2 range 0 .. 15;
          video_mem    at 4 range 0 .. 31;
          -- vfmt         at 8 range 0 .. 31;
-         vfmt         at 1*8 range 0 .. NBits-1;
-         current_w    at 2*8 range 0 .. NBits-1;
-         current_h    at 3*8 range 0 .. NBits-1;
+         vfmt         at 1*NBytes range 0 .. NBits-1;
+         current_w    at 2*NBytes range 0 .. NBits-1;
+         current_h    at 3*NBytes range 0 .. NBits-1;
       end record;
 
    pragma Convention (C, VideoInfo);
