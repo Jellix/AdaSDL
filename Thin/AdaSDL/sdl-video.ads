@@ -278,6 +278,9 @@ package SDL.Video is
          current_h    : Uint64;
       end record;
 
+   NBits : constant := System.Word_Size;
+   NBytes : constant := System.Word_Size/8;
+
    for VideoInfo use
       record
          hw_available at 0 range 0 .. 0;
@@ -294,9 +297,9 @@ package SDL.Video is
          UnusedBits3  at 2 range 0 .. 15;
          video_mem    at 4 range 0 .. 31;
          -- vfmt         at 8 range 0 .. 31;
-         vfmt         at 8 range 0 .. 63;
-         current_w    at 16 range 0 .. 63;
-         current_h    at 24 range 0 .. 63;
+         vfmt         at 1*8 range 0 .. NBits-1;
+         current_w    at 2*8 range 0 .. NBits-1;
+         current_h    at 3*8 range 0 .. NBits-1;
       end record;
 
    pragma Convention (C, VideoInfo);
@@ -346,8 +349,6 @@ package SDL.Video is
          UnusedBits : bits31;
       end record;
 
-   NBits : constant := System.Word_Size;
-   NBytes : constant := System.Word_Size/8;
 
    for Overlay use
       record
