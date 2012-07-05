@@ -274,12 +274,15 @@ package SDL.Video is
          video_mem    : Uint32; --  The total amount of video memory (in K)
          --  Value: The format of the video surface
          vfmt         : PixelFormat_ptr;
-         current_w    : Uint64;
-         current_h    : Uint64;
+         current_w    : C.Int;
+         current_h    : C.Int;
       end record;
 
    NBits : constant := System.Word_Size;
    NBytes : constant := System.Word_Size/8;
+
+   NBitsCInt : constant := C.int'Size;
+   NBytesCInt : constant := C.int'Size/8;
 
    for VideoInfo use
       record
@@ -297,9 +300,9 @@ package SDL.Video is
          UnusedBits3  at 2 range 0 .. 15;
          video_mem    at 4 range 0 .. 31;
          -- vfmt         at 8 range 0 .. 31;
-         vfmt         at 1*NBytes range 0 .. NBits-1;
-         current_w    at 2*NBytes range 0 .. NBits-1;
-         current_h    at 3*NBytes range 0 .. NBits-1;
+         vfmt         at 4+4 range 0..NBits-1;
+         current_w    at 4+4+NBytes range 0 .. NBitsCInt-1;
+         current_h    at 4+4+NBytes + NBytesCInt range 0 .. NBitsCInt-1;
       end record;
 
    pragma Convention (C, VideoInfo);
