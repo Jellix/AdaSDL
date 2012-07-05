@@ -1,0 +1,38 @@
+with "../../Thin/adasdl.gpr";
+
+project MAdaSDLThick is
+
+   for Source_Dirs use ("./obj");
+   for Languages use ("Ada");
+   for Source_Files use ("adasdl.adb", "adasdl.ads", "adasdl-audio.adb",
+                         "adasdl-audio.ads", "adasdl-audio-music.adb",
+                         "adasdl-audio-music.ads", "adasdl-audio-sound.adb",
+                         "adasdl-audio-sound.ads", "adasdl-event_filters.adb",
+                         "adasdl-event_filters.ads", "adasdl-events.adb",
+                         "adasdl-events.ads", "adasdl-input.adb",
+                         "adasdl-input.ads", "adasdlranges.ads",
+                         "adasdl-video.adb", "adasdl-video.ads",
+                         "adasdl-video-drawing.adb", "adasdl-video-drawing.ads",
+                         "adasdl-video-images.adb", "adasdl-video-images.ads",
+                         "adasdl-video-pixels.adb", "adasdl-video-pixels.ads",
+                         "adasdl-video-window_management.adb",
+                         "adasdl-video-window_management.ads",
+                         "ranges.adb", "ranges.ads");
+
+   for Object_Dir use "obj";
+   for Source_Dirs use ("src");
+
+   package Binder is
+      for Default_Switches ("ada") use ("-gnat95", "-g", "-gnata");
+   end Binder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnat95", "-g", "-gnata");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-gnat95", "-g", "-gnata");
+   end Builder;
+
+end MAdaSDLThick;
+

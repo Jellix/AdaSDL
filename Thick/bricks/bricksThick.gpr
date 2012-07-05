@@ -1,0 +1,29 @@
+with "../Meiners/MAdaSDLThick.gpr";
+
+project BricksThick is
+
+   for Source_Dirs use ("./obj");
+   for Languages use ("Ada");
+   for Source_Files use ("brick_events.adb", "brick_events.ads", "bricks.adb", "game_engine.adb", "game_engine.ads", "game_engine-game_environment.adb", "game_engine-physics.adb");
+   for Object_Dir use "obj";
+   for Source_Dirs use ("src");
+   for Exec_Dir use ".";
+   for Main use ("bricks.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnato","-fstack-check",
+                                       "-g","-gnat95");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2","-k","-g","-s");
+   end Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-lSDL","-lSDL_mixer",
+                                        "-lSDL_image","-lSDL_ttf",
+                                       "-lGL","-lGLU","-g");
+   end Linker;
+
+end BricksThick;
+
