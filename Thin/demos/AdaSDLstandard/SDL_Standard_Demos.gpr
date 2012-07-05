@@ -14,7 +14,8 @@ project SDL_Standard_Demos is
       "torturethread_sprogs.adb", "torturethread_sprogs.ads");
 
    package Ide is
-      for Vcs_Kind use "Auto";
+      for Vcs_Kind use "Git";
+      for Vcs_Repository_Root use "afvargas@adasdl.git.sourceforge.net/gitroot/adasdl/adasdl";
    end Ide;
 
    package Builder is

@@ -252,16 +252,16 @@ procedure TestWin is
 
             for i in 0 .. maxstep / 2 loop --  halfway fade
                for count in C.size_t range 0 .. C.size_t (ncolors) - 1 loop
-                  colors (count).r := Uint8 (
-                     Sint16 (palcolors (count).r) + (cdist (count).r * Sint16 (i))
-                                                    / Sint16 (maxstep));
-                  colors (count).g := Uint8 (
-                     Sint16 (palcolors (count).g) + (cdist (count).g * Sint16 (i))
-                                                    / Sint16 (maxstep));
-                  colors (count).b := Uint8 (
-                     Sint16 (palcolors (count).r) + (cdist (count).b * Sint16 (i))
-                                                    / Sint16 (maxstep));
-               end loop;
+                  colors (count).r := Uint8 (Sint16 (palcolors (count).r)
+                                             + (cdist (count).r * Sint16 (i))
+                                                / Sint16 (maxstep));
+                  colors (count).g := Uint8 (Sint16 (palcolors (count).g)
+                                             + (cdist (count).g * Sint16 (i))
+                                                / Sint16 (maxstep));
+                  colors (count).b := Uint8 (Sint16 (palcolors (count).b)
+                                           + (cdist (count).b * Sint16 (i))
+                                              / Sint16 (maxstep));
+              end loop;
                V.SetColors (screen, colors.all, 0, ncolors);
                Tm.SDL_Delay (1);
             end loop;
@@ -284,7 +284,7 @@ procedure TestWin is
                      Sint16 (palcolors (count).g) + (cdist (count).g * Sint16 (i))
                                                     / Sint16 (maxstep));
                   colors (count).b := Uint8 (
-                     Sint16 (palcolors (count).r) + (cdist (count).b * Sint16 (i))
+                     Sint16 (palcolors (count).r) + (cdist (count).r * Sint16 (i))
                                                     / Sint16 (maxstep));
                end loop;
                V.SetColors (screen, colors.all, 0, ncolors);
@@ -348,7 +348,7 @@ procedure TestWin is
    bmpfile_name : CS.chars_ptr := CS.Null_Ptr;
 begin
    --  Set default option and check command-line
-   speedy := 0;
+   speedy := 10;
    flip := 0;
    nofade := 0;
    the_delay := 1;
