@@ -1,17 +1,14 @@
-INC+=-I../../AdaSDL -I../../AdaGL/GL -I../../AdaSDL_mixer
-include ../../make.conf
 
-all: gears
+NAME=gears
 
-.PHONY: gears
-gears:
-	gnatmake -O3 -gnaty3abcefhiklmprtM90 -gnatnfvU -gnatwl\
-		$(INC) $@ -largs $(LIBS)
+.PHONY: all
 
-cleandist: clean cleangears
+all:
+	gprbuild $(NAME).gpr
 
 clean:
-	rm -f *.o  b~*.ad[bs] *.ali
+	gprclean -c $(NAME).gpr
 
-cleangears:
-	rm -f gears$(EXE)
+cleandist distclean:
+	gprclean $(NAME).gpr
+

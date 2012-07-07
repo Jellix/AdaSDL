@@ -1,17 +1,14 @@
-INC+=-I../../../AdaSDL -I../../../AdaGL/GL -I../../../AdaSDL_mixer
-include ../../../make.conf
 
-default: cleanexecs rectangle
+NAME=book
 
-%:%.adb
-	gnatmake -O3 -gnaty3abcefhiklmprtM90 -gnatnfvU -gnatwl\
-		$(INC) $@ -largs $(LIBS)
+.PHONY: all
 
-cleandist: clean cleanexecs
+all:
+	gprbuild $(NAME).gpr
 
 clean:
-	rm -f *.o  b~*.ad[bs] *.ali
+	gprclean -c $(NAME).gpr
 
-cleanexecs:
-	rm -f genericgl$(EXE) rectangle$(EXE) double$(EXE)
+cleandist distclean:
+	gprclean $(NAME).gpr
 

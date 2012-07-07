@@ -18,7 +18,7 @@ help:
 lib: bind
 
 bind:
-	make -C GL
+	make -C src
 
 tbz2:
 	tar -Icvf ../AdaOpenGL_$(VERSION).tar.bz2 ../AdaOpenGL
@@ -27,21 +27,21 @@ tgz:
 	tar -zcvf ../AdaOpenGL_$(VERSION).tgz ../AdaOpenGL
 
 clean:
-	make -C GL clean
+	make -C src clean
 
 cleandist: clean
 
 #cleandist:
-#	rm -f -R GL
+#	rm -f -R src
 #	rm -f make.conf
 
 conf2w32:
 	rm -f make.conf
-	rm -f -R GL
-	cp -R GL_w32 GL
+	rm -f -R src
+	cp -R GL_w32 src
 
 conf2x11:
 	rm -f make.conf
-	rm -f -R GL
-	cp -R GL_x11 GL
+	rm -f -R src
+	cp -R GL_x11 src
 

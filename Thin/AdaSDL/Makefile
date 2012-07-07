@@ -1,19 +1,14 @@
 
-help:
-	@echo "***********************************************************************"
-	@echo "* make [all] [clean]                                                  *"
-	@echo "***********************************************************************"
+NAME=adasdl
 
-include ../make.conf
+.PHONY: all
 
 all:
-	rm -f compile
-	gnatmake -O3 -gnaty3abcefhiklmprstM90 -gnatnfvU -gnatwl\
-		$(INC) compile -largs $(LIBS)
-	gnatxref -v *.ads > tags
-	ar cru libadasdl.a *.o
-	ranlib libadasdl.a
-		
+	gprbuild $(NAME).gpr
+
 clean:
-	rm -f compile$(EXE)  b~*.ad[bs] *.o *.ali libadasdl.a tags
-cleandist: clean
+	gprclean -c $(NAME).gpr
+
+cleandist distclean:
+	gprclean $(NAME).gpr
+

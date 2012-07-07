@@ -1,46 +1,14 @@
 
-include ../../make.conf
-INC+=-I../../AdaSDL -I../../AdaGL/GL
+NAME=SDL_Standard_Demos
 
-%:%.adb
-	gnatmake -O3 -gnaty3abcefhiklmprM90 -gnatnfvU $<\
-		$(INC) -largs $(LIBS)
-	gnatxref -v *.ads *.adb > tags
+.PHONY: all
 
-#gnatmake  -mcpu=i686 -ffast-math -fomit-frame-pointer -O3 -gnaty3abcefhiklmprM90 -gnatnfvURp $<\
-
-EXECS = loopwave testver testvidinfo testkeys testsprite\
-	testalpha testgl testwm testpalette checkkeys graywin \
-	testbitmap testcdrom testerror testhread testlock\
-	testsem testtimer testtypes testwin threadwin torturethread\
-	testjoystick
-
-default: cleanexecs testbitmap
-
-all: $(EXECS)
-
-#default: 
-#	echo "make <name_of_the_file>
+all:
+	gprbuild $(NAME).gpr
 
 clean:
-	rm -f *.o *.ali *.adt b~*ad[bs]
-	
-cleanexecs:
-	rm -f $(EXECS:=$(EXE))
+	gprclean -c $(NAME).gpr
 
-stripexecs:
-	strip $(EXECS)
-	
-cleandist: clean cleanexecs
+cleandist distclean:
+	gprclean $(NAME).gpr
 
-cleantags:
-	rm -f tags
-
-shorter:
-	gnatmake -c $(INC) $(EXECNAME)
-	gnatbind $(INC) $(EXECNAME)
-	gnatmake $(INC) -f -c -gnatc -gnatt $(EXECNAME)
-	gnatelim $(EXECNAME) > gnat.adc
-
-gnathtml:
-	$(PERL) $(GNATHTML) -d -l 1 $(INC) -I$(GNATHTMLADAINCLUDE) *.ad[bs]
