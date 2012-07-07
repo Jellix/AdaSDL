@@ -1,0 +1,27 @@
+with "../../../adasdl.gpr";
+project genericgls is
+
+   for Main use ("genericgls.adb");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Source_Files use ("genericgls.adb");
+
+   package Ide is
+      for Vcs_Kind use "Auto";
+   end Ide;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2", "-k", "-g", "-s");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+   end Linker;
+
+end genericgls;
+
