@@ -1,20 +1,16 @@
 
-INC+=-I../../../AdaSDL -I../../../AdaSDL_framebuff
-include ../../../make.conf
+NAME=simple
 
-%:%.adb
-	gnatmake -gnatnfvU $< $(INC) -largs $(LIBS)
-	
-default: 
-	@echo "make <name_of_the_file>"
-	@echo "or make all"
+.PHONY: all go
 
-EXECS=simple00 simple01 simple02 simple03
+all:
+	gprbuild $(NAME).gpr
 
-all: $(EXECS)
+cleandist: cleanexec
 
 clean:
-	rm -f *.o *.ali 
-cleanexecs: clean
-	rm -f $(EXECS:=$(EXE))
+	gprclean -c $(NAME).gpr
+
+cleanexec:
+	gprclean $(NAME).gpr
 

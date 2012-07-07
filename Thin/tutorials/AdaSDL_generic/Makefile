@@ -10,4 +10,6 @@ clean:
 	make -C genericGL clean
 	make -C genericGLS clean
 
-cleandist: clean
+cleandist distclean: 
+	make -C genericGL cleandist
+	make -C genericGLS cleandist

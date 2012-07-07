@@ -1,4 +1,5 @@
-
+help:
+	@echo "make {all | clean | cleandist}"
 
 all:
 	make -C simple all
@@ -6,7 +7,6 @@ all:
 clean:
 	make -C simple clean
 
-cleanexecs:
-	make -C simple cleanexecs
+cleandist distclean:
+	make -C simple cleandist
 
-cleandist: clean cleanexecs

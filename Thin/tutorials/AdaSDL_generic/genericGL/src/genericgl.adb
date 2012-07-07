@@ -9,14 +9,14 @@
 
 --  -----------------------------------------------------
 --  Command line options:
---      -info      Print GL implementation information
---                 (this is the original option).
---      -slow      To slow down velocity under acelerated
---                 hardware.
---      -window    GUI window. Fullscreen is the default.
---      -800x600   To create a video display of 800 by 600
---                 the default mode is 640x480
---      -1024x768  To create a video display of 1024 by 768
+--      -info        Print GL implementation information
+--                   this is the original option).
+--      -slow        To slow down velocity under acelerated
+--                   hardware.
+--      -fullscreen  Fullscreen. Window is the default.
+--      -800x600     To create a video display of 800 by 600
+--                   the default mode is 640x480
+--      -1024x768    To create a video display of 1024 by 768
 --  -----------------------------------------------------
 with Interfaces.C;
 with Ada.Numerics.Generic_Elementary_Functions;
@@ -98,7 +98,7 @@ procedure GenericGL is
 
    Slowly      : Boolean := False;
    Info        : Boolean := False;
-   Full_Screen : Boolean := True;
+   Full_Screen : Boolean := False;
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
@@ -110,8 +110,8 @@ procedure GenericGL is
          if (argc >= 1) and then CL.Argument (argc) = "-slow" then
             Slowly := True;
             argc := argc - 1;
-         elsif CL.Argument (argc) = "-window" then
-            Full_Screen := False;
+         elsif CL.Argument (argc) = "-fullscreen" then
+            Full_Screen := True;
             argc := argc - 1;
          elsif CL.Argument (argc) = "-1024x768" then
             Screen_Width := 1024;
@@ -126,7 +126,7 @@ procedure GenericGL is
             argc := argc - 1;
          else
             Put_Line ("Usage: " & CL.Command_Name & " " &
-                      "[-slow] [-window] [-h] [[-800x600] | [-1024x768]]");
+                      "[-slow] [-fullscreen] [-h] [[-800x600] | [-1024x768]]");
             argc := argc - 1;
             GNAT.OS_Lib.OS_Exit (0);
          end if;
