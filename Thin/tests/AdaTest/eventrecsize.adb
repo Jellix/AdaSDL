@@ -11,7 +11,7 @@ procedure eventrecsize is
 begin
    Put (" The size of SDL.Events.ActiveEvent:       ");
    Put_Line (Integer'Image (SDL.Events.ActiveEvent'Size / C.CHAR_BIT));
-   
+
    Put (" The size of SDL.Events.KeyboardEvent:  ");
    Put_Line (Integer'Image (SDL.Events.KeyboardEvent'Size / C.CHAR_BIT));
    Put (" ---------------------  Event_Type:          ");
@@ -30,7 +30,7 @@ begin
    Put_Line (Integer'Image (SDL.Keysym.SDLMod'Size / C.CHAR_BIT));
    Put (" ============================ Uint16:            ");
    Put_Line (Integer'Image (SDL.Types.Uint16'Size / C.CHAR_BIT));
-   
+
    Put (" The size of SDL.Events.MouseMotionEvent:  ");
    Put_Line (Integer'Image (SDL.Events.MouseMotionEvent'Size / C.CHAR_BIT));
    Put (" The size of SDL.Events.MouseButtonEvent:  ");

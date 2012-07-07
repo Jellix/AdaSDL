@@ -1,12 +1,11 @@
-with "../../adasdl.gpr";
+with "../../../adasdl.gpr";
+project simple is
 
-project Gears is
-
-   for Main use ("gears.adb");
-   for Source_Dirs use (".");
+   for Main use ("simple00.adb","simple01.adb","simple02.adb");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Source_Files use ("gears.adb");
+   for Source_Files use ("simple00.adb","simple01.adb","simple02.adb");
 
    package Ide is
       for Vcs_Kind use "Auto";
@@ -24,5 +23,5 @@ project Gears is
       for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
    end Linker;
 
-end Gears;
+end simple;
 

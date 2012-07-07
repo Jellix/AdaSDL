@@ -1,4 +1,3 @@
-
 -- ----------------------------------------------------------------- --
 --                Copyright (C) 2001-2007 A.M.F.Vargas               --
 --                Antonio M. Ferreira Vargas                         --
@@ -40,9 +39,9 @@ procedure Simple00 is
    use type SDL.Init_Flags;
    use type C.int;
    use type V.Surface_ptr;
-   
+
    Main_Surface : SDL.Video.Surface_ptr;
-   
+
    ch : Character;
 begin
 
@@ -53,7 +52,7 @@ begin
 
    SDL.Quit.atexit (SDL.SDL_Quit'Access);
 
-   SDL.Video.WM_SetCaption (S.New_String (" Olá mundo "), S.Null_Ptr);
+   SDL.Video.WM_SetCaption (S.New_String ("Hello World! Press a Key in the console"), S.Null_Ptr);
 
    Main_Surface := V.SetVideoMode (
                       800, 600, 16, V.SWSURFACE);
@@ -63,7 +62,7 @@ begin
    end if;
 
    Get_Immediate (ch);
-   
+
    V.FreeSurface (Main_Surface);
 
 end Simple00;

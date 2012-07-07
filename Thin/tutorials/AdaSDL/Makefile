@@ -1,12 +1,12 @@
 
 default:
-	@echo "make { all | cleandist}"
-
+	@echo "make { all | clean | cleandist}"
 
 all:
 	make -C simple all
 
-cleandist: distclean
-distclean:
+clean:
+	make -C simple clean
+cleandist distclean:
 	make -C simple cleandist
 

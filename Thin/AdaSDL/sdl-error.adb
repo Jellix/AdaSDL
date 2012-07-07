@@ -2,10 +2,10 @@
 -- ----------------------------------------------------------------- --
 --                AdaSDL                                             --
 --                Thin binding to Simple Direct Media Layer          --
---                Copyright (C) 2001-2007  A.M.F.Vargas              --
+--                Copyright (C) 2001-2012  A.M.F.Vargas              --
 --                Antonio M. M. Ferreira Vargas                      --
 --                Manhente - Barcelos - Portugal                     --
---                http://amvf.no.sapo.pt                             --
+--                http://adasdl.sourceforge.net                            --
 --                E-mail: amfv@sapo.pt                               --
 -- ----------------------------------------------------------------- --
 --                                                                   --
