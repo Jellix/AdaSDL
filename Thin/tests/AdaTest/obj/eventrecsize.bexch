@@ -1,0 +1,33 @@
+[GENERATED OBJECT FILE]
+b__eventrecsize.o
+[PROJECT FILES]
+/home/avargas/local/prog_Ada/adasdl/Thin/tests/AdaTest/adatest.gpr
+20120707235845
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/adasdl.gpr
+20120707231119
+[BOUND OBJECT FILES]
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/lib_c.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-keysym.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/uintn_ptrops.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-types.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-active.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-joystick.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-keyboard.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-mutex.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-rwops.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-video.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-mouse.o
+/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/sdl-events.o
+/home/avargas/local/prog_Ada/adasdl/Thin/tests/AdaTest/obj/eventrecsize.o
+[GENERATED SOURCE FILES]
+b__eventrecsize.ads
+b__eventrecsize.adb
+b__eventrecsize.ali
+[RESULTING OPTIONS]
+-L/home/avargas/local/prog_Ada/adasdl/Thin/tests/AdaTest/obj/
+-L/home/avargas/local/prog_Ada/adasdl/Thin/AdaSDL/obj/
+-L/home/avargas/gnat/lib/gcc/x86_64-pc-linux-gnu/4.5.4/adalib/
+-static
+-static-libgcc
+/home/avargas/gnat/lib/gcc/x86_64-pc-linux-gnu/4.5.4/adalib/libgnat.a

@@ -173,8 +173,8 @@ procedure Testalpha is
       ticks2   : Uint32;
    begin
       --  Easy, center light
-      position.x := Sint16 (x - Uint16 (light.w / 2));
-      position.y := Sint16 (y - Uint16 (light.h / 2));
+      position.x := Sint16 (x) - Sint16 (light.w / 2);
+      position.y := Sint16 (y) - Sint16 (light.h / 2);
       position.w := Uint16 (light.w);
       position.h := Uint16 (light.h);
       ticks1     := T.GetTicks;
@@ -290,7 +290,7 @@ procedure Testalpha is
             State : M.Mouse_State;
          begin
             M.Get_Mouse_State (State, x, y);
-            FlashLight (screen, light, Uint16 (x), Uint16 (y));
+            FlashLight (screen, light, Uint16 (abs x), Uint16 (abs y));
          end;
       end if;
 
@@ -314,7 +314,7 @@ procedure Testalpha is
       elsif (C.int (alpha) + alpha_vel) > 255 then
          alpha_vel := -alpha_vel;
       end if;
-      V.SetAlpha (sprite, V.SRCALPHA, alpha + Uint8 (alpha_vel));
+      V.SetAlpha (sprite, V.SRCALPHA, alpha + Uint8 (abs alpha_vel));
 
       --  Save the area behind the sprite
       updates (1) := position;
@@ -440,7 +440,7 @@ begin
    end if;
 
    --  Load the sprite
-   if LoadSprite (screen, "icon.bmp") < 0 then
+   if LoadSprite (screen, "data/icon.bmp") < 0 then
       V.FreeSurface (light);
       GNAT.OS_Lib.OS_Exit (1);
    end if;

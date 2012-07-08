@@ -121,7 +121,7 @@ begin
    SDL.Quit.atexit (SDL.SDL_Quit'Access);
 
    --  Set the icon --  this must be done before the first mode set
-   LoadIconSurface ("icon.bmp", icon_mask, icon);
+   LoadIconSurface ("data/icon.bmp", icon_mask, icon);
    if icon /= null then
       V.WM_SetIcon (icon, icon_mask.all);
       --  V.WM_SetIcon (icon, null);

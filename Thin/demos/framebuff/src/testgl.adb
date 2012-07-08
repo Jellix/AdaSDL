@@ -40,7 +40,7 @@ procedure TestGL is
    logo     : Boolean := False;
    numtests : C.int := 1;
    bpp      : C.int := 0;
-   slowly   : Boolean := False;
+   slowly   : Boolean := True;
    gamma    : C.C_float := 0.0;
    argc     : Integer := CL.Argument_Count;
    video_flags : V.Surface_Flags := 0;

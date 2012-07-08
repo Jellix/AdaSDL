@@ -86,7 +86,7 @@ procedure TestWin is
    begin
       --  Load the image into a surface
       if bmpfile = CS.Null_Ptr then
-         bmpfile := CS.New_String ("sample.bmp"); --  Sample image
+         bmpfile := CS.New_String ("data/sample.bmp"); --  Sample image
       end if;
 
       Put_Line ("Loading picture: " & CS.Value (bmpfile));
@@ -210,7 +210,7 @@ procedure TestWin is
       end loop;
 
       --  #ifdef SCREENSHOT
-      if V.SaveBMP (screen, CS.New_String ("screen.bmp")) < 0 then
+      if V.SaveBMP (screen, CS.New_String ("data/screen.bmp")) < 0 then
          Put_Line ("Couldn't save screen: " & Er.Get_Error);
       end if;
       --  #endif

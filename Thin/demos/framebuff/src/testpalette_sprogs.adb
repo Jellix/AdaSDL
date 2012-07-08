@@ -93,11 +93,11 @@ package body  TestPalette_Sprogs is
                   end if;
                   Fb.Go_Right_Unchecked (p, j).all := Uint8 (
                      startcol + C.int (
-                        (Unsigned_32 (v) and Unsigned_32 (63))));
+                        (Unsigned_32 (abs v) and Unsigned_32 (63))));
                   d := d
                        + C.int (
                            It.Shift_Right (
-                              It.Unsigned_32 (Random (Integer_Generator)),
+                              It.Unsigned_32 (abs Random (Integer_Generator)),
                               3)
                            mod 3)
                        - 1;

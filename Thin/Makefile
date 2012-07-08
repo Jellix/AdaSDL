@@ -47,8 +47,8 @@ bindings:
 	make -C AdaGL
 	make -C AdaSDL all
 	#make -C AdaSDL_framebuff
+	make -C AdaSDL_mixer
 	#make -C AdaSDL_image
-	#make -C AdaSDL_mixer
 	#make -C AdaSDL_ttf
 
 all: bindings

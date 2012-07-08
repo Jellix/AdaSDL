@@ -173,7 +173,7 @@ package body TestGL_Sprogs is
          declare
             temp : V.Surface_ptr;
          begin
-            temp := V.LoadBMP (CS.New_String ("icon.bmp"));
+            temp := V.LoadBMP (CS.New_String ("data/icon.bmp"));
             if temp = null then
                return;
             end if;

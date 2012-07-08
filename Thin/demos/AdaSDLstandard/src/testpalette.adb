@@ -127,7 +127,7 @@ begin
    end if;
 
 
-   boat (0) := V.LoadBMP (CS.New_String ("sail.bmp"));
+   boat (0) := V.LoadBMP (CS.New_String ("data/sail.bmp"));
    if  boat (0) = null then
       sdlerr ("loading sail.bmp");
    end if;

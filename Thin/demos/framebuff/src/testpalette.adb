@@ -76,6 +76,7 @@ procedure TestPalette is
    argc : Integer := CL.Argument_Count;
 
 begin
+   Reset(Integer_Generator);
    if SDL.Init (SDL.INIT_VIDEO) < 0 then
       sdlerr ("initializing SDL");
    end if;
@@ -112,7 +113,7 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   boat (0) := Vd.LoadBMP ("sail.bmp");
+   boat (0) := Vd.LoadBMP ("data/sail.bmp");
    if  boat (0) = null then
       sdlerr ("loading sail.bmp");
    end if;
@@ -163,7 +164,7 @@ begin
       boaty (i)   := C.int (i) * (SCRH - boat (0).h) / (NBOATS - 1);
       boatdir (i) := C.int (
                         It.Shift_Right (
-                           It.Unsigned_32 (Random (Integer_Generator)),
+                           It.Unsigned_32 (abs Random (Integer_Generator)),
                            5)
                         and 1)
                      * 2 - 1;
@@ -225,7 +226,7 @@ begin
                   updates (i).x := 0;
                end if;
                if C.int (updates (i).x) + C.int (updates (i).w) > SCRW then
-                  updates (i).w := Uint16 (SCRW - updates (i).x);
+                  updates (i).w := Uint16 (abs (SCRW - updates (i).x));
                end if;
             end; -- declare
          end loop; -- move boats
@@ -279,12 +280,12 @@ begin
             else
                Fb.Copy_Colors (screen, cmap (0)'Access, Natural (boatcols));
                for i in C.size_t range 0 .. C.size_t (boatcols + 63) loop
-                  cmap (i).r := Uint8 (C.C_float (cmap (i).r)
-                                * C.C_float (fade_level) / C.C_float (fade_max));
-                  cmap (i).g := Uint8 (C.C_float (cmap (i).g)
-                                * C.C_float (fade_level) / C.C_float (fade_max));
-                  cmap (i).b := Uint8 (C.C_float (cmap (i).b)
-                                * C.C_float (fade_level) / C.C_float (fade_max));
+                  cmap (i).r := Uint8 (abs (C.C_float (cmap (i).r)
+                                * C.C_float (fade_level) / C.C_float (fade_max)));
+                  cmap (i).g := Uint8 ( abs (C.C_float (cmap (i).g)
+                                * C.C_float (fade_level) / C.C_float (fade_max)));
+                  cmap (i).b := Uint8 (abs (C.C_float (cmap (i).b)
+                                * C.C_float (fade_level) / C.C_float (fade_max)));
                end loop;
             end if;
             if fade_level = fade_max then

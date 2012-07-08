@@ -287,7 +287,7 @@ begin
    end if;
 
    --  Load the sprite
-   if LoadSprite (screen, "icon.bmp") < 0 then
+   if LoadSprite (screen, "data/icon.bmp") < 0 then
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
