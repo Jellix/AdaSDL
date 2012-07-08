@@ -1,5 +1,5 @@
 
-INC+=-I../binding -I../src
+INC+=-I../binding -I../GL
 include ../../make.conf
 
 default:
