@@ -6,11 +6,9 @@ NAME=simple
 all:
 	gprbuild $(NAME).gpr
 
-cleandist: cleanexec
-
 clean:
 	gprclean -c $(NAME).gpr
 
-cleanexec:
+cleandist distclean:
 	gprclean $(NAME).gpr
 

@@ -1,12 +1,14 @@
+NAME=simple
+
 help:
 	@echo "make {all | clean | cleandist}"
 
 all:
-	make -C simple all
+	make -C $(NAME) all
 
 clean:
-	make -C simple clean
+	make -C $(NAME) clean
 
 cleandist distclean:
-	make -C simple cleandist
+	make -C $(NAME) cleandist
 

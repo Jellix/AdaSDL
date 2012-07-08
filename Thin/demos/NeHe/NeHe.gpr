@@ -1,11 +1,12 @@
-with "../../../AdaSDL/adasdl.gpr";
-project simple is
+with "../../AdaSDL/adasdl.gpr";
 
-   for Main use ("simple00.adb","simple01.adb","simple02.adb");
-   for Source_Dirs use ("src");
+project NeHe is
+
+   for Main use ("lesson01.adb");
+   for Source_Dirs use ("./src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Source_Files use ("simple00.adb","simple01.adb","simple02.adb");
+   for Source_Files use ("lesson01.adb");
 
    package Ide is
       for Vcs_Kind use "Auto";
@@ -23,5 +24,5 @@ project simple is
       for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
    end Linker;
 
-end simple;
+end NeHe;
 

@@ -1,6 +1,7 @@
 project Adasdl is
 
-   for Source_Dirs use ("./src", "../AdaSDL_image/src", "../AdaSDL_mixer/src", "../AdaSDL_ttf/src", "../AdaGL/src");
+   for Source_Dirs use ("./src", "../AdaSDL_image/src", "../AdaSDL_mixer/src", 
+       		        "../AdaSDL_ttf/src", "../AdaGL/src","../AdaSDL_framebuff/src");
    for Languages use ("Ada");
    for Source_Files use ("adagl.adb", "adagl.ads", "gl_h.ads", "glu_h.ads", "lib_c.ads", "sdl-active.ads", "sdl.ads", 
       "sdl-audio.adb", "sdl-audio.ads", "sdl-audio-extra.ads", "sdl-byteorder.adb", "sdl-byteorder.ads", 
@@ -8,7 +9,8 @@ project Adasdl is
       "sdl-events.ads", "sdl_image.adb", "sdl_image.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads", 
       "sdl-keysym.ads", "sdl_mixer.adb", "sdl_mixer.ads", "sdl-mouse.adb", "sdl-mouse.ads", "sdl-mutex.adb", "sdl-mutex.ads",
       "sdl-quit.ads", "sdl-rwops.adb", "sdl-rwops.ads", "sdl-thread.ads", "sdl-timer.ads", "sdl_ttf.adb", "sdl_ttf.ads", 
-      "sdl-types.adb", "sdl-types.ads", "sdl-version.adb", "sdl-version.ads", "sdl-video.adb", "sdl-video.ads", "uintn_ptrops.ads");
+      "sdl-types.adb", "sdl-types.ads", "sdl-version.adb", "sdl-version.ads", "sdl-video.adb", "sdl-video.ads", "uintn_ptrops.ads",
+      "sdl_framebuffer.ads","sdl_framebuffer.adb","sdl_framebuffer_generics.ads","sdl_framebuffer_generics.adb");
    for Object_Dir use "./obj";
 
    package Binder is

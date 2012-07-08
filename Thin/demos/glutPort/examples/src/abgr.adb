@@ -1,7 +1,7 @@
 --  Copyright (c) Mark J. Kilgard, 1994.
 --  Ported to Ada by Antonio F. Vargas
---  http://ada.chavedigital.net
---  mailto: amfv@sapo.pt
+--  http://adasdl.source.net
+--  mailto: amfv@gmail.com
 --  /**
 --  * (c) Copyright 1993, Silicon Graphics, Inc.
 --  * ALL RIGHTS RESERVED

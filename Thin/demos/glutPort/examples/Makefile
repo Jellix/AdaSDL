@@ -1,18 +1,16 @@
-INC+=-I../../../AdaSDL -I../../../AdaGL/GL -I../../../AdaSDL_mixer
-include ../../../make.conf
 
-EXECNAMES=abgr
+NAME=examples
 
-EXECS=$(EXECNAMES:=$(EXE));
+.PHONY: all go
 
-%:%.adb
-	gnatmake -O3 -gnaty3abcefhiklmprtM90 -gnatnfvU -gnatwl\
-		$(INC) $@ -largs $(LIBS)
-default: abgr
+all:
+	gprbuild $(NAME).gpr
+
+cleandist: cleanexec
 
 clean:
-	rm -f *.o  b~*.ad[bs] *.ali
+	gprclean -c $(NAME).gpr
 
-cleandist: clean
-	rm -f $(EXECS)
+cleanexec:
+	gprclean $(NAME).gpr
 

@@ -1,18 +1,13 @@
+NAME=pong_demo
 
-include ../../make.conf
+.PHONY: all
 
-all:pong
-
-.PHONY: pong
-
-pong:
-	gprbuild pong_demo.gpr
-
-cleandist: cleanexec
+all:
+	gprbuild $(NAME).gpr
 
 clean:
-	gprclean -c pong_demo.gpr
+	gprclean -c $(NAME).gpr
 
-cleanexec:
-	gprclean pong_demo.gpr
+cleandist distclean:
+	gprclean $(NAME).gpr
 

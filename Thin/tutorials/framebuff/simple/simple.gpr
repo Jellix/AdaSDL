@@ -1,4 +1,4 @@
-with "../../../adasdl.gpr";
+with "../../../AdaSDL/adasdl.gpr";
 project simple is
 
    for Main use ("simple00.adb","simple01.adb","simple02.adb");

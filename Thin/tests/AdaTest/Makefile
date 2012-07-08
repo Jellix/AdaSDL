@@ -1,22 +1,14 @@
-INC+=-I../../AdaSDL
 
-include ../../make.conf
+NAME=adatest
 
-NAMES= eventrecsize test_enumerations test_endianess
+.PHONY: all
 
-all: $(NAMES)
-
-eventrecsize: eventrecsize.adb
-	gnatmake -O3 -gnaty -gnatnfvU $@  $(INC) -largs $(LIBS)
-
-test_enumerations: test_enumerations.adb
-	gnatmake -O3 -gnaty -gnatnfvU $@  $(INC) -largs $(LIBS)
-
-test_endianess: test_endianess.adb
-	gnatmake -O3 -gnaty -gnatnfvU $@  $(INC) -largs $(LIBS)
+all:
+	gprbuild $(NAME).gpr
 
 clean:
-	rm -f *.o *.ali
+	gprclean -c $(NAME).gpr
 
-cleandist: clean
-	rm -f $(NAMES) $(NAMES:=.exe)
+cleandist distclean:
+	gprclean $(NAME).gpr
+
