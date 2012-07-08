@@ -46,10 +46,7 @@ conf2w32:
 bindings:
 	make -C AdaGL
 	make -C AdaSDL all
-	#make -C AdaSDL_framebuff
 	make -C AdaSDL_mixer
-	#make -C AdaSDL_image
-	#make -C AdaSDL_ttf
 
 all: bindings
 	make -C demos all
@@ -59,18 +56,10 @@ all: bindings
 libs:
 	make -C AdaGL lib
 	make -C AdaSDL lib
-	#make -C AdaSDL_framebuff lib
-	#make -C AdaSDL_image lib
-	#make -C AdaSDL_mixer lib
-	#make -C AdaSDL_ttf lib
 
 cleandist:
 	make -C AdaGL cleandist
 	make -C AdaSDL cleandist
-	#make -C AdaSDL_framebuff cleandist
-	#make -C AdaSDL_image cleandist
-	#make -C AdaSDL_mixer cleandist
-	#make -C AdaSDL_ttf cleandist
 	make -C demos cleandist
 	make -C tests cleandist
 	make -C tutorials cleandist
