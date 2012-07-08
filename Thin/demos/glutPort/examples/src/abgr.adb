@@ -182,7 +182,7 @@ procedure abgr is
    argc : Integer := CL.Argument_Count;
    Screen_Width : C.int := 640;
    Screen_Hight : C.int := 480;
-   Full_Screen  : Boolean := True;
+   Full_Screen  : Boolean := False;
 
    --  ===================================================================
    procedure Args is
@@ -196,8 +196,8 @@ procedure abgr is
             elsif CL.Argument (argc) = "-db" then
                doubleBuffer := GL_TRUE;
                argc := argc - 1;
-            elsif CL.Argument (argc) = "-window" then
-               Full_Screen := False;
+            elsif CL.Argument (argc) = "-fullscreen" then
+               Full_Screen := True;
                argc := argc - 1;
             elsif CL.Argument (argc) = "-1024x768" then
                Screen_Width := 1024;
@@ -209,7 +209,7 @@ procedure abgr is
                argc := argc - 1;
             else
                Put_Line ("Usage: " & CL.Command_Name & " " &
-                         "[ -sb | -db ] [-window] [-h] " &
+                         "[ -sb | -db ] [-fullscreen] [-h] " &
                          "[-800x600 | -1024x768]");
                GNAT.OS_Lib.OS_Exit (0);
             end if;

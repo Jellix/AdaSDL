@@ -1,8 +1,8 @@
 --  -----------------------------------------------------
 --     Copyright (C)2001-2007 by:
 --     Antonio F. Vargas - Manhente - Barcelos - Portugal
---     mailto: amfv@sapo.pt
---     http://amfv.no.sap.pt
+--     mailto: amfv@amfvargas@gmail.com
+--     http://adasdl.sourceforge.net
 --  -----------------------------------------------------
 
 --  This program is in the public domain
@@ -202,7 +202,7 @@ begin
       GNAT.OS_Lib.OS_Exit (2);
    end if;
 
-   Vd.WM_Set_Caption ("Generic GL", "Generic");
+   Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
 
    init (Info);
 

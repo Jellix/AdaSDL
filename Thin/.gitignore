@@ -1,5 +1,6 @@
 
 *.o
 *.ali
+make.conf
 
 tags

@@ -115,7 +115,7 @@ procedure Rectangle is
 
    Slowly      : Boolean := False;
    Info        : Boolean := False;
-   Full_Screen : Boolean := True;
+   Full_Screen : Boolean := False;
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
@@ -128,7 +128,7 @@ procedure Rectangle is
             Slowly := True;
             argc := argc - 1;
          elsif CL.Argument (argc) = "-fullscreen" then
-            Full_Screen := False;
+            Full_Screen := True;
             argc := argc - 1;
          elsif CL.Argument (argc) = "-1024x768" then
             Screen_Width := 1024;
