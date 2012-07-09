@@ -57,7 +57,6 @@ libs:
 	make -C AdaSDL lib
 
 cleandist:
-	make -C AdaGL cleandist
 	make -C AdaSDL cleandist
 	make -C demos cleandist
 	make -C tests cleandist

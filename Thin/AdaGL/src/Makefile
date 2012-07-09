@@ -2,8 +2,8 @@
 INC+=-I../binding -I../GL
 include ../../make.conf
 
-default:
-	gnatmake -O3 $(INC)  compile -largs $(LIBS)
+all:
+	gprbuild gl.prj
 
 clean:
-	rm -f *.o *.ali compile$(EXE) b~*.ad[bs]
+	gprbuild gl.prj clean
