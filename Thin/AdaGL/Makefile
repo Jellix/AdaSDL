@@ -2,18 +2,9 @@
 all : bind
 
 help:
-	@echo "***********************************************************************"
-	@echo "* make [conf2w32] [conf2x11] [all] [bind] [clean]                     *"
-	@echo "*      [cleandist] [tbz2 [VERSION=version] [tgz [VERSION=version]]    *"
-	@echo "* bind            Makes de AdaOpenGL binding                          *"
-	@echo "* conf2w32:       Prepare the system for compilation on windows       *" 
-	@echo "* conf2x11:       Prepare the system for compilation on X11           *"
-	@echo "* tbz2 [VERSION=version]: makes an AdaOpenGL<version>.tar.bz2         *"
-	@echo "* tgz  [VERSION=version]: makes an AdaOpenGL<version>.tgz             *"
-	@echo "* clean:          Clean bins, not configuration files                 *"
-	@echo "* cleandist:      Clean bins and configuration  files                 *"
-	@echo "* alternatively you can cd to a directory and do a make there         *"
-	@echo "***********************************************************************"
+	@echo "***********************************************"
+	@echo "* make [all] [clean] [distclean]              *"
+	@echo "***********************************************"
 
 lib: bind
 

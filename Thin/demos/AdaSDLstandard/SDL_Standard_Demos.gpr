@@ -2,21 +2,21 @@ with "../../AdaSDL/adasdl.gpr";
 
 project SDL_Standard_Demos is
 
-   for Main use ("checkkeys.adb", "graywin.adb", "loopwave.adb", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", 
-   "testerror.adb", "testgl.adb", "testhread.adb", "testjoystick.adb", "testkeys.adb", "testlock.adb", "testpalette.adb", 
-      "testsem.adb", "testsprite.adb", "testtimer.adb", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", 
+   for Main use ("checkkeys.adb", "graywin.adb", "loopwave.adb", "testalpha.adb", "testbitmap.adb", "testcdrom.adb",
+   "testerror.adb", "testgl.adb", "testhread.adb", "testjoystick.adb", "testkeys.adb", "testlock.adb", "testpalette.adb",
+      "testsem.adb", "testsprite.adb", "testtimer.adb", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb",
       "testwm.adb", "threadwin.adb", "torturethread.adb");
    for Source_Dirs use ("./src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Source_Files use ("checkkeys.adb", "checkkeys.adb", "graywin.adb", "loopwave.adb", "loopwave_callback.adb", 
-   "loopwave_callback.ads", "picture_xbm.ads", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", "testerror.adb", 
-      "testerror_tfunc.adb", "testerror_tfunc.ads", "testgl.adb", "testgl_sprogs.adb", "testgl_sprogs.ads", "testhread.adb", 
-      "testhread_sprogs.adb", "testhread_sprogs.ads", "testhread_sprogs.ads", "testjoystick.adb", "testkeys.adb", 
-      "testlock.adb", "testlock_sprogs.adb", "testpalette.adb", "testpalette_sprogs.adb", "testpalette_sprogs.ads", 
-      "testsem.adb", "testsem_sprogs.adb", "testsem_sprogs.ads", "testsprite.adb", "testtimer.adb", "testtimer_sprogs.adb", 
-      "testtimer_sprogs.ads", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", "testwm_sprogs.adb", 
-      "testwm_sprogs.ads", "threadwin.adb", "threadwin_sprogs.adb", "threadwin_sprogs.ads", "torturethread.adb", 
+   for Source_Files use ("checkkeys.adb", "checkkeys.adb", "graywin.adb", "loopwave.adb", "loopwave_callback.adb",
+   "loopwave_callback.ads", "picture_xbm.ads", "testalpha.adb", "testbitmap.adb", "testcdrom.adb", "testerror.adb",
+      "testerror_tfunc.adb", "testerror_tfunc.ads", "testgl.adb", "testgl_sprogs.adb", "testgl_sprogs.ads", "testhread.adb",
+      "testhread_sprogs.adb", "testhread_sprogs.ads", "testhread_sprogs.ads", "testjoystick.adb", "testkeys.adb",
+      "testlock.adb", "testlock_sprogs.adb", "testpalette.adb", "testpalette_sprogs.adb", "testpalette_sprogs.ads",
+      "testsem.adb", "testsem_sprogs.adb", "testsem_sprogs.ads", "testsprite.adb", "testtimer.adb", "testtimer_sprogs.adb",
+      "testtimer_sprogs.ads", "testtypes.adb", "testver.adb", "testvidinfo.adb", "testwin.adb", "testwm.adb", "testwm_sprogs.adb",
+      "testwm_sprogs.ads", "threadwin.adb", "threadwin_sprogs.adb", "threadwin_sprogs.ads", "torturethread.adb",
       "torturethread_sprogs.adb", "torturethread_sprogs.ads");
 
    package Ide is
@@ -32,8 +32,18 @@ project SDL_Standard_Demos is
       for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
    end Compiler;
 
+   type Devel_Environment_Type is ("penWin32","general");
+   -- To be overrided by the environment variable DE
+   DE : Devel_Environment_Type := external ("DE","general");
    package Linker is
-      for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU", "-g");
+      case DE is
+         when "penWin32" =>
+            for Default_Switches ("ada") use ("-L../../../supportFilesW32/devel/libs","-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lopengl32", "-lGLU32");
+         when "general" =>
+            for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+         when others =>
+            for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+      end case;
    end Linker;
 
 end SDL_Standard_Demos;

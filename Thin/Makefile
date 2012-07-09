@@ -44,7 +44,6 @@ conf2w32:
 	cp make.conf_w32 make.conf
 
 bindings:
-	make -C AdaGL
 	make -C AdaSDL all
 	make -C AdaSDL_mixer
 

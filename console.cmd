@@ -1,15 +1,24 @@
 SET SUBDIR=%~dp0
-ECHO %SUBDIR% 
+ECHO %SUBDIR%
 
-set PATH=%SUBDIR%supportFilesW32\devel\bin;%PATH%
-set PATH=%SUBDIR%supportFilesW32\runtime\bin;%PATH%
+set DRIVE=%~d0
+echo %DRIVE%
 
-set LIBSPATH=-L%SUBDIR%supportFilesW32\devel\libs
-rem LIBS=%LIBSPATH% -lopengl32 -lglu32 -lSDL -lSDL_mixer -lSDL_image -lSDL_ttf -lGLI -lGL
-set LIBS=%LIBSPATH% -lopengl32 -lglu32 -lSDL.dll -lSDL_mixer -lSDL_image -lSDL_ttf
+rem -- binary files *.dll and *.exe for imediate use
+rem -- allways check for any virus.
+set TOOLSPATH=%SUBDIR%supportFilesW32\devel\bin
+set DLLSPATH=%SUBDIR%supportFilesW32\runtime\bin
 
 rem -- If you have a nonstandard gnat installation
-rem -- uncomment and adapt the next line
-PATH=%SUBDIR%..\..\GNAT\2012\bin;%PATH%
+rem -- adapt the next line. Here I have gnat on a 
+rem -- pen inside directory \local
+PATH=%DRIVE%\local\GNAT\2012\bin;%TOOLSPATH%;%DLLSPATH%;%PATH%
 
+rem -- This environmen variable is used in gprbuild
+rem -- in order to adapt to the portable environment.
+set DE=penWin32
+
+rem -- Opens the console for use with make or gpr.
+rem -- and for execution of some applications
 cmd /e
+

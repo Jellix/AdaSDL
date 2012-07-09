@@ -1,6 +1,7 @@
 
 *.o
 *.ali
+*.exe
 make.conf
 
 tags

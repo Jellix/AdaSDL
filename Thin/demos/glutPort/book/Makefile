@@ -4,7 +4,7 @@ NAME=book
 .PHONY: all
 
 all:
-	gprbuild $(NAME).gpr
+	gprbuild $(NAME).gpr -largs $(LIBS)
 
 clean:
 	gprclean -c $(NAME).gpr

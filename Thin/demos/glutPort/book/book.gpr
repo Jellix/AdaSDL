@@ -20,8 +20,18 @@ project Book is
       for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
    end Compiler;
 
+   type Devel_Environment_Type is ("penWin32","general");
+   -- To be overrided by the environment variable DE
+   DE : Devel_Environment_Type := external ("DE","general");
    package Linker is
-      for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+      case DE is
+         when "penWin32" =>
+            for Default_Switches ("ada") use ("-L../../../../supportFilesW32/devel/libs","-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lopengl32", "-lGLU32");
+         when "general" =>
+            for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+         when others =>
+            for Default_Switches ("ada") use ("-lSDL", "-lSDL_mixer", "-lSDL_image", "-lSDL_ttf", "-lGL", "-lGLU");
+      end case;
    end Linker;
 
 end Book;
