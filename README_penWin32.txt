@@ -12,10 +12,10 @@ from a copy of the pen on HD the file system).
 Pen Layout
 
 /local/
-   GNAT        <-- you have to paste it here copying from a normal installation
+   GNAT        <-- you have to paste it here after copying from a normal installation
       2012
          ... 
-   Git         <-- you have to paste it here copying from a normal installation
+   Git         <-- (OPTIONAL) you have to paste it here after copying from a normal installation
       ...
    prog_Ada    <- make directory (optional)
       adasdl   <-- Uncompressed or from git clone
@@ -35,3 +35,7 @@ Use 2
     execute--> console.cmd
     inside de console
     do --> gps   <-- and use the IDE normally.
+
+Have fun
+
+AMFVargas.
