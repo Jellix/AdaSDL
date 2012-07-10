@@ -88,7 +88,7 @@ procedure testwm is
 begin
    if SDL.Init (SDL.INIT_VIDEO) < 0 then
       Put_Line ("Couldn't initialize SDl: " & Er.Get_Error);
-      GNAT.OS_Lib.OS_Exit (1);
+      return; -- GNAT.OS_Lib.OS_Exit (1);
    end if;
    Q.atexit (SDL.SDL_Quit'Access);
 
@@ -120,14 +120,14 @@ begin
    end loop;
 
    --  Set the icon -- this must be done before the first mode set
-   LoadIconSurface ("icon.bmp", icon_mask, icon);
+   LoadIconSurface ("data/icon.bmp", icon_mask, icon);
    if icon /= null then
       V.WM_SetIcon(icon, icon_mask.all);
       --  V.WM_SetIcon(icon, null);
    end if;
 
    if  The_Title = null then
-      The_Title := new String'("Testing 1.. 2.. 3...");
+      The_Title := new String'("Testão: Testing 1.. 2.. 3...");
    end if;
 
    V.WM_Set_Caption (The_Title.all, "testwm");
