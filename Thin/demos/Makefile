@@ -10,9 +10,6 @@ all:
 	make -C NeHe all
 	make -C pong all
 
-gnathtml:
-	make -C AdaSDLstandard gnathtml
-
 clean:
 	make -C glutPort clean
 	make -C gears clean

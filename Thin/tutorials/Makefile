@@ -1,6 +1,6 @@
 
 default:
-	@echo "make {conf2x11 | conf2w32 | all | libs | cleandist}"
+	@echo "make { all | clean | cleandist}"
 
 all:
 	make -C AdaSDL all

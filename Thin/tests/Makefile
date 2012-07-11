@@ -1,19 +1,17 @@
 
 help:
-	@echo "***********************************************************************"
-	@echo "* make [all] [AdaSDL] [AdaTest] [framebuff] [cleandist] [gnathatml]   *"
-	@echo "***********************************************************************"
+	@echo "***********************************"
+	@echo "* make [all] [clean] [cleandist]  *"
+	@echo "***********************************"
 
 all:
 	make -C AdaTest all
 
+clean:
+	make -C AdaTest clean
+	make -C bind_check clean
+
 cleandist:
 	make -C AdaTest cleandist
 	make -C bind_check cleandist
-	
-gnathtml:
-	make -C stdtest gnathtml
-	rm -f -R  ../AdaSDLhtml
-	mv stdtest/html ../AdaSDLhtml
 
-clean: cleandist

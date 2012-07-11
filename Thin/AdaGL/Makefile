@@ -11,20 +11,10 @@ lib: bind
 bind:
 	make -C src
 
-tbz2:
-	tar -Icvf ../AdaOpenGL_$(VERSION).tar.bz2 ../AdaOpenGL
-
-tgz:
-	tar -zcvf ../AdaOpenGL_$(VERSION).tgz ../AdaOpenGL
-
 clean:
 	make -C src clean
 
 cleandist: clean
-
-#cleandist:
-#	rm -f -R src
-#	rm -f make.conf
 
 conf2w32:
 	rm -f make.conf
