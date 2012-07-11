@@ -1,12 +1,12 @@
 
 -- ----------------------------------------------------------------- --
---                AdaSDL_Mixer                                       --
---                Thin binding to SDL mixer library                  --
---                Copyright (C) 2001-2012  A.M.F.Vargas              --
+--                AdaSDL                                             --
+--                Thin binding to Simple Direct Media Layer          --
+--                Copyright (C) 2000-2012  A.M.F.Vargas              --
 --                Antonio M. M. Ferreira Vargas                      --
 --                Manhente - Barcelos - Portugal                     --
---                http://adasdl.sourceforge.net                           --
---                E-mail: amfv@gmail.com                             --
+--                http://adasdl.sourceforge.net                      --
+--                E-mail: amfvargas@gmail.com                        --
 -- ----------------------------------------------------------------- --
 --                                                                   --
 -- This library is free software; you can redistribute it and/or     --

@@ -22,8 +22,8 @@
 --    Ada code written by:
 --                Antonio M. F. Vargas                               --
 --                Manhente - Barcelos - Portugal                     --
---                E-mail: amfv@sapo.pt                               --
---                http://ada.chavedigital.net                             --
+--                E-mail: amfvargas@gmail.com                        --
+--                http://adasdl.sourceforge.net                      --
 
 with Ada.Command_Line;
 with Ada.Characters.Handling;
@@ -340,9 +340,12 @@ begin  -- showfont procedure
    bdiff := C.size_t (backcol.b - forecol.b);
    --  for i in C.size_t range 0 .. NUM_COLORS - 1 loop
    for i in colors'Range loop
-      colors (i).r := forecol.r + Uint8 ((i * rdiff) / 4);
-      colors (i).g := forecol.g + Uint8 ((i * gdiff) / 4);
-      colors (i).b := forecol.b + Uint8 ((i * bdiff) / 4);
+      colors (i).r := forecol.r
+        + Uint8 (((i * rdiff)/ 4) mod 2**8);
+      colors (i).g := forecol.g
+        + Uint8 (((i * gdiff)/ 4) mod 2**8);
+      colors (i).b := forecol.b
+        + Uint8 (((i * bdiff)/ 4) mod 2**8);
    end loop;
    --  V.SetColors (screen, colors, 0, NUM_COLORS);
    V.Set_Colors (screen, colors);

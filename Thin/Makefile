@@ -56,10 +56,15 @@ libs:
 	make -C AdaGL lib
 	make -C AdaSDL lib
 
+clean:
+	make -C AdaSDL clean
+	make -C demos clean
+	make -C tests clean
+	make -C tutorials clean
+
 cleandist:
 	make -C AdaSDL cleandist
 	make -C demos cleandist
 	make -C tests cleandist
 	make -C tutorials cleandist
 
-clean: cleandist

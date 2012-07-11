@@ -1,7 +1,7 @@
 
-NAME=examples
+NAME=demos
 
-.PHONY: all go
+.PHONY: all
 
 all:
 	gprbuild $(NAME).gpr
