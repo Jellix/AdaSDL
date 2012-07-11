@@ -13,6 +13,10 @@ project Adasdl is
       "sdl_framebuffer.ads","sdl_framebuffer.adb","sdl_framebuffer_generics.ads","sdl_framebuffer_generics.adb");
    for Object_Dir use "./obj";
 
+   for Library_Name use "adasdl";
+   for Library_Dir use "lib";
+   for Library_Kind use "static";
+
    package Binder is
       for Default_Switches ("ada") use ("-g");
    end Binder;
