@@ -443,6 +443,11 @@ package SDL_Mixer is
    procedure Set_Music_CMD (command : String);
    pragma Inline (Set_Music_CMD);
 
+   -- Get the Mix_Chunk currently associated with a mixer channel
+   -- Returns NULL if it's an invalid channel, or there's no chunk associated.
+   procedure GetChunk (channel : C.int);
+   pragma Import (C, GetChunk, "Mix_GetChunk");
+
    -- Close the mixer, halting all playing audio
    procedure CloseAudio;
    pragma Import (C, CloseAudio, "Mix_CloseAudio");
