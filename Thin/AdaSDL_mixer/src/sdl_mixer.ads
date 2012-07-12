@@ -416,6 +416,14 @@ package SDL_Mixer is
    function PausedMusic return C.int;
    pragma Import (C, PausedMusic, "Mix_PausedMusic");
 
+   -- Set the current position in the music stream.
+   -- This returns 0 if successful, or -1 if it failed or isn't implemented.
+   -- This function is only implemented for MOD music formats (set pattern
+   -- order number) and for OGG, FLAC, MP3_MAD, and MODPLUG music (set
+   -- position in seconds), at the moment.
+   function SetMusicPosition (position : C.double) return C.int;
+   pragma Import (C, SetMusicPosition, "Mix_SetMusicPosition");
+
    --  Check the status of a specific channel.
    --  If the specified channel is -1, check all channels.
    function Playing (channel : C.int) return C.int;
@@ -435,6 +443,7 @@ package SDL_Mixer is
    procedure Set_Music_CMD (command : String);
    pragma Inline (Set_Music_CMD);
 
+   -- Close the mixer, halting all playing audio
    procedure CloseAudio;
    pragma Import (C, CloseAudio, "Mix_CloseAudio");
 
