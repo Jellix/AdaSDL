@@ -1,3 +1,4 @@
+.PHONY: all clean cleandist bin conf2w32 conf2x11 lib help
 
 all : bind
 
@@ -14,7 +15,7 @@ bind:
 clean:
 	make -C src clean
 
-cleandist: clean
+cleandist distclean: clean
 
 conf2w32:
 	rm -f make.conf

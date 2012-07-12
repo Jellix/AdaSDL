@@ -1,7 +1,7 @@
 
 NAME=SDL_Framebuff_Demos
 
-.PHONY: all
+.PHONY: all clean cleandist distclean
 
 all:
 	gprbuild $(NAME).gpr

@@ -1,7 +1,7 @@
 
 NAME=adatest
 
-.PHONY: all
+.PHONY: all clean cleandist
 
 all:
 	gprbuild $(NAME).gpr

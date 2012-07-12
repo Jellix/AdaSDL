@@ -1,7 +1,7 @@
 
 NAME=examples
 
-.PHONY: all go
+.PHONY: all clean cleandist distclean
 
 all:
 	gprbuild $(NAME).gpr

@@ -1,16 +1,14 @@
 
 NAME=genericgl
 
-.PHONY: all go
+.PHONY: all clean cleandist distclean
 
 all:
 	gprbuild $(NAME).gpr
 
-cleandist: cleanexec
-
 clean:
 	gprclean -c $(NAME).gpr
 
-cleanexec:
+cleandist distclean:
 	gprclean $(NAME).gpr
 

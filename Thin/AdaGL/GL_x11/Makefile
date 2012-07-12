@@ -1,4 +1,4 @@
-
+.PHONY: all clean
 
 all:
 	gprbuild gl.prj

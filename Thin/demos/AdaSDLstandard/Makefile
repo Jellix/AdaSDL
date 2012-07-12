@@ -1,7 +1,7 @@
 
 NAME=SDL_Standard_Demos
 
-.PHONY: all
+.PHONY: all clean cleandist distclean
 
 all:
 	gprbuild $(NAME).gpr

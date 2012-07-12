@@ -28,7 +28,9 @@ conf2w32:
 
 bindings:
 	make -C AdaSDL all
-	make -C AdaSDL_mixer
+	make -C AdaSDL_mixer all
+	make -C AdaSDL_image all
+	make -C AdaSDL_ttf all
 
 all: bindings
 	make -C demos all
@@ -41,12 +43,18 @@ libs:
 
 clean:
 	make -C AdaSDL clean
+	make -C AdaSDL_mixer clean
+	make -C AdaSDL_image clean
+	make -C AdaSDL_ttf clean
 	make -C demos clean
 	make -C tests clean
 	make -C tutorials clean
 
 cleandist:
 	make -C AdaSDL cleandist
+	make -C AdaSDL_mixer cleandist
+	make -C AdaSDL_image cleandist
+	make -C AdaSDL_ttf cleandist
 	make -C demos cleandist
 	make -C tests cleandist
 	make -C tutorials cleandist

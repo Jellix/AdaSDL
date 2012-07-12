@@ -1,3 +1,4 @@
+.PHONY: all clean cleandist distclean default
 
 default:
 	@echo "make {all | clean}"

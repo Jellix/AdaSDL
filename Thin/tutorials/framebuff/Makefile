@@ -1,5 +1,7 @@
 NAME=simple
 
+.PHONY: all clean cleandist distclean help
+
 help:
 	@echo "make {all | clean | cleandist}"
 

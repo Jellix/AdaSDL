@@ -1,3 +1,4 @@
+.PHONY: all clean cleandist distclean
 
 default:
 	@echo "make { all | clean | cleandist}"
@@ -5,12 +6,8 @@ default:
 all:
 	make -C demos all
 
-gnathtml:
-	make -C src gnathtml
-	make -C demos gnathtml
-
 clean:
 	make -C demos clean
 
-cleandist: 
+cleandist distclean: 
 	make -C demos cleandist
