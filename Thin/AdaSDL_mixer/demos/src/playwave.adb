@@ -20,10 +20,11 @@
 --    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 -- ---------------------------------------------------------------------------
 --    Ada code written by:
---                Antonio M. F. Vargas                               --
---                Manhente - Barcelos - Portugal                     --
---                E-mail: amfv@sapo.pt                               --
---                http://ada.chavedigital.net                             --
+--                António M. F. Vargas                                      --
+--                Manhente - Barcelos - Portugal                            --
+--                E-mail: amfvargas@gmail.com                               --
+--                http://adasdl.sourceforge.net                             --
+-- ---------------------------------------------------------------------------
 
 with System.OS_Interface;
 with Interfaces.C;

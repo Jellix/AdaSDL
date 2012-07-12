@@ -22,8 +22,8 @@
 --    Ada code written by:
 --                Antonio M. F. Vargas                               --
 --                Manhente - Barcelos - Portugal                     --
---                E-mail: amfv@sapo.pt                               --
---                http://ada.chavedigital.net                             --
+--                E-mail: amfvargas@gmail.com
+--                http://adasdl@sourceforge.net                      --
 
 with System.OS_Interface;
 with Interfaces.C;
