@@ -19,7 +19,7 @@ echo [k] TestJoystick;   [l] TestKeys;  [m] TestLock;    [n] TestSemaphore
 echo [o] TestTimer;      [p] TestTypes; [q] TestVersion; [r] TestVideoInfo
 echo [s] TortureThread ; [z] LoopWave ( CTRL-C to stop)
 :choice
-set /P C=[0,1,2,3,4,5,6,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,z]?
+set /P C=[0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,z]?
 echo ###############################################################
 if "%C%"=="z" goto LoopWave
 if "%C%"=="s" goto TortureThread
