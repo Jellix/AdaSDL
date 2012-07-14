@@ -25,19 +25,10 @@ Pen Layout
 --------------------------------
 Use 1
     in --> /local/prog_Ada/adasdl/Thin
-    execute--> console.cmd
-    inside this special console
-    do  -–>   make conf2w32
-    then do --> make all
+    execute--> WinDevelConsole.cmd
+    Use the options presented there.
 
-Use 2
-    in --> /local/prog_Ada/adasdl/Thin
-    execute--> console.cmd
-    inside de console
-    do  -–>   make conf2w32
-    do --> gps   <-- and use the IDE normally.
-
-Things to see:
+Extras things to see:
    Thin/tutorials directory with very basic examples.
    Thin/demos directory with more complex examples.
 

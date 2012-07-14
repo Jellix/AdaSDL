@@ -1,3 +1,5 @@
+If you don't want to use the portable environment.
+
 Install Gnat 2012 in your system.
 
 place  "supportFilesW32\devel\bin" and "supportFilesW32\runtime\bin"
