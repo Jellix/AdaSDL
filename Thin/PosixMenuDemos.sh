@@ -80,12 +80,12 @@ read -p " ?" answer
 	  cd ../..
        ;;
        E|e) cd demos/AdaSDLstandard
-	    echo "Click to see rectangles of random sizes."
-	  ./graywin
+	  ./threadwin
 	  cd ../..
        ;;
        F|f) cd demos/AdaSDLstandard
-	  ./threadwin
+	    echo "Click to see rectangles of random sizes."
+	  ./graywin
 	  cd ../..
        ;;
        G|g) cd demos/AdaSDLstandard

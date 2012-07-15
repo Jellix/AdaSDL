@@ -37,4 +37,8 @@ set DE=penWin32
 rem -- Opens the console for use with make or gpr.
 rem -- and for execution of some applications
 cmd /e
-
+echo .
+echo ##############################################################
+echo #  You'll have more features using Thin/WinDevelConsole.cmd ##
+echo ##############################################################
+echo .

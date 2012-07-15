@@ -1,9 +1,9 @@
 -- ----------------------------------------------------------------- --
---                Copyright (C) 2001-2007 A.M.F.Vargas               --
+--                Copyright (C) 2001-2012 A.M.F.Vargas               --
 --                Antonio M. Ferreira Vargas                         --
 --                Manhente - Barcelos - Portugal                     --
---                mailto: amfv@sapo.pt                               --
---                http://amfv.no.sap.pt                              --
+--                mailto: amfvargas@gmail.com                       --
+--                http://adasdl.sourceforge.net                      --
 -- ----------------------------------------------------------------- --
 --                                                                   --
 -- This is free software; you can redistribute it and/or             --

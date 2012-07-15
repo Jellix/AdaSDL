@@ -55,6 +55,11 @@ package SDL_Mixer is
    package CS renames Interfaces.C.Strings;
    package Er renames SDL.Error;
 
+   -- Printable format: "%d.%d.%d", MAJOR, MINOR, PATCHLEVEL
+   SDL_MIXER_MAJOR_VERSION: constant := 1;
+   SDL_MIXER_MINOR_VERSION: constant := 2;
+   SDL_MIXER_PATCHLEVEL: constant := 12;
+
    --  The default mixer has 8 simultaneous mixing channels
    MIX_CHANNELS : constant := 8;
 
