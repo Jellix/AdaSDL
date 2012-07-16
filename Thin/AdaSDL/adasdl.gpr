@@ -1,14 +1,14 @@
 project Adasdl is
 
-   for Source_Dirs use ("./src", "../AdaSDL_image/src", "../AdaSDL_mixer/src", 
+   for Source_Dirs use ("./src", "../AdaSDL_image/src", "../AdaSDL_mixer/src",
        		        "../AdaSDL_ttf/src", "../AdaGL/src","../AdaSDL_framebuff/src");
    for Languages use ("Ada");
-   for Source_Files use ("adagl.adb", "adagl.ads", "gl_h.ads", "glu_h.ads", "lib_c.ads", "sdl-active.ads", "sdl.ads", 
-      "sdl-audio.adb", "sdl-audio.ads", "sdl-audio-extra.ads", "sdl-byteorder.adb", "sdl-byteorder.ads", 
-      "sdl-byteorder-extra.ads", "sdl-cdrom.adb", "sdl-cdrom.ads", "sdl-error.adb", "sdl-error.ads", "sdl-events.adb", 
-      "sdl-events.ads", "sdl_image.adb", "sdl_image.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads", 
+   for Source_Files use ("adagl.adb", "adagl.ads", "gl_h.ads", "glu_h.ads", "lib_c.ads", "sdl-active.ads", "sdl.ads",
+      "sdl-audio.adb", "sdl-audio.ads", "sdl-audio-extra.ads", "sdl-byteorder.adb", "sdl-byteorder.ads",
+      "sdl-byteorder-extra.ads", "sdl-cdrom.adb", "sdl-cdrom.ads", "sdl-error.adb", "sdl-error.ads", "sdl-events.adb",
+      "sdl-events.ads", "sdl_image.adb", "sdl_image.ads", "sdl-joystick.ads", "sdl-keyboard.adb", "sdl-keyboard.ads",
       "sdl-keysym.ads", "sdl_mixer.adb", "sdl_mixer.ads", "sdl-mouse.adb", "sdl-mouse.ads", "sdl-mutex.adb", "sdl-mutex.ads",
-      "sdl-quit.ads", "sdl-rwops.adb", "sdl-rwops.ads", "sdl-thread.ads", "sdl-timer.ads", "sdl_ttf.adb", "sdl_ttf.ads", 
+      "sdl-quit.ads", "sdl-rwops.adb", "sdl-rwops.ads", "sdl-thread.ads", "sdl-timer.ads", "sdl_ttf.adb", "sdl_ttf.ads",
       "sdl-types.adb", "sdl-types.ads", "sdl-version.adb", "sdl-version.ads", "sdl-video.adb", "sdl-video.ads", "uintn_ptrops.ads",
       "sdl_framebuffer.ads","sdl_framebuffer.adb","sdl_framebuffer_generics.ads","sdl_framebuffer_generics.adb");
    for Object_Dir use "./obj";
@@ -17,22 +17,9 @@ project Adasdl is
    for Library_Dir use "lib";
    for Library_Kind use "static";
 
-   package Binder is
-      for Default_Switches ("ada") use ("-g");
-   end Binder;
-
    package Compiler is
-      for Default_Switches ("ada") use ("-g");
+      for Default_Switches ("Ada") use ("-g");
    end Compiler;
-
-   package Builder is
-      for Default_Switches ("ada") use ("-g");
-   end Builder;
-
-   package Ide is
-      for Vcs_Kind use "Git";
-      for Vcs_Repository_Root use "adasdl.git.sourceforge.net/gitroot/adasdl/adasdl";
-   end Ide;
 
 end Adasdl;
 

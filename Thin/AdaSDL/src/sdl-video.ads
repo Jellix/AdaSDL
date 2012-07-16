@@ -483,7 +483,7 @@ package SDL.Video is
    --  Necessary to verify if ListModes returns
    --  a non-pointer value like 0 or -1.
    function RectPP_To_Int is new
-      Ada.Unchecked_Conversion (Rect_ptr_ptr, C.int);
+     Ada.Unchecked_Conversion (Rect_ptr_ptr, C.int);
 
    --  Necessary to manipulate C pointer from Ada
    type Rect_ptr_Array is array (C.size_t range <>)
@@ -571,16 +571,20 @@ package SDL.Video is
       screen    : Surface_ptr;
       numrects  : C.int;
       rects     : Rect_ptr);
-
    procedure UpdateRects (
       screen    : Surface_ptr;
       numrects  : C.int;
       rects     : Rects_Array);
-
    pragma Import (C, UpdateRects, "SDL_UpdateRects");
 
-
-
+   --  Makes sure the given area is updated on the given screen.
+   --  (In other words, it makes sure any changes to the given area
+   --  of the screen are made visible)
+   --  The rectangle must be confined within the screen boundaries
+   --  (no clipping is done).
+   --  If 'x', 'y', 'w' and 'h' are all 0, UpdateRect will update
+   --  the entire screen.
+   --  This function should not be called while 'screen' is locked (LockSurface).
    procedure UpdateRect (
       screen    : Surface_ptr;
       x         : Sint32;
@@ -589,6 +593,13 @@ package SDL.Video is
       h         : Uint32);
    pragma Import (C, UpdateRect, "SDL_UpdateRect");
 
+   --  Makes sure the given area is updated on the given screen.
+   --  (In other words, it makes sure any changes to the given area
+   --  of the screen are made visible)
+   --  The rectangle must be confined within the screen boundaries
+   --  (no clipping is done).
+   --  If rect is (0,0,0,0), UpdateRect will update the entire screen.
+   --  This function should not be called while 'screen' is locked (LockSurface).
    procedure Update_Rect (
       screen   : Surface_ptr;
       the_rect : Rect);
@@ -894,6 +905,7 @@ package SDL.Video is
    function LockSurface (surface : Surface_ptr) return C.int;
    pragma Import (C, LockSurface, "SDL_LockSurface");
 
+   --  Removes any hardware locks, enabling blits
    procedure UnlockSurface (surface : Surface_ptr);
    pragma Import (C, UnlockSurface, "SDL_UnlockSurface");
 

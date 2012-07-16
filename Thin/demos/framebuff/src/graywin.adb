@@ -99,8 +99,8 @@ procedure graywin is
       --  Get the bounds of the rectangle
       area.w := Uint16 (Random (Width_Generator));
       area.h := Uint16 (Random (Height_Generator));
-      area.x := Sint16 (Uint16 (X) - (area.w / 2));
-      area.y := Sint16 (Uint16 (Y) - (area.h / 2));
+      area.x := Sint16 (X - C.int(area.w / 2));
+      area.y := Sint16 (Y - C.int(area.h / 2));
       color  := Uint32 (Random (Color_Generator));
       Put_Line ("Color: " & Uint32'Image (color) & ";   " &
                 "x: " & Sint16'Image (area.x) & ";   " &

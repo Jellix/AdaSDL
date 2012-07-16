@@ -61,7 +61,7 @@ procedure showfont is
    Argument_Index : Natural := 0;
    rdiff, gdiff, bdiff : C.size_t;
 
-   DEFAULT_PTSIZE : constant := 18;
+   DEFAULT_PTSIZE : constant := 24;
    DEFAULT_TEXT : constant string :=
       "This is not complete (ÁÀÃÂáàãâ)";
    NUM_COLORS : constant := 256;
@@ -75,7 +75,7 @@ procedure showfont is
    backcol : V.Color_ptr := white;
    dstrect : V.Rect;
    --  Look for special rendering types
-   rendersolid : boolean := false;
+   rendersolid : boolean := true;
    renderstyle : TTF_STYLE := TTF_STYLE_NORMAL;
    --  Look for special execution mode
    dump : boolean := false;
@@ -85,59 +85,8 @@ procedure showfont is
    filename,
    message : string_access_type;
 
---  ####################################################
-   procedure Debug_Status (Id : string := "anonymous"; Prog_Exit : boolean := false) is
-   begin
-      Text_IO.Put_Line ("=======================================");
-      Text_IO.Put_Line ("Start Debug point: " & Id);
-      Text_IO.Put_Line ("=======================================");
-      Text_IO.Put ("backcol = (");
-      Text_IO.Put ("r =>" & Uint8'Image (backcol.r));
-      Text_IO.Put (", g =>" & Uint8'Image (backcol.g));
-      Text_IO.Put (", b =>" & Uint8'Image (backcol.b));
-      Text_IO.Put_Line (")");
-      Text_IO.Put ("forecol = (");
-      Text_IO.Put ("r =>" & Uint8'Image (forecol.r));
-      Text_IO.Put (", g =>" & Uint8'Image (forecol.g));
-      Text_IO.Put (", b =>" & Uint8'Image (forecol.b));
-      Text_IO.Put_Line (")");
-      Text_IO.Put ("rendertype = ");
-      case rendertype is
-         when RENDER_LATIN1 => Text_IO.Put ("RENDER_LATIN1; ");
-         when RENDER_UTF8 => Text_IO.Put ("RENDER_UTF8; ");
-      end case;
-      Text_IO.Put ("renderstyle = ");
-      case renderstyle is
-         when TTF_STYLE_NORMAL => Text_IO.Put ("TTF_STYLE_NORMAL; ");
-         when TTF_STYLE_BOLD => Text_IO.Put ("TTF_STYLE_BOLD; ");
-         when TTF_STYLE_ITALIC => Text_IO.Put ("TTF_STYLE_ITALIC; ");
-         when TTF_STYLE_UNDERLINE => Text_IO.Put ("TTF_STYLE_UNDERLINE; ");
-         when others => null;
-      end case;
-      Text_IO.Put      ("rendersolid = " & boolean'Image (rendersolid));
-      Text_IO.Put_Line ("; ptsize = " & C.int'Image (ptsize));
-      Text_IO.Put      ("Argument_Index = " & Integer'Image (Argument_Index));
-      Text_IO.Put_Line ("; CL.Argument_Count = " & Integer'Image (CL.Argument_Count));
-      if filename = null then
-         Text_IO.Put_Line ("No file name");
-      else
-         Text_IO.Put_Line ("filename = " & filename.all);
-      end if;
-      Text_IO.Put_Line ("dump = " & boolean'Image (dump));
-      if message = null then
-         Text_IO.Put_Line ("no message ");
-      else
-         Text_IO.Put_Line ("message = " & message.all);
-      end if;
-      Text_IO.Put_Line ("=======================================");
-      Text_IO.Put_Line ("End Debug point: " & Id);
-      Text_IO.Put_Line ("=======================================");
-      if Prog_Exit then
-         GNAT.OS_Lib.OS_Exit (0);
-      end if;
-   end Debug_Status;
+   --  ####################################################
 
---  ####################################################
    procedure Get_Commandline_Args_Phase1
       (Index         : in out Natural;
        Fore_Color,
@@ -153,8 +102,8 @@ procedure showfont is
          Index := 1;
          while (Index <= CL.Argument_Count)
                and then (CL.Argument (Index) (1) = '-') loop
-            if CL.Argument (Index) = "-solid" then
-               Render_Solid := true;
+            if CL.Argument (Index) = "-hollow" then
+               Render_Solid := false;
             elsif CL.Argument (Index) = "-utf8" then
                TypeOfRender := RENDER_UTF8;
             elsif CL.Argument (Index) = "-b" then
@@ -216,6 +165,7 @@ procedure showfont is
    end Get_Commandline_Args_Phase1;
 
    --  ###############################################
+
    procedure Get_Commandline_Args_Phase2 (
       Index : in out Natural;
       File_Name : in out string_access_type;
@@ -248,6 +198,7 @@ procedure showfont is
    end Get_Commandline_Args_Phase2;
 
    --  ####################################################
+
    procedure Get_Commandline_Args_Phase3 (
       Index : in Natural;
       The_Message : in out string_access_type) is
@@ -259,9 +210,9 @@ procedure showfont is
       end if;
    end Get_Commandline_Args_Phase3;
 
---  ####################################################
+   --  ####################################################
+
 begin  -- showfont procedure
-   Debug_Status ("#231#");
 
    Get_Commandline_Args_Phase1 (
       Argument_Index,
@@ -270,8 +221,6 @@ begin  -- showfont procedure
       rendersolid,
       renderstyle,
       rendertype);
-
-   Debug_Status ("#241#");
 
    --  Initialize SDL
    if SDL.Init (SDL.INIT_VIDEO) < 0 then
@@ -302,8 +251,6 @@ begin  -- showfont procedure
                         ": " & Er.Get_Error);
       GNAT.OS_Lib.OS_Exit (2);
    end if;
-
-   Debug_Status ("#261#");
 
    Set_Font_Style (font, renderstyle);
 
@@ -383,8 +330,6 @@ begin  -- showfont procedure
       Argument_Index,
       message);
 
-   Debug_Status ("#336#"); --  , Prog_Exit => true);
-
    case rendertype is
       when RENDER_LATIN1 =>
          if rendersolid then
@@ -427,9 +372,8 @@ begin  -- showfont procedure
       CloseFont (font);
       GNAT.OS_Lib.OS_Exit (2);
    end if;
-   Debug_Status ("#Last#"); --  , Prog_Exit => true);
-   V.UpdateRect (screen, 0, 0, 0, 0);
 
+   V.UpdateRect (screen, 0, 0, 0, 0);
 
    --  Set the text colorkey and convert to display format
    if V.SetColorKey (text, V.SRCCOLORKEY or V.RLEACCEL, 0) < 0 then

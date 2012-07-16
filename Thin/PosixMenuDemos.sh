@@ -46,7 +46,7 @@ read -p " ?" answer
 	  cd ../..
        ;;
        6) cd AdaSDL_ttf/demos
-	  ./showfont data/bullpen3.ttf
+	  ./showfont data/squealer.ttf
 	  cd ../..
        ;;
        7) cd demos/AdaSDLstandard

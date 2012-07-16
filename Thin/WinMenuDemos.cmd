@@ -88,7 +88,7 @@ goto menu
 :TtfDemo
 cd AdaSDL_ttf\demos
 echo Click randomly
-showfont data\bullpen3.ttf
+showfont data\squealer.ttf
 cd ..\..
 goto menu
 

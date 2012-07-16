@@ -55,6 +55,8 @@ package SDL is
    type Init_Flags is mod 2**32;
    pragma Convention (C, Init_Flags);
 
+   --  These are the flags which may be passed to SDL.Init(...) -- you should
+   --  specify the subsystems which you will be using in your application.
    INIT_TIMER       : constant Init_Flags := 16#00000001#;
    INIT_AUDIO       : constant Init_Flags := 16#00000010#;
    INIT_VIDEO       : constant Init_Flags := 16#00000020#;

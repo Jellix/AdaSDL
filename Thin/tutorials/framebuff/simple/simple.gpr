@@ -1,11 +1,13 @@
 with "../../../AdaSDL/adasdl.gpr";
 project simple is
 
-   for Main use ("simple00.adb","simple01.adb","simple02.adb");
+   for Main use ("simple00.adb","simple01.adb","simple02.adb",
+                 "simple03.adb","simple04.adb");
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Source_Files use ("simple00.adb","simple01.adb","simple02.adb");
+   for Source_Files use ("simple00.adb","simple01.adb","simple02.adb",
+                         "simple03.adb","simple04.adb");
 
    package Ide is
       for Vcs_Kind use "Auto";
@@ -16,7 +18,7 @@ project simple is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
+      for Default_Switches ("ada") use ("-gnato","-gnata", "-fstack-check", "-g", "-gnat95");
    end Compiler;
 
    type Devel_Environment_Type is ("penWin32","general");

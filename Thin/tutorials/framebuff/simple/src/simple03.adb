@@ -46,37 +46,39 @@ procedure Simple03 is
    package Er renames SDL.Error;
    package S  renames C.Strings;
    package Ev renames SDL.Events;
-   package Kb renames SDL.Keyboard; 
+   package Kb renames SDL.Keyboard;
    package Ks renames SDL.Keysym;
    package Fb renames SDL_Framebuffer;
-   
+
    Main_Surface : SDL.Video.Surface_ptr;
-   
+
    --  ---------------------------------
    Procedure Draw_Pixels is
    begin
-      
+
       if V.LockSurface (Main_Surface) < 0 then
          Put_Line ("Couldn't lock the display surface: " & Er.Get_Error);
          GNAT.OS_Lib.OS_Exit (2);
       end if;
-     
+
       --  Draw pixels one by one.
       for x in Natural range 50 .. 200 loop
-         Fb.Go_XY_Unchecked (Main_Surface, x,  200).all := Uint16'(Fb.MapRGB (Main_Surface.format, 16#FF#, 16#FF#, 16#FF#));
+         Fb.Go_XY_Unchecked (Main_Surface, x,  200).all :=
+           Uint16'(Fb.MapRGB (Main_Surface.format, 16#FF#, 16#FF#, 16#FF#));
       end loop;
-      
+
       for y in Natural range 150 .. 200 loop
          for x in Natural range 250 .. 300 loop
-            Fb.Go_XY_Unchecked (Main_Surface, x,  y).all := Uint16'(Fb.MapRGB (Main_Surface.format, 16#FF#, 16#00#, 16#00#));
+            Fb.Go_XY_Unchecked (Main_Surface, x,  y).all :=
+              Uint16'(Fb.MapRGB (Main_Surface.format, 16#FF#, 16#00#, 16#00#));
 	 end loop;
       end loop;
-      
+
       V.UnlockSurface (Main_Surface);
       V.UpdateRect (Main_Surface, 0, 0, 0, 0);
 
    end Draw_Pixels;
-   
+
    --  ---------------------------------
    procedure Start_Event_Management
    is
@@ -118,17 +120,17 @@ begin
                             S.Null_Ptr);
 
    Main_Surface := V.SetVideoMode (1024, 768, 16,
-                                   V.SWSURFACE or V.FULLSCREEN);
+                                   V.SWSURFACE); -- or V.FULLSCREEN);
    if Main_Surface = null then
       Put_Line ("Couldn't set video mode" &
                 S.Value (Er.GetError));
       GNAT.OS_Lib.OS_Exit (1);
    end if;
-   
+
    Draw_Pixels;
-    
+
    Start_Event_Management;
-  
+
    V.FreeSurface (Main_Surface);
 
 end Simple03;

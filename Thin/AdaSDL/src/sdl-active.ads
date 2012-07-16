@@ -43,13 +43,17 @@
 
 with SDL.Types; use SDL.Types;
 
+--  SDL application focus event handling
 package SDL.Active is
 
    --  The available application states
    type Active_State is mod 2**8;
    for Active_State'Size use 8;
+   --  The app has mouse coverage
    APPMOUSEFOCUS : constant Active_State := 16#01#;
+   --  The app has input focus
    APPINPUTFOCUS : constant Active_State := 16#02#;
+   --  The application is active
    APPACTIVE     : constant Active_State := 16#04#;
 
    --  Function prototypes
