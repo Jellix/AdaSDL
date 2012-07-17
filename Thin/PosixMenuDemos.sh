@@ -19,8 +19,8 @@ echo "................... Boring Demos ..............................."
 echo "[g] CheckKeys;      [h] TestCDRom; [i] TestError;   [j] TestThread"
 echo "[k] TestJoystick;   [l] TestKeys;  [m] TestLock;    [n] TestSemaphore"
 echo "[o] TestTimer;      [p] TestTypes; [q] TestVersion; [r] TestVideoInfo"
-echo "[s] TortureThread ; [z] LoopWave ( CTRL-C to stop)"
-echo "Choose: [0,1,2,3,4,5,6,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,z]?"
+echo "[s] TortureThread ; [t] NeHe Demos Menu [z] LoopWave ( CTRL-C to stop)"
+echo "Choose: [0,1,2,3,4,5,6,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,z]?"
 echo ###############################################################
 read -p " ?" answer
     case $answer in
@@ -139,6 +139,8 @@ read -p " ?" answer
        S|s) cd demos/AdaSDLstandard
 	  ./torturethread
 	  cd ../..
+       ;;
+       T|t) ./PosixMenuNeHe.sh
        ;;
        Z|z) cd demos/AdaSDLstandard
 	  ./loopwave data/sample.wav

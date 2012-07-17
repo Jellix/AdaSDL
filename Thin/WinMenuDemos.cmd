@@ -17,11 +17,12 @@ echo ................... Boring Demos ...............................
 echo [g] CheckKeys;      [h] TestCDRom; [i] TestError;   [j] TestThread
 echo [k] TestJoystick;   [l] TestKeys;  [m] TestLock;    [n] TestSemaphore
 echo [o] TestTimer;      [p] TestTypes; [q] TestVersion; [r] TestVideoInfo
-echo [s] TortureThread ; [z] LoopWave ( CTRL-C to stop)
+echo [s] TortureThread ; [t] NeHe Demos Menu; [z] LoopWave ( CTRL-C to stop)
 :choice
 set /P C=[0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,z]?
 echo ###############################################################
 if "%C%"=="z" goto LoopWave
+if "%C%"=="t" goto WinMenuNeHe
 if "%C%"=="s" goto TortureThread
 if "%C%"=="r" goto TestVidInfo
 if "%C%"=="q" goto TestVer
@@ -226,6 +227,10 @@ goto menu
 cd demos\AdaSDLstandard
 torturethread
 cd ..\..
+goto menu
+
+:WinMenuNeHe
+start WinMenuNeHe.cmd
 goto menu
 
 :LoopWave
