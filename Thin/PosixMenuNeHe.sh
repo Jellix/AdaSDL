@@ -1,7 +1,7 @@
 #!/bin/bash
 # simple menu to do various functions
 
-while [ answer != "0" ] 
+while [ answer != "0" ]
 do
 clear
 echo ###################### MENU ####################################
@@ -9,8 +9,8 @@ echo What would you like to do? Make a choice
 echo "----------------------------------------------------------------"
 echo "[0] Quit"
 echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon"
-echo "[3] Adding Color;  [4] Rotation"
-echo "Choose: [0,1,2,3,4]?"
+echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes"
+echo "Choose: [0,1,2,3,4,5]?"
 echo ###############################################################
 read -p " ?" answer
     case $answer in
@@ -31,8 +31,12 @@ read -p " ?" answer
 	  ./lesson04
 	  cd ../..
        ;;
+       5) cd demos/NeHe
+	  ./lesson05
+	  cd ../..
+       ;;
         *) break ;;
-   esac 
+   esac
    echo "press RETURN for menu"
    read key
 done
