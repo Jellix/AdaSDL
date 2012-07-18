@@ -72,7 +72,8 @@ procedure Lesson07 is
    LightPosition: Four_GLfloat_Vector := ( 0.0, 0.0, 2.0, 1.0 );
 
    -- Filter: GLuint;
-   Filter: Integer; --  Which Filter To Use
+   type Filter_Type is mod 3;
+   Filter: Filter_Type := 1; --  Which Filter To Use
    Texture: Three_GLuint_Vector; --  Storage for 3 textures
 
    -- These are to calculate our fps
@@ -208,7 +209,7 @@ procedure Lesson07 is
       glRotatef( yrot, 0.0, 1.0, 0.0); -- Rotate On The Y Axis
 
       -- Select A Texture Based On filter
-      glBindTexture( GL_TEXTURE_2D, Texture(Filter) );
+      glBindTexture( GL_TEXTURE_2D, Texture(Integer(Filter)));
 
       -- Start Drawing Quads
       glBegin( GL_QUADS );
@@ -453,7 +454,7 @@ procedure Lesson07 is
             done := True;
          when Ks.K_f =>
             -- pages through the different filters
-            Filter := (Filter + 1) mod 3;
+            Filter := Filter + 1;  --  Filter is mod 3
          when Ks.K_l =>
             -- this toggles the light
             Light := not Light;
