@@ -10,7 +10,7 @@
 --                Copyright (C) 2001-2012  A.M.F.Vargas              --
 --                Antonio M. M. Ferreira Vargas                      --
 --                Manhente - Barcelos - Portugal                     --
---                http://adsdl.sourceforge.net                            --
+--                http://adasdl.sourceforge.ner                      --
 --                E-mail: amfvargas@gmail.com                        --
 -- ----------------------------------------------------------------- --
 --                                                                   --
@@ -41,26 +41,38 @@ with gl_h; use gl_h;
 
 package AdaGL is
 
+   type GLubyte_Array is array (Integer range <>) of aliased GLubyte;
+   type GLbyte_Array is array (Integer range <>) of aliased GLbyte;
+   type GLushort_Array is array (Integer range <>) of aliased GLushort;
+   type GLshort_Array is array (Integer range <>) of aliased GLshort;
+   type GLuint_Array is array (Integer range <>) of aliased GLuint;
+   type GLint_Array is array (Integer range <>) of aliased GLint;
+
    function glGetString (Chars_Ref : GLenum) return String;
 
-   type Three_GLfloat_Vector is array (0 .. 2) of GLfloat;
+   type Three_GLfloat_Vector is array (0 .. 2) of aliased GLfloat;
    pragma Convention (C, Three_GLFloat_Vector);
 
-   type Four_GLfloat_Vector is array (0 .. 3) of GLfloat;
+   type Four_GLfloat_Vector is array (0 .. 3) of aliased GLfloat;
    pragma Convention (C, Four_GLFloat_Vector);
 
-   type Three_GLint_Vector is array (0 .. 2) of GLint;
+   type Three_GLint_Vector is array (0 .. 2) of aliased GLint;
    pragma Convention (C, Three_GLint_Vector);
 
-   type Four_GLint_Vector is array (0 .. 3) of GLint;
+   type Four_GLint_Vector is array (0 .. 3) of aliased GLint;
    pragma Convention (C, Four_GLint_Vector);
+
+   type Three_GLuint_Vector is array (0 .. 2) of aliased GLuint;
+   pragma Convention (C, Three_GLuint_Vector);
+
+   type Four_GLuint_Vector is array (0 .. 3) of aliased GLuint;
+   pragma Convention (C, Four_GLuint_Vector);
 
    procedure glVertex3fv (v : Three_GLFloat_Vector);
    pragma Import (C, glVertex3fv, "glVertex3fv");
 
    procedure glColor3fv (v : Three_GLFloat_Vector);
    pragma Import (C, glColor3fv, "glColor3fv");
-
 
    --  To be used with pname receiving one of:
    --      GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION
@@ -143,8 +155,6 @@ package AdaGL is
 
    pragma Import (C, glMaterialiv, "glMaterialiv");
 
-   type GLubyte_Array is array (Integer range <>) of GLubyte;
-
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -154,8 +164,6 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLubyte_Array);
-
-   type GLbyte_Array is array (Integer range <>) of GLbyte;
 
    --  type_Id = GL_BYTE
    procedure glTexImage1D (target         : GLenum;
@@ -167,7 +175,7 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLbyte_Array);
 
-   type GLushort_Array is array (Integer range <>) of GLushort;
+
 
    --  type_Id = GL_UNSIGNED_SHORT
    procedure glTexImage1D (target         : GLenum;
@@ -179,8 +187,6 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLushort_Array);
 
-   type GLshort_Array is array (Integer range <>) of GLshort;
-
    --  type_Id = GL_SHORT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -191,8 +197,6 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLshort_Array);
 
-   type GLuint_Array is array (Integer range <>) of GLuint;
-
    --  type_Id = GL_UNSIGNED_INT
    procedure glTexImage1D (target         : GLenum;
                            level          : GLint;
@@ -202,8 +206,6 @@ package AdaGL is
                            format         : GLenum;
                            type_Id        : GLenum;
                            pixels         : GLuint_Array);
-
-   type GLint_Array is array (Integer range <>) of GLint;
 
    --  type_Id = GL_INT;
    procedure glTexImage1D (target         : GLenum;
@@ -359,5 +361,8 @@ package AdaGL is
                            pixels  : GLfloat_Array);
 
    pragma Import (C, glDrawPixels, "glDrawPixels");
+
+   procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLenum);
+   pragma Import (C, glTexParameteri, "glTexParameteri");
 
 end AdaGL;
