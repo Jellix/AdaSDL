@@ -156,7 +156,7 @@ package SDL.Video is
          format : PixelFormat_ptr;  --  Read-only
          w, h : C.int;              --  Read-only
          pitch : Uint16;            --  Read-only
-         pixels : System.Address;  --  Read-write
+         pixels : System.Address;   --  Read-write
          offset : C.int;            --  Private
 
          --  Hardware-specific surface info

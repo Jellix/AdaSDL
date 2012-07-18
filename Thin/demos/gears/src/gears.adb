@@ -6,8 +6,8 @@
 --  Conversion to Ada + SDL, and extensions, written by:
 --     Antonio M. Ferreira Vargas;
 --     Manhente - Barcelos - Portugal
---     email: amfv@sapo.pt
---     http://ada.chavedigital.net
+--     email: amfvargas@gmail.com
+--     http://adasdl.sourceforge.net
 --  -----------------------------------------------------
 
 --  This program is in the public domain

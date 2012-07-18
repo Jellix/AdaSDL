@@ -9,8 +9,9 @@ echo What would you like to do? Make a choice
 echo "----------------------------------------------------------------"
 echo "[0] Quit"
 echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon"
-echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes"
-echo "Choose: [0,1,2,3,4,5]?"
+echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping"
+echo "[7] Texture Filters, Lighting & Keyboard Control"
+echo "Choose: [0,1,2,3,4,5,6,7]?"
 echo ###############################################################
 read -p " ?" answer
     case $answer in
@@ -33,6 +34,14 @@ read -p " ?" answer
        ;;
        5) cd demos/NeHe
 	  ./lesson05
+	  cd ../..
+       ;;
+       6) cd demos/NeHe
+	  ./lesson06
+	  cd ../..
+       ;;
+       7) cd demos/NeHe
+	  ./lesson07
 	  cd ../..
        ;;
         *) break ;;

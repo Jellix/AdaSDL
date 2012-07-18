@@ -21,7 +21,7 @@
 -- ----------------------------------------------------------------- --
 -- This is a translation, to the Ada programming language, of the    --
 -- original C test files written by Sam Lantinga - www.libsdl.org    --
--- translation made by Antonio F. Vargas - amfv@sapo.pt              --
+-- translation made by Antonio F. Vargas - amfvargas@gmail.com       --
 -- ----------------------------------------------------------------- --
 
 --  Simple program:  Loop, watching keystrokes

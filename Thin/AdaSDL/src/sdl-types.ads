@@ -32,15 +32,6 @@
 -- executable file  might be covered by the  GNU Public License.     --
 -- ----------------------------------------------------------------- --
 
---  **************************************************************** --
---  This is an Ada binding to SDL ( Simple DirectMedia Layer from    --
---  Sam Lantinga - www.libsld.org )                                  --
---  **************************************************************** --
---  In order to help the Ada programmer, the comments in this file   --
---  are, in great extent, a direct copy of the original text in the  --
---  SDL header files.                                                --
---  **************************************************************** --
-
 with System.Address_To_Access_Conversions;
 with Interfaces.C;
 with Interfaces.C.Strings;
