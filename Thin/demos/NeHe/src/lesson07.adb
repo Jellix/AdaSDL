@@ -1,23 +1,30 @@
---  -----------------------------------------------------
---     Copyright (C)2001-2012 by:
+---------------------------------------------------------
+-- This is a port to AdaSDL of the NeHe Lessons
+-- Author of the Port:
 --     Antonio F. Vargas - Manhente - Barcelos - Portugal
 --     mailto: amfvargas@gmail.com
 --     http://adasdl.sourceforge.net
---  -----------------------------------------------------
-
---  This program is in the public domain
-
---  -----------------------------------------------------
+---------------------------------------------------------
+--  Credits to previous authors:
+--     The author of the NeHe Lessons and code written in C
+--     (for Windows) was Jeff Molofee 1999. http://nehe.gamedev.net/
+--
+--     Then a port to C Linux/SDL was made by Ti Leggett 2001
+--
+--  ------------------------------------------------------
+--                   AdaSDL specific notes:
+--  ------------------------------------------------------
 --  Command line options:
 --      -info      Print GL implementation information
 --                 (this is the original option).
---      -slow      To slow down velocity under acelerated
+--      -slow      To slow down velocity under accelerated
 --                 hardware.
---      -fullscreen  GUI fullscreen. Window mode is the default.
+--      -fullscreen  GUI full screen. Window mode is the default.
 --      -800x600   To create a video display of 800 by 600
 --                 the default mode is 640x480
 --      -1024x768  To create a video display of 1024 by 768
 --  -----------------------------------------------------
+
 with System.Address_To_Access_Conversions;
 with Interfaces.C;
 with Ada.Numerics.Generic_Elementary_Functions;
@@ -52,6 +59,22 @@ procedure Lesson07 is
    package Tm  renames SDL.Timer;
    use type Ks.SDLMod;
 
+
+   --  ===================================================================
+
+   screen : Vd.Surface_ptr;
+   done   : Boolean;
+   Screen_Width : C.int := 640;
+   Screen_Hight : C.int := 480;
+
+   Slowly      : Boolean := False;
+   Info        : Boolean := False;
+   Full_Screen : Boolean := False;
+   argc        : Integer := CL.Argument_Count;
+   Video_Flags : Vd.Surface_Flags := 0;
+   Initialization_Flags : SDL.Init_Flags := 0;
+
+   -- Nehe variables
    Light: Boolean := false;
    --  This is a SDL surface
    --  Surface: Vd.Surface_ptr;
@@ -193,6 +216,86 @@ procedure Lesson07 is
    end Load_Textures;
 
    --  ===================================================================
+
+   procedure Init_GL (info : Boolean) is
+      No_Texture_Loaded: Exception;
+   begin
+
+      -- Load in the texture */
+      if not Load_Textures then
+         raise No_Texture_Loaded;
+      end if;
+
+    -- Enable Texture Mapping ( NEW )
+    glEnable( GL_TEXTURE_2D );
+
+    -- Enable smooth shading
+    glShadeModel( GL_SMOOTH );
+
+    -- Set the background black
+    glClearColor( 0.0, 0.0, 0.0, 0.0 );
+
+    -- Depth buffer setup
+    glClearDepth( 1.0 );
+
+    -- Enables Depth Testing
+    glEnable( GL_DEPTH_TEST );
+
+    -- The Type Of Depth Test To Do
+    glDepthFunc( GL_LEQUAL );
+
+    -- Really Nice Perspective Calculations
+    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+
+    -- Setup The Ambient Light
+    glLightfv( GL_LIGHT1, GL_AMBIENT, LightAmbient );
+
+    -- Setup The Diffuse Light
+    glLightfv( GL_LIGHT1, GL_DIFFUSE, LightDiffuse );
+
+    -- Position The Light
+    glLightfv( GL_LIGHT1, GL_POSITION, LightPosition );
+
+    -- Enable Light One
+    glEnable( GL_LIGHT1 );
+
+   end Init_GL;
+
+   --  ===================================================================
+   --  New window size of exposure
+   procedure Resize_Window (width : C.int; height : C.int) is
+      -- Height / width ration
+      my_height: C.int:=height;
+      ratio: GLdouble;
+   begin
+      -- Protect against a divide by zero
+      if my_height = 0
+      then
+         my_height := 1;
+      end if;
+
+      ratio := GLdouble(width) / GLdouble(my_height);
+
+      -- Setup our viewport.
+      glViewport( 0, 0, GLsizei(width), GLsizei(my_height));
+
+      -- change to the projection matrix and set our viewing volume.
+      glMatrixMode( GL_PROJECTION );
+      glLoadIdentity;
+
+      -- Set our perspective
+      gluPerspective( 45.0, ratio, 0.1, 100.0 );
+
+      -- Make sure we're chaning the model view and not the projection
+      glMatrixMode( GL_MODELVIEW );
+
+      -- Reset The View
+      glLoadIdentity;
+
+   end Resize_Window;
+
+   --  ===================================================================
+
    procedure Draw_Scene is
    begin
 
@@ -316,103 +419,10 @@ procedure Lesson07 is
 
    --  ===================================================================
 
-   procedure Init (info : Boolean) is
-      No_Texture_Loaded: Exception;
-   begin
-
-      -- Load in the texture */
-      if not Load_Textures then
-         raise No_Texture_Loaded;
-      end if;
-
-    -- Enable Texture Mapping ( NEW )
-    glEnable( GL_TEXTURE_2D );
-
-    -- Enable smooth shading
-    glShadeModel( GL_SMOOTH );
-
-    -- Set the background black
-    glClearColor( 0.0, 0.0, 0.0, 0.0 );
-
-    -- Depth buffer setup
-    glClearDepth( 1.0 );
-
-    -- Enables Depth Testing
-    glEnable( GL_DEPTH_TEST );
-
-    -- The Type Of Depth Test To Do
-    glDepthFunc( GL_LEQUAL );
-
-    -- Really Nice Perspective Calculations
-    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-
-    -- Setup The Ambient Light
-    glLightfv( GL_LIGHT1, GL_AMBIENT, LightAmbient );
-
-    -- Setup The Diffuse Light
-    glLightfv( GL_LIGHT1, GL_DIFFUSE, LightDiffuse );
-
-    -- Position The Light
-    glLightfv( GL_LIGHT1, GL_POSITION, LightPosition );
-
-    -- Enable Light One
-    glEnable( GL_LIGHT1 );
-
-   end Init;
-
-   --  ===================================================================
-
    procedure Idle is
    begin
       null;
    end Idle;
-
-   --  ===================================================================
-   --  New window size of exposure
-   procedure Resize_Window (width : C.int; height : C.int) is
-      -- Height / width ration
-      my_height: C.int:=height;
-      ratio: GLdouble;
-   begin
-      -- Protect against a divide by zero
-      if my_height = 0
-      then
-         my_height := 1;
-      end if;
-
-      ratio := GLdouble(width) / GLdouble(my_height);
-
-      -- Setup our viewport.
-      glViewport( 0, 0, GLsizei(width), GLsizei(my_height));
-
-      -- change to the projection matrix and set our viewing volume.
-      glMatrixMode( GL_PROJECTION );
-      glLoadIdentity;
-
-      -- Set our perspective
-      gluPerspective( 45.0, ratio, 0.1, 100.0 );
-
-      -- Make sure we're chaning the model view and not the projection
-      glMatrixMode( GL_MODELVIEW );
-
-      -- Reset The View
-      glLoadIdentity;
-
-   end Resize_Window;
-
-   --  ===================================================================
-
-   screen : Vd.Surface_ptr;
-   done   : Boolean;
-   Screen_Width : C.int := 640;
-   Screen_Hight : C.int := 480;
-
-   Slowly      : Boolean := False;
-   Info        : Boolean := False;
-   Full_Screen : Boolean := False;
-   argc        : Integer := CL.Argument_Count;
-   Video_Flags : Vd.Surface_Flags := 0;
-   Initialization_Flags : SDL.Init_Flags := 0;
 
    --  ===================================================================
    procedure Manage_Command_Line is
@@ -465,22 +475,22 @@ procedure Lesson07 is
             end if;
          when Ks.K_PAGEUP =>
             -- zooms into the scene
-            z := z - 0.02;
+            z := z - 0.05;
          when Ks.K_PAGEDOWN =>
             --  zooms out of the scene
-            z := z + 0.02;
+            z := z + 0.05;
             when Ks.K_UP =>
             --  affects the x rotation
-            xspeed := xspeed - 0.01;
+            xspeed := xspeed - 0.02;
          when Ks.K_DOWN =>
             --  affects the x rotation
-            xspeed := xspeed + 0.01;
+            xspeed := xspeed + 0.02;
          when Ks.K_RIGHT =>
             --  affects the y rotation
-            yspeed := yspeed + 0.01;
+            yspeed := yspeed + 0.02;
          when Ks.K_LEFT =>
             --  affects the y rotation
-            yspeed := yspeed - 0.01;
+            yspeed := yspeed - 0.02;
          when Ks.K_F1 =>
             --  toggles fullscreen mode
             if Vd.WM_ToggleFullScreen( screen ) = 0 then
@@ -561,7 +571,7 @@ begin
 
    Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
 
-   Init (Info);
+   Init_GL (Info);
 
    Resize_Window (screen.w, screen.h);
    done := False;
