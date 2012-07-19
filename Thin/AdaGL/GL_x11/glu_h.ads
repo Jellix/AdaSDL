@@ -256,6 +256,7 @@ package glu_h is
                                 textureCoords : Gl_H.GLboolean);
 
    type glu_h_proc_1 is access procedure;
+   Pragma Convention(C, glu_h_proc_1);  --  Added by AMFVargas
 
    procedure gluQuadricCallback (qobj  : access GLUquadricObj;
                                  which : Gl_H.GLenum;
@@ -330,6 +331,7 @@ package glu_h is
                           type_Id  : Gl_H.GLenum);
 
    type glu_h_proc_2 is access procedure;
+   pragma Convention(C, glu_h_proc_2); --  Added by AMFVargas
 
    procedure gluNurbsCallback (nobj  : access GLUnurbsObj;
                                which : Gl_H.GLenum;
@@ -342,6 +344,7 @@ package glu_h is
    function gluNewTess return GLUtriangulatorObj_Ptr;
 
    type glu_h_proc_3 is access procedure;
+   pragma Convention(C, glu_h_proc_3);  --  Added by AMFVargas
 
    procedure gluTessCallback (tobj  : access GLUtriangulatorObj;
                               which : Gl_H.GLenum;

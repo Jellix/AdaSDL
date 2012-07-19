@@ -114,28 +114,29 @@ procedure Lesson07 is
       --SDL_Surface *TextureImage[1];
       Texture_Image:  array (0..0) of Vd.Surface_ptr;
 
+
    begin
 
       --  Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
       Texture_Image(0) := Vd.LoadBMP( "data/crate.bmp" );
       if  Texture_Image(0) /= Vd.null_Surface_ptr
       then
-         --  Set the status to true
-         Status := true;
-
-         -- Create The Texture
-         glGenTextures( 3, Texture(0)'access );
-
-         --  Load in texture 1
-         --  Typical Texture Generation Using Data From The Bitmap
-         glBindTexture( GL_TEXTURE_2D, Texture(0) );
-
          declare
             subtype GLubytes_Type is GLubyte_Array
               (0 .. Integer(Texture_Image(0).w * Texture_Image(0).h -1));
             package GLubytes_Address is
               new System.Address_To_Access_Conversions(GLubytes_Type);
          begin
+            --  Set the status to true
+            Status := true;
+
+            -- Create The Texture
+            glGenTextures( 3, Texture(0)'access );
+
+            --  Load in texture 1
+            --  Typical Texture Generation Using Data From The Bitmap
+            glBindTexture( GL_TEXTURE_2D, Texture(0) );
+
 
             -- Nearest Filtering
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -152,18 +153,10 @@ procedure Lesson07 is
               GLubytes_Address.To_Pointer(
                 Texture_Image(0).pixels).all );
 
-         end;
 
-         --  Load in texture 2
-         --  Typical Texture Generation Using Data From The Bitmap
-         glBindTexture( GL_TEXTURE_2D, Texture(1) );
-
-         declare
-            subtype GLubytes_Type is GLubyte_Array
-              (0 .. Integer(Texture_Image(0).w * Texture_Image(0).h -1));
-            package GLubytes_Address is
-              new System.Address_To_Access_Conversions(GLubytes_Type);
-         begin
+            --  Load in texture 2
+            --  Typical Texture Generation Using Data From The Bitmap
+            glBindTexture( GL_TEXTURE_2D, Texture(1) );
 
             -- Linear Filtering
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -177,18 +170,11 @@ procedure Lesson07 is
               GL_UNSIGNED_BYTE,
               GLubytes_Address.To_Pointer(
                 Texture_Image(0).pixels).all );
-         end;
 
-         --  Load in texture 3
-         --  Typical Texture Generation Using Data From The Bitmap
-         glBindTexture( GL_TEXTURE_2D, Texture(2) );
+            --  Load in texture 3
+            --  Typical Texture Generation Using Data From The Bitmap
+            glBindTexture( GL_TEXTURE_2D, Texture(2) );
 
-         declare
-            subtype GLubytes_Type is GLubyte_Array
-              (0 .. Integer(Texture_Image(0).w * Texture_Image(0).h -1));
-            package GLubytes_Address is
-              new System.Address_To_Access_Conversions(GLubytes_Type);
-         begin
 
             -- Mipmapped Filtering
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -204,13 +190,12 @@ procedure Lesson07 is
               GLubytes_Address.To_Pointer(
                 Texture_Image(0).pixels).all );
 
-         end;
-
-         -- Free up any memory we may have used
-         if Texture_Image(0) /= Vd.null_Surface_ptr
-         then
-            Vd.FreeSurface( Texture_Image(0) );
-         end if;
+            -- Free up any memory we may have used
+            if Texture_Image(0) /= Vd.null_Surface_ptr
+            then
+               Vd.FreeSurface( Texture_Image(0) );
+            end if;
+         end; -- declare
       end if;
       return Status;
    end Load_Textures;
@@ -226,38 +211,38 @@ procedure Lesson07 is
          raise No_Texture_Loaded;
       end if;
 
-    -- Enable Texture Mapping ( NEW )
-    glEnable( GL_TEXTURE_2D );
+      -- Enable Texture Mapping ( NEW )
+      glEnable( GL_TEXTURE_2D );
 
-    -- Enable smooth shading
-    glShadeModel( GL_SMOOTH );
+      -- Enable smooth shading
+      glShadeModel( GL_SMOOTH );
 
-    -- Set the background black
-    glClearColor( 0.0, 0.0, 0.0, 0.0 );
+      -- Set the background black
+      glClearColor( 0.0, 0.0, 0.0, 0.0 );
 
-    -- Depth buffer setup
-    glClearDepth( 1.0 );
+      -- Depth buffer setup
+      glClearDepth( 1.0 );
 
-    -- Enables Depth Testing
-    glEnable( GL_DEPTH_TEST );
+      -- Enables Depth Testing
+      glEnable( GL_DEPTH_TEST );
 
-    -- The Type Of Depth Test To Do
-    glDepthFunc( GL_LEQUAL );
+      -- The Type Of Depth Test To Do
+      glDepthFunc( GL_LEQUAL );
 
-    -- Really Nice Perspective Calculations
-    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+      -- Really Nice Perspective Calculations
+      glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 
-    -- Setup The Ambient Light
-    glLightfv( GL_LIGHT1, GL_AMBIENT, LightAmbient );
+      -- Setup The Ambient Light
+      glLightfv( GL_LIGHT1, GL_AMBIENT, LightAmbient );
 
-    -- Setup The Diffuse Light
-    glLightfv( GL_LIGHT1, GL_DIFFUSE, LightDiffuse );
+      -- Setup The Diffuse Light
+      glLightfv( GL_LIGHT1, GL_DIFFUSE, LightDiffuse );
 
-    -- Position The Light
-    glLightfv( GL_LIGHT1, GL_POSITION, LightPosition );
+      -- Position The Light
+      glLightfv( GL_LIGHT1, GL_POSITION, LightPosition );
 
-    -- Enable Light One
-    glEnable( GL_LIGHT1 );
+      -- Enable Light One
+      glEnable( GL_LIGHT1 );
 
    end Init_GL;
 
