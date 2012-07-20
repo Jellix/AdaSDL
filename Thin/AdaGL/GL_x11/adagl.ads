@@ -365,4 +365,22 @@ package AdaGL is
    procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLenum);
    pragma Import (C, glTexParameteri, "glTexParameteri");
 
+   function gluBuild2DMipmaps
+     (target     : Gl_H.GLenum;
+      components : Gl_H.GLint;
+      width      : Gl_H.GLint;
+      height     : Gl_H.GLint;
+      format     : Gl_H.GLenum;
+      type_Id    : Gl_H.GLenum;
+      data       : GLubyte_Array) return Gl_H.GLint;
+   procedure gluBuild2DMipmaps
+     (target     : Gl_H.GLenum;
+      components : Gl_H.GLint;
+      width      : Gl_H.GLint;
+      height     : Gl_H.GLint;
+      format     : Gl_H.GLenum;
+      type_Id    : Gl_H.GLenum;
+      data       : GLubyte_Array);
+   pragma Import (C, gluBuild2DMipmaps, "gluBuild2DMipmaps");
+
 end AdaGL;
