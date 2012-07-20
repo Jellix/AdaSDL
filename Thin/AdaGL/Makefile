@@ -24,12 +24,11 @@ conf2x11:
 	cp -R GL_x11/* src/
 
 C_To_StdCall:
-	sed 's/pragma Import [(]C,/pragma Import \(StdCall,/Ig' GL_x11/gl_h.ads > GL_w32/gl_h.ads
-	sed 's/pragma Import [(]C,/pragma Import \(StdCall,/Ig' GL_x11/glu_h.ads > GL_w32/glu_h.ads
-	sed 's/pragma Import [(]C,/pragma Import \(StdCall,/Ig' GL_x11/adagl.adb > GL_w32/adagl.adb
-	sed 's/pragma Import [(]C,/pragma Import \(StdCall,/Ig' GL_x11/adagl.ads > GL_w32/adagl.ads
+	for F in gl_h.ads glu_h.ads adagl.ads adagl.adb; do \
+	sed -E 's/pragma[[:space:]]+Import[[:space:]]*[(][[:space:]]*C[[:space:]]*,/pragma Import \(StdCall,/Ig' GL_x11/$$F > GL_w32/$$F; \
+	echo $$F ; \
+	done
 
-	
 conf2w32:
 	rm -f make.conf
 	rm -f -R src/*
