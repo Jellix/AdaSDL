@@ -6,12 +6,13 @@ echo ###################### MENU ####################################
 echo What would you like to do? Make a choice (Select a Demo)
 echo ----------------------------------------------------------------
 echo [0] Quit
-echo [1] Setting Up An OpenGL Window; [2] Your First Polygon
-echo [3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping
-echo [7] Texture Filters, Lighting & Keyboard Control
+echo [1] Setting Up An OpenGL Window; [2] Your First Polygon;
+echo [3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping;
+echo [7] Texture Filters, Lighting & Keyboard Control; [8] Belnding;
 :choice
-set /P C=[0,1,2,3,4,5,6,7]?
+set /P C=[0,1,2,3,4,5,6,7,8]?
 echo ###############################################################
+if "%C%"=="8" goto Lesson08
 if "%C%"=="7" goto Lesson07
 if "%C%"=="6" goto Lesson06
 if "%C%"=="5" goto Lesson05
@@ -61,6 +62,12 @@ goto menu
 :Lesson07
 cd demos\NeHe
 lesson07
+cd ..\..
+goto menu
+
+:Lesson08
+cd demos\NeHe
+lesson08
 cd ..\..
 goto menu
 

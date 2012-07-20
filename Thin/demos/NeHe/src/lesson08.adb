@@ -42,7 +42,7 @@ with gl_h; use gl_h;
 with glu_h; use glu_h;
 with AdaGL; use AdaGL;
 
-procedure Lesson07 is
+procedure Lesson08 is
 
    package CL renames Ada.Command_Line;
    package C  renames Interfaces.C;
@@ -76,6 +76,7 @@ procedure Lesson07 is
 
    -- Nehe variables
    Light: Boolean := false;
+   Blend: Boolean := false;
    --  This is a SDL surface
    --  Surface: Vd.Surface_ptr;
 
@@ -117,7 +118,7 @@ procedure Lesson07 is
    begin
 
       --  Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
-      Texture_Image(0) := Vd.LoadBMP( "data/crate.bmp" );
+      Texture_Image(0) := Vd.LoadBMP( "data/glass.bmp" );
       if  Texture_Image(0) /= Vd.null_Surface_ptr
       then
          declare
@@ -158,8 +159,10 @@ procedure Lesson07 is
             glBindTexture( GL_TEXTURE_2D, Texture(1) );
 
             -- Linear Filtering
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                            GL_LINEAR );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                            GL_LINEAR );
 
             --  Generate The Texture
             glTexImage2D( GL_TEXTURE_2D, 0, 3,
@@ -174,18 +177,26 @@ procedure Lesson07 is
             --  Typical Texture Generation Using Data From The Bitmap
             glBindTexture( GL_TEXTURE_2D, Texture(2) );
 
-
             -- Mipmapped Filtering
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                             GL_LINEAR_MIPMAP_NEAREST );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                            GL_LINEAR );
 
-            --  Generate The MipMapped Texture ( NEW )
+            --  Generate The MipMapped Texture
             glTexImage2D( GL_TEXTURE_2D, 0, 3,
               GLsizei(Texture_Image(0).w),
               GLsizei(Texture_Image(0).h),
               0, GL_BGR,
               GL_UNSIGNED_BYTE,
+              GLubytes_Address.To_Pointer(
+                Texture_Image(0).pixels).all );
+
+            -- Generate The MipMapped Texture ( NEW )
+            gluBuild2DMipmaps( GL_TEXTURE_2D, 3,
+              GLint(Texture_Image(0).w),
+              GLint(Texture_Image(0).h),
+              GL_BGR,GL_UNSIGNED_BYTE,
               GLubytes_Address.To_Pointer(
                 Texture_Image(0).pixels).all );
 
@@ -242,6 +253,12 @@ procedure Lesson07 is
 
       -- Enable Light One
       glEnable( GL_LIGHT1 );
+
+      -- Full Brightness, 50% Alpha ( NEW )
+      glColor4f( 1.0, 1.0, 1.0, 0.5);
+
+      -- Blending Function For Translucency Based On Source Alpha Value
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE );
 
    end Init_GL;
 
@@ -446,6 +463,16 @@ procedure Lesson07 is
       case keysym.sym is
          when Ks.K_ESCAPE =>
             done := True;
+         when Ks.K_b =>
+            --  toggles blending
+            Blend := not Blend;
+            if Blend then
+               glEnable(GL_BLEND);
+               glDisable(GL_DEPTH_TEST);
+            else
+               glDisable(GL_BLEND);
+               glEnable(GL_DEPTH_TEST);
+            end if;
          when Ks.K_f =>
             -- pages through the different filters
             Filter := Filter + 1;  --  Filter is mod 3
@@ -563,4 +590,4 @@ begin
    Main_System_Loop;
 
    SDL.SDL_Quit;
-end Lesson07;
+end Lesson08;
