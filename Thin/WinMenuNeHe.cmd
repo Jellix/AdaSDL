@@ -5,10 +5,10 @@ goto menu
 echo ###################### MENU ####################################
 echo What would you like to do? Make a choice (Select a Demo)
 echo ----------------------------------------------------------------
-echo [0] Quit
-echo [1] Setting Up An OpenGL Window; [2] Your First Polygon;
-echo [3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping;
-echo [7] Texture Filters, Lighting & Keyboard Control; [8] Belnding;
+echo "[0] Quit"
+echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon;"
+echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping;"
+echo "[7] Texture Filters, Lighting & Keyboard Control; [8] Belnding;"
 :choice
 set /P C=[0,1,2,3,4,5,6,7,8]?
 echo ###############################################################

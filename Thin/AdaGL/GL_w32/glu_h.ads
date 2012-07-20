@@ -5,7 +5,7 @@ with Interfaces.C.Extensions;
 with gl_h;
 
 package glu_h is
-   --   $Id: glu_h.ads,v 1.1.1.1 2001/04/11 01:21:47 afvargas Exp $
+   --   $Id: glu_h.ads,v 1.1.1.1 2001/04/11 01:22:08 afvargas Exp $
    --
    --  Mesa 3-D graphics library
    --  Version:  3.0
@@ -28,7 +28,7 @@ package glu_h is
 
    --
    --  $Log: glu_h.ads,v $
-   --  Revision 1.1.1.1  2001/04/11 01:21:47  afvargas
+   --  Revision 1.1.1.1  2001/04/11 01:22:08  afvargas
    --
    --
    --  Revision 1.1  1999/09/24 08:37:15  briot
@@ -256,6 +256,7 @@ package glu_h is
                                 textureCoords : Gl_H.GLboolean);
 
    type glu_h_proc_1 is access procedure;
+   Pragma Convention(C, glu_h_proc_1);  --  Added by AMFVargas
 
    procedure gluQuadricCallback (qobj  : access GLUquadricObj;
                                  which : Gl_H.GLenum;
@@ -330,6 +331,7 @@ package glu_h is
                           type_Id  : Gl_H.GLenum);
 
    type glu_h_proc_2 is access procedure;
+   pragma Convention(C, glu_h_proc_2); --  Added by AMFVargas
 
    procedure gluNurbsCallback (nobj  : access GLUnurbsObj;
                                which : Gl_H.GLenum;
@@ -342,6 +344,7 @@ package glu_h is
    function gluNewTess return GLUtriangulatorObj_Ptr;
 
    type glu_h_proc_3 is access procedure;
+   pragma Convention(C, glu_h_proc_3);  --  Added by AMFVargas
 
    procedure gluTessCallback (tobj  : access GLUtriangulatorObj;
                               which : Gl_H.GLenum;
@@ -363,50 +366,50 @@ package glu_h is
 
 private
 
-   pragma Import (Stdcall, gluLookAt, "gluLookAt");
-   pragma Import (Stdcall, gluOrtho2D, "gluOrtho2D");
-   pragma Import (Stdcall, gluPerspective, "gluPerspective");
-   pragma Import (Stdcall, gluPickMatrix, "gluPickMatrix");
-   pragma Import (Stdcall, gluProject, "gluProject");
-   pragma Import (Stdcall, gluUnProject, "gluUnProject");
-   pragma Import (Stdcall, gluErrorString, "gluErrorString");
-   pragma Import (Stdcall, gluScaleImage, "gluScaleImage");
-   pragma Import (Stdcall, gluBuild1DMipmaps, "gluBuild1DMipmaps");
-   pragma Import (Stdcall, gluBuild2DMipmaps, "gluBuild2DMipmaps");
-   pragma Import (Stdcall, gluNewQuadric, "gluNewQuadric");
-   pragma Import (Stdcall, gluDeleteQuadric, "gluDeleteQuadric");
-   pragma Import (Stdcall, gluQuadricDrawStyle, "gluQuadricDrawStyle");
-   pragma Import (Stdcall, gluQuadricOrientation, "gluQuadricOrientation");
-   pragma Import (Stdcall, gluQuadricNormals, "gluQuadricNormals");
-   pragma Import (Stdcall, gluQuadricTexture, "gluQuadricTexture");
-   pragma Import (Stdcall, gluQuadricCallback, "gluQuadricCallback");
-   pragma Import (Stdcall, gluCylinder, "gluCylinder");
-   pragma Import (Stdcall, gluSphere, "gluSphere");
-   pragma Import (Stdcall, gluDisk, "gluDisk");
-   pragma Import (Stdcall, gluPartialDisk, "gluPartialDisk");
-   pragma Import (Stdcall, gluNewNurbsRenderer, "gluNewNurbsRenderer");
-   pragma Import (Stdcall, gluDeleteNurbsRenderer, "gluDeleteNurbsRenderer");
-   pragma Import (Stdcall, gluLoadSamplingMatrices, "gluLoadSamplingMatrices");
-   pragma Import (Stdcall, gluNurbsProperty, "gluNurbsProperty");
-   pragma Import (Stdcall, gluGetNurbsProperty, "gluGetNurbsProperty");
-   pragma Import (Stdcall, gluBeginCurve, "gluBeginCurve");
-   pragma Import (Stdcall, gluEndCurve, "gluEndCurve");
-   pragma Import (Stdcall, gluNurbsCurve, "gluNurbsCurve");
-   pragma Import (Stdcall, gluBeginSurface, "gluBeginSurface");
-   pragma Import (Stdcall, gluEndSurface, "gluEndSurface");
-   pragma Import (Stdcall, gluNurbsSurface, "gluNurbsSurface");
-   pragma Import (Stdcall, gluBeginTrim, "gluBeginTrim");
-   pragma Import (Stdcall, gluEndTrim, "gluEndTrim");
-   pragma Import (Stdcall, gluPwlCurve, "gluPwlCurve");
-   pragma Import (Stdcall, gluNurbsCallback, "gluNurbsCallback");
-   pragma Import (Stdcall, gluNewTess, "gluNewTess");
-   pragma Import (Stdcall, gluTessCallback, "gluTessCallback");
-   pragma Import (Stdcall, gluDeleteTess, "gluDeleteTess");
-   pragma Import (Stdcall, gluBeginPolygon, "gluBeginPolygon");
-   pragma Import (Stdcall, gluEndPolygon, "gluEndPolygon");
-   pragma Import (Stdcall, gluNextContour, "gluNextContour");
-   pragma Import (Stdcall, gluTessVertex, "gluTessVertex");
-   pragma Import (Stdcall, gluGetString, "gluGetString");
+   pragma Import (StdCall, gluLookAt, "gluLookAt");
+   pragma Import (StdCall, gluOrtho2D, "gluOrtho2D");
+   pragma Import (StdCall, gluPerspective, "gluPerspective");
+   pragma Import (StdCall, gluPickMatrix, "gluPickMatrix");
+   pragma Import (StdCall, gluProject, "gluProject");
+   pragma Import (StdCall, gluUnProject, "gluUnProject");
+   pragma Import (StdCall, gluErrorString, "gluErrorString");
+   pragma Import (StdCall, gluScaleImage, "gluScaleImage");
+   pragma Import (StdCall, gluBuild1DMipmaps, "gluBuild1DMipmaps");
+   pragma Import (StdCall, gluBuild2DMipmaps, "gluBuild2DMipmaps");
+   pragma Import (StdCall, gluNewQuadric, "gluNewQuadric");
+   pragma Import (StdCall, gluDeleteQuadric, "gluDeleteQuadric");
+   pragma Import (StdCall, gluQuadricDrawStyle, "gluQuadricDrawStyle");
+   pragma Import (StdCall, gluQuadricOrientation, "gluQuadricOrientation");
+   pragma Import (StdCall, gluQuadricNormals, "gluQuadricNormals");
+   pragma Import (StdCall, gluQuadricTexture, "gluQuadricTexture");
+   pragma Import (StdCall, gluQuadricCallback, "gluQuadricCallback");
+   pragma Import (StdCall, gluCylinder, "gluCylinder");
+   pragma Import (StdCall, gluSphere, "gluSphere");
+   pragma Import (StdCall, gluDisk, "gluDisk");
+   pragma Import (StdCall, gluPartialDisk, "gluPartialDisk");
+   pragma Import (StdCall, gluNewNurbsRenderer, "gluNewNurbsRenderer");
+   pragma Import (StdCall, gluDeleteNurbsRenderer, "gluDeleteNurbsRenderer");
+   pragma Import (StdCall, gluLoadSamplingMatrices, "gluLoadSamplingMatrices");
+   pragma Import (StdCall, gluNurbsProperty, "gluNurbsProperty");
+   pragma Import (StdCall, gluGetNurbsProperty, "gluGetNurbsProperty");
+   pragma Import (StdCall, gluBeginCurve, "gluBeginCurve");
+   pragma Import (StdCall, gluEndCurve, "gluEndCurve");
+   pragma Import (StdCall, gluNurbsCurve, "gluNurbsCurve");
+   pragma Import (StdCall, gluBeginSurface, "gluBeginSurface");
+   pragma Import (StdCall, gluEndSurface, "gluEndSurface");
+   pragma Import (StdCall, gluNurbsSurface, "gluNurbsSurface");
+   pragma Import (StdCall, gluBeginTrim, "gluBeginTrim");
+   pragma Import (StdCall, gluEndTrim, "gluEndTrim");
+   pragma Import (StdCall, gluPwlCurve, "gluPwlCurve");
+   pragma Import (StdCall, gluNurbsCallback, "gluNurbsCallback");
+   pragma Import (StdCall, gluNewTess, "gluNewTess");
+   pragma Import (StdCall, gluTessCallback, "gluTessCallback");
+   pragma Import (StdCall, gluDeleteTess, "gluDeleteTess");
+   pragma Import (StdCall, gluBeginPolygon, "gluBeginPolygon");
+   pragma Import (StdCall, gluEndPolygon, "gluEndPolygon");
+   pragma Import (StdCall, gluNextContour, "gluNextContour");
+   pragma Import (StdCall, gluTessVertex, "gluTessVertex");
+   pragma Import (StdCall, gluGetString, "gluGetString");
 
 end glu_h;
 

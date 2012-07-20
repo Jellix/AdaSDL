@@ -69,10 +69,10 @@ package AdaGL is
    pragma Convention (C, Four_GLuint_Vector);
 
    procedure glVertex3fv (v : Three_GLFloat_Vector);
-   pragma Import (Stdcall, glVertex3fv, "glVertex3fv");
+   pragma Import (StdCall, glVertex3fv, "glVertex3fv");
 
    procedure glColor3fv (v : Three_GLFloat_Vector);
-   pragma Import (Stdcall, glColor3fv, "glColor3fv");
+   pragma Import (StdCall, glColor3fv, "glColor3fv");
 
    --  To be used with pname receiving one of:
    --      GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION
@@ -92,7 +92,7 @@ package AdaGL is
                         pname  : GLenum;
                         params : in out GLFloat); -- pseudo in
 
-   pragma Import (Stdcall, glLightfv, "glLightfv");
+   pragma Import (StdCall, glLightfv, "glLightfv");
 
    --  To be used with pname receiving one of:
    --      GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION
@@ -111,7 +111,7 @@ package AdaGL is
    procedure glLightiv (light  : GLenum;
                         pname  : GLenum;
                         params : in out GLint); -- pseudo in
-   pragma Import (Stdcall, glLightiv, "glLightiv");
+   pragma Import (StdCall, glLightiv, "glLightiv");
 
    -- To be used with pname receiving:
    --  GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION
@@ -132,7 +132,7 @@ package AdaGL is
                            pname  : GLenum;
                            params : in out GLfloat); -- pseudo in
 
-   pragma Import (Stdcall, glMaterialfv, "glMaterialfv");
+   pragma Import (StdCall, glMaterialfv, "glMaterialfv");
 
    -- To be used with pname receiving:
    --  GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION
@@ -153,7 +153,7 @@ package AdaGL is
                            pname  : GLenum;
                            params : in out GLint); -- pseudo in
 
-   pragma Import (Stdcall, glMaterialiv, "glMaterialiv");
+   pragma Import (StdCall, glMaterialiv, "glMaterialiv");
 
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glTexImage1D (target         : GLenum;
@@ -229,7 +229,7 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLfloat_Array);
 
-   pragma Import (Stdcall, glTexImage1D, "glTexImage1D");
+   pragma Import (StdCall, glTexImage1D, "glTexImage1D");
 
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glTexImage2D (target         : GLenum;
@@ -309,7 +309,7 @@ package AdaGL is
                            type_Id        : GLenum;
                            pixels         : GLfloat_Array);
 
-   pragma Import (Stdcall, glTexImage2D, "glTexImage2D");
+   pragma Import (StdCall, glTexImage2D, "glTexImage2D");
 
    --  type_Id = GL_UNSIGNED_BYTE
    procedure glDrawPixels (width   : GLsizei;
@@ -360,9 +360,27 @@ package AdaGL is
                            type_Id : GLenum;
                            pixels  : GLfloat_Array);
 
-   pragma Import (Stdcall, glDrawPixels, "glDrawPixels");
+   pragma Import (StdCall, glDrawPixels, "glDrawPixels");
 
    procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLenum);
-   pragma Import (Stdcall, glTexParameteri, "glTexParameteri");
+   pragma Import (StdCall, glTexParameteri, "glTexParameteri");
+
+   function gluBuild2DMipmaps
+     (target     : Gl_H.GLenum;
+      components : Gl_H.GLint;
+      width      : Gl_H.GLint;
+      height     : Gl_H.GLint;
+      format     : Gl_H.GLenum;
+      type_Id    : Gl_H.GLenum;
+      data       : GLubyte_Array) return Gl_H.GLint;
+   procedure gluBuild2DMipmaps
+     (target     : Gl_H.GLenum;
+      components : Gl_H.GLint;
+      width      : Gl_H.GLint;
+      height     : Gl_H.GLint;
+      format     : Gl_H.GLenum;
+      type_Id    : Gl_H.GLenum;
+      data       : GLubyte_Array);
+   pragma Import (StdCall, gluBuild2DMipmaps, "gluBuild2DMipmaps");
 
 end AdaGL;
