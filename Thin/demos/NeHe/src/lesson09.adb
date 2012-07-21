@@ -506,14 +506,10 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   --  Enable OpenGL in SDL
-   --  Enable double buffering
-   --  Store the palette in hardware
-   --  Enable window resizing
    Video_Flags :=
-     Vd.OPENGL
-     or Vd.HWPALETTE
-     or Vd.RESIZABLE;
+     Vd.OPENGL        --  Enable OpenGL in SDL
+     or Vd.HWPALETTE  --  Store the palette in hardware
+     or Vd.RESIZABLE; -- Enable window resizing
 
    -- Fetch the video info */
    Video_Info := Vd.GetVideoInfo;
@@ -550,7 +546,9 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
+    Vd.WM_Set_Caption ("t (to Twinkle); Up/Dow (to Tilt);"
+                      & " PgUp,PgDown (to Zoom)",
+                      "Generic NeHe canvas");
 
    Init_GL (Info);
 

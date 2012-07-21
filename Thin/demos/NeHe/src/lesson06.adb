@@ -52,6 +52,7 @@ procedure Lesson06 is
    package Vd  renames SDL.Video;
    use type Vd.Surface_ptr;
    use type Vd.Surface_Flags;
+   use type Vd.VideoInfo_ConstPtr;
    package Er  renames SDL.Error;
    package Ev  renames SDL.Events;
    package Kb  renames SDL.Keyboard;
@@ -72,6 +73,8 @@ procedure Lesson06 is
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
+   -- this holds some info about our display */
+    Video_Info : Vd.VideoInfo_ConstPtr;
 
    --  NeHe variables.
    --  This is our SDL surface
@@ -432,10 +435,30 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   Video_Flags := Vd.OPENGL or Vd.RESIZABLE;
+   Video_Flags :=
+     Vd.OPENGL        --  Enable OpenGL in SDL
+     or Vd.HWPALETTE  --  Store the palette in hardware
+     or Vd.RESIZABLE; -- Enable window resizing
+
+   -- Fetch the video info */
+   Video_Info := Vd.GetVideoInfo;
+   if (Video_Info.hw_available /= 0) then
+      Video_Flags := Video_Flags or Vd.HWSURFACE;
+   else
+      Video_Flags := Video_Flags or Vd.SWSURFACE;
+   end if;
+
+    -- This checks if hardware blits can be done
+   if Video_Info.blit_hw /= 0 then
+      Video_Flags := Video_Flags or Vd.HWACCEL;
+   end if;
+
    if Full_Screen then
          Video_Flags := Video_Flags or Vd.FULLSCREEN;
    end if;
+
+   -- Sets up OpenGL double buffering
+   Vd.GL_SetAttribute( Vd.GL_DOUBLEBUFFER, 1 );
 
    screen := Vd.SetVideoMode (Screen_Width, Screen_Hight, 16, Video_Flags);
    if screen = null then
