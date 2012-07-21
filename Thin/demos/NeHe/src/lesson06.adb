@@ -96,7 +96,6 @@ procedure Lesson06 is
       Status: boolean := false;
 
       -- Create storage space for the texture
-      --SDL_Surface *TextureImage[1];
       Texture_Image:  array (0..0) of Vd.Surface_ptr;
 
    begin

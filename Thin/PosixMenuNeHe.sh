@@ -11,7 +11,8 @@ echo "[0] Quit"
 echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon"
 echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping"
 echo "[7] Texture Filters, Lighting & Keyboard Control; [8] Blending"
-echo "Choose: [0,1,2,3,4,5,6,7,8]?"
+echo "[9] Moving Bitmaps In 3D Space"
+echo "Choose: [0,1,2,3,4,5,6,7,8,9]?"
 echo ###############################################################
 read -p " ?" answer
     case $answer in
@@ -46,6 +47,10 @@ read -p " ?" answer
        ;;
        8) cd demos/NeHe
 	  ./lesson08
+	  cd ../..
+       ;;
+       9) cd demos/NeHe
+	  ./lesson09
 	  cd ../..
        ;;
         *) break ;;
