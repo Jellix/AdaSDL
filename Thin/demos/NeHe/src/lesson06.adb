@@ -1,5 +1,5 @@
 ---------------------------------------------------------
--- This is a port to AdaSDL of the NeHe Lessons
+-- This is a port to AdaSDL of the Legacy NeHe Lessons
 -- Author of the Port:
 --     Antonio F. Vargas - Manhente - Barcelos - Portugal
 --     mailto: amfvargas@gmail.com
@@ -90,6 +90,16 @@ procedure Lesson06 is
    -- These are to calculate our fps
    T0: GLint := 0;
    Frames: GLint := 0;
+
+    --  ===================================================================
+
+   --  procedure to release/destroy our resources and restoring the old desktop
+   procedure Quit (Return_Code : Integer) is
+   begin
+      SDL.SDL_Quit;
+      Done := True;
+      GNAT.OS_Lib.OS_Exit (Return_Code);
+   end;
 
     --  ===================================================================
 
@@ -373,7 +383,7 @@ procedure Lesson06 is
          when Ks.K_F1 =>
             --  toggles fullscreen mode
             if Vd.WM_ToggleFullScreen( screen ) = 0 then
-               Put_Line("Sory: FullScreen not available!");
+               Put_Line("Sorry: FullScreen not available!");
             end if;
          when others => null;
       end case;
@@ -411,7 +421,7 @@ procedure Lesson06 is
                      --  handle key presses
                      Handle_Key_Press( event.key.keysym );
                   when Ev.QUIT =>
-                     done := True;
+                     Quit(0);
                   when others => null;
                end case;
             end loop;
@@ -464,8 +474,7 @@ begin
    if screen = null then
       Put_Line ("Couldn't set " & C.int'Image (Screen_Width) & "x" &
                 C.int'Image (Screen_Hight) & " GL video mode: " & Er.Get_Error);
-      SDL.SDL_Quit;
-      GNAT.OS_Lib.OS_Exit (2);
+      Quit(2);
    end if;
 
    Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
@@ -477,5 +486,5 @@ begin
 
    Main_System_Loop;
 
-   SDL.SDL_Quit;
+   Quit(0);
 end Lesson06;

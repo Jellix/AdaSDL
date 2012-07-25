@@ -26,26 +26,30 @@
 --  -----------------------------------------------------
 
 with Interfaces.C;
+with Lib_C;
+with GNAT.OS_Lib;
 with System.Address_To_Access_Conversions;
+with Unchecked_Deallocation;
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Command_Line;
 with Ada.Text_IO; use Ada.Text_IO;
-with GNAT.OS_Lib;
+with Ada.Numerics.Generic_Elementary_Functions;
 with SDL.Video;
 with SDL.Error;
 with SDL.Events;
 with SDL.Keyboard;
 with SDL.Keysym;
-with SDL.Timer;
 with SDL.Types; use SDL.Types;
+with SDL.Timer;
 with gl_h; use gl_h;
 with glu_h; use glu_h;
 with AdaGL; use AdaGL;
-
-procedure Lesson08 is
+procedure Lesson10 is
 
    package CL renames Ada.Command_Line;
    package C  renames Interfaces.C;
+   package Math is new Ada.Numerics.Generic_Elementary_Functions(Float);
+   use Math;
    use type C.unsigned;
    use type C.int;
    use type SDL.Init_Flags;
@@ -60,13 +64,12 @@ procedure Lesson08 is
    package Tm  renames SDL.Timer;
    use type Ks.SDLMod;
 
-
    --  ===================================================================
-
    screen : Vd.Surface_ptr;
    done   : Boolean;
    Screen_Width : C.int := 640;
    Screen_Hight : C.int := 480;
+   Screen_Bpp   : C.int := 16;
 
    Slowly      : Boolean := False;
    Info        : Boolean := False;
@@ -77,19 +80,37 @@ procedure Lesson08 is
    -- this holds some info about our display */
     Video_Info : Vd.VideoInfo_ConstPtr;
 
-   -- Nehe variables
-   Light: Boolean := false;
-   Blend: Boolean := false;
-   --  This is a SDL surface
-   --  Surface: Vd.Surface_ptr;
+   -- NeHe variables
 
-   -- rotational vars for the triangle and quad, respectively
-   xrot:   GLfloat :=  0.0; -- X Rotation
-   yrot:   GLfloat :=  0.0; -- Y Rotation
-   zrot:   GLfloat :=  0.0; -- Z Rotation
-   xspeed: GLfloat :=  0.0; -- X Rotation Speed
-   yspeed: GLfloat :=  0.0; -- Y Rotation Speed
-   z:      GLfloat := -5.0; -- Depth Into The Screen
+   --  Build Our Vertex Structure
+   type Vertex_Type is record
+      x,y,z : Float; --  3D Coordinates
+      u,v : Float;   --  Texture Coordinates
+   end record;
+
+   type Vertex3_Array_Type is array (1..3) of Vertex_Type;
+
+   -- Build Our Triangle Structure
+   type Triangle_Type is record
+      Vertex : Vertex3_Array_Type; --  Array Of Three Vertices
+   end record;
+
+   type Triangle_Type_Access is access Triangle_type;
+
+
+   type Sector_Type is array(Natural range <>) of Triangle_Type_Access;
+   type Sector_Access_Type is access Sector_Type;
+   --  procedure Free_Sector is new Unchecked_Deallocation(Sector_Type,
+   --                                                    Sector_Access_Type);
+
+   --  Our sector
+   Sector1 : Sector_Access_Type;
+
+   yrot: GLfloat; -- Camera rotation variable
+   xpos, zpos : GLfloat; -- Camera pos variable
+
+   Walk_Bias, Walk_Bias_Angle: GLfloat;
+   Lookup_Down: GLfloat;
 
    -- Ambient Light Values (NEW)
    LightAmbient: Four_GLfloat_Vector := ( 0.5, 0.5, 0.5, 1.0);
@@ -98,10 +119,15 @@ procedure Lesson08 is
    -- Light Position ( NEW )
    LightPosition: Four_GLfloat_Vector := ( 0.0, 0.0, 2.0, 1.0 );
 
+   -- constant used for converting to radians
+   PI_Over_180 : constant Float := 0.0174532925;
+
    -- Filter: GLuint;
    type Filter_Type is mod 3;
    Filter: Filter_Type := 1; --  Which Filter To Use
    Texture: Three_GLuint_Vector; --  Storage for 3 textures
+
+   subtype String255 is String(1 .. 255);
 
    -- These are to calculate our fps
    T0: GLint := 0;
@@ -114,8 +140,25 @@ procedure Lesson08 is
    begin
       SDL.SDL_Quit;
       Done := True;
+
+      -- Deallocate things we allocated
+--        if  Sector1 /= null then
+--           --  null;
+--           Free_Sector(Sector1);
+--        end if;
+
+      --  and exit appropriately
       GNAT.OS_Lib.OS_Exit (Return_Code);
    end;
+
+   --  ===================================================================
+   --  Template for an extra processing during Idle time of the game
+   --  or simulation.
+   --  (Not parte of the NeHe configuration.)
+   procedure Idle is
+   begin
+      null;
+   end idle;
 
    --  ===================================================================
 
@@ -127,85 +170,72 @@ procedure Lesson08 is
       -- Create storage space for the texture
       Texture_Image:  array (0..0) of Vd.Surface_ptr;
 
-
    begin
 
       --  Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
-      Texture_Image(0) := Vd.LoadBMP( "data/glass.bmp" );
+      Texture_Image(0) := Vd.LoadBMP( "data/mud.bmp" );
       if  Texture_Image(0) /= Vd.null_Surface_ptr
       then
+         --  Set the status to true
+         Status := true;
+
+         -- Create The Texture
+         glGenTextures( 3, Texture(0)'access );
+
          declare
             subtype GLubytes_Type is GLubyte_Array
-              (0 .. Integer(Texture_Image(0).w * Texture_Image(0).h -1));
+              (0 .. Integer(Texture_Image(0).w * Texture_Image(0).h - 1));
             package GLubytes_Address is
               new System.Address_To_Access_Conversions(GLubytes_Type);
          begin
-            --  Set the status to true
-            Status := true;
 
-            -- Create The Texture
-            glGenTextures( 3, Texture(0)'access );
-
-            --  Load in texture 1
-            --  Typical Texture Generation Using Data From The Bitmap
+            -- Load in texture 1
+            -- Typical Texture Generation Using Data From The Bitmap
             glBindTexture( GL_TEXTURE_2D, Texture(0) );
 
+            --  Generate The Texture
+            glTexImage2D( GL_TEXTURE_2D, 0, 3,
+              GLsizei(Texture_Image(0).w),
+              GLsizei(Texture_Image(0).h),
+              0, GL_BGR, GL_UNSIGNED_BYTE,
+              GLubytes_Address.To_Pointer(
+                Texture_Image(0).pixels).all );
 
-            -- Nearest Filtering
+                     -- Linear Filtering
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                             GL_NEAREST );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                             GL_NEAREST );
 
-            --  Generate The Texture
+	    -- Load in texture 2
+	    -- Typical Texture Generation Using Data From The Bitmap
+	    glBindTexture( GL_TEXTURE_2D, texture(1) );
+
+	    -- Linear Filtering
+	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			     GL_LINEAR );
+	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+			     GL_LINEAR );
+
+	    -- Generate The Texture
             glTexImage2D( GL_TEXTURE_2D, 0, 3,
-              GLsizei(Texture_Image(0).w),
-              GLsizei(Texture_Image(0).h),
-              0, GL_BGR,
-              GL_UNSIGNED_BYTE,
-              GLubytes_Address.To_Pointer(
-                Texture_Image(0).pixels).all );
+                         GLsizei(Texture_Image(0).w),
+                         GLsizei(Texture_Image(0).h),
+                         0, GL_BGR, GL_UNSIGNED_BYTE,
+                         GLubytes_Address.To_Pointer(
+                         Texture_Image(0).pixels).all );
 
+	    -- Load in texture 3
+	    -- Typical Texture Generation Using Data From The Bitmap
+	    glBindTexture( GL_TEXTURE_2D, texture(2) );
 
-            --  Load in texture 2
-            --  Typical Texture Generation Using Data From The Bitmap
-            glBindTexture( GL_TEXTURE_2D, Texture(1) );
+	    -- Mipmapped Filtering
+	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			     GL_LINEAR_MIPMAP_NEAREST );
+	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+			     GL_LINEAR );
 
-            -- Linear Filtering
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                            GL_LINEAR );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                            GL_LINEAR );
-
-            --  Generate The Texture
-            glTexImage2D( GL_TEXTURE_2D, 0, 3,
-              GLsizei(Texture_Image(0).w),
-              GLsizei(Texture_Image(0).h),
-              0, GL_BGR,
-              GL_UNSIGNED_BYTE,
-              GLubytes_Address.To_Pointer(
-                Texture_Image(0).pixels).all );
-
-            --  Load in texture 3
-            --  Typical Texture Generation Using Data From The Bitmap
-            glBindTexture( GL_TEXTURE_2D, Texture(2) );
-
-            -- Mipmapped Filtering
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                            GL_LINEAR_MIPMAP_NEAREST );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                            GL_LINEAR );
-
-            --  Generate The MipMapped Texture
-            glTexImage2D( GL_TEXTURE_2D, 0, 3,
-              GLsizei(Texture_Image(0).w),
-              GLsizei(Texture_Image(0).h),
-              0, GL_BGR,
-              GL_UNSIGNED_BYTE,
-              GLubytes_Address.To_Pointer(
-                Texture_Image(0).pixels).all );
-
-            -- Generate The MipMapped Texture ( NEW )
+            -- Generate The MipMapped Texture
             gluBuild2DMipmaps( GL_TEXTURE_2D, 3,
               GLint(Texture_Image(0).w),
               GLint(Texture_Image(0).h),
@@ -213,15 +243,114 @@ procedure Lesson08 is
               GLubytes_Address.To_Pointer(
                 Texture_Image(0).pixels).all );
 
-            -- Free up any memory we may have used
-            if Texture_Image(0) /= Vd.null_Surface_ptr
-            then
-               Vd.FreeSurface( Texture_Image(0) );
-            end if;
-         end; -- declare
+         end;
+
+         -- Free up any memory we may have used
+         if Texture_Image(0) /= Vd.null_Surface_ptr
+         then
+            Vd.FreeSurface( Texture_Image(0) );
+         end if;
       end if;
+
       return Status;
    end Load_Textures;
+
+
+
+   --  ===================================================================
+
+   --  Setup Our World
+   procedure Setup_World (World_File   : String) is
+
+      Num_Triangles: aliased C.int; --  Number of Triangles
+      One_Line: String255; -- One line from conf file
+
+      x, y, z, u, v: aliased GLfloat; -- 3d and texture coordinates
+
+      --  File To Work With
+      File_Handler : Ada.Text_IO.File_Type;
+
+      Last: Natural :=0;
+
+      procedure sscanf (Str: C.char_array;
+               	        Fmt : C.char_array;
+                        Result : access C.int);
+      procedure sscanf (Str: C.char_array;
+                        Fmt : C.char_array;
+                        x_access : access GLfloat;
+                        y_access : access GLfloat;
+                        z_access : access GLfloat;
+                        u_access : access GLfloat;
+                        v_access : access GLfloat);
+      pragma Import (C, sscanf, "sscanf");
+   --  ===================================================================
+
+      procedure Read_String (File: in  Ada.Text_IO.File_Type;
+                             Line: in out String255;
+                             Last: in out Natural) is
+      begin
+         loop
+            Get_Line (File, Line, Last);
+            exit when One_Line(One_Line'First) /= '/' and Last /= 0;
+         end loop;
+      end Read_String;
+
+      --  Just for testing. Prints the content of a text file.
+      procedure Print_Line_By_Line(Filename: String) is
+         File       : Ada.Text_IO.File_Type;
+         Line       : String255;
+         Last       : Natural;
+         Line_Count : Natural := 0;
+
+      begin
+         Ada.Text_IO.Open (File => File,
+                           Mode => Ada.Text_IO.In_File,
+                           Name => Filename);
+         while not Ada.Text_IO.End_Of_File (File) loop
+               Ada.Text_IO.Get_Line (File,Line,Last);
+               Line_Count := Line_Count + 1;
+               Ada.Text_IO.Put_Line (Natural'Image (Line_Count) & ": "
+                                     & Line(1..Last));
+         end loop;
+         Ada.Text_IO.Close (File);
+      end Print_Line_By_Line;
+
+      begin
+
+      -- Open Our File
+      Ada.Text_IO.Open (File => File_Handler,
+                        Mode => Ada.Text_IO.In_File,
+                        Name => World_File);
+
+      --  Grab a line from 'World_File'.
+      Read_String( File_Handler, One_Line, Last );
+
+      -- Read in number of triangle
+      sscanf( C.To_C(One_Line(1..Last)), C.To_C("NUMPOLLIES %d\n"),
+             Num_Triangles'Access );
+
+      --  allocate space for our triangles
+      --  sector1.triangle     = malloc( numTriangles * sizeof( triangle ) );
+      Sector1 := new Sector_Type(1..Integer(Num_Triangles));
+      Sector1.all:=(others=>new Triangle_Type);
+      --  for I in Sector1'Range loop
+      --     Sector1(I):= new Triangle_Type;
+      --  end Loop;
+
+	--  Get coords for each triangle
+      for Triangle_I in Sector1'Range loop
+         for J in Sector1(Triangle_I).Vertex'Range loop
+            Read_String( File_Handler, One_Line, Last );
+            sscanf( C.To_C(One_Line(1..Last)), C.To_C("%f %f %f %f %f\n"),
+                   x'access, y'access, z'access,
+                   u'access, v'access );
+            Sector1(Triangle_I).Vertex(J):=(x,y,z,u,v);
+         end loop;
+      end loop;
+
+   Close (File_Handler);
+
+end Setup_World;
 
    --  ===================================================================
 
@@ -267,6 +396,10 @@ procedure Lesson08 is
       -- Enable Light One
       glEnable( GL_LIGHT1 );
 
+      Lookup_Down := 0.0;
+      Walk_Bias := 0.0;
+      Walk_Bias_Angle := 0.0;
+
       -- Full Brightness, 50% Alpha ( NEW )
       glColor4f( 1.0, 1.0, 1.0, 0.5);
 
@@ -276,7 +409,8 @@ procedure Lesson08 is
    end Init_GL;
 
    --  ===================================================================
-   --  New window size of exposure
+
+   --  function to reset our viewport after a window resize
    procedure Resize_Window (width : C.int; height : C.int) is
       -- Height / width ration
       my_height: C.int:=height;
@@ -311,100 +445,86 @@ procedure Lesson08 is
    --  ===================================================================
 
    procedure Draw_Scene is
+      --  Floating Point For Temp X, Y, Z, U And V Vertices
+      x_m, y_m, z_m, u_m, v_m: GLfloat;
+            -- Used For Player Translation On The X Axis
+      xtrans: GLfloat := -xpos;
+      --  Used For Player Translation On The Z Axis
+      ztrans: GLfloat := -zpos;
+      -- Used For Bouncing Motion Up And Down
+      ytrans: GLfloat := -Walk_Bias - 0.25;
+      -- 360 Degree Angle For Player Direction
+      Scene_Rot_y: GLfloat := 360.0 - yrot;
    begin
 
-      --  Clear The Screen And The Depth Buffer
       glClear (GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);
 
-      --  Reset the view
       glLoadIdentity;
 
-      --  Translate Into/Out Of The Screen By z
-      glTranslatef(0.0,0.0,z);
+      --  Rotate Up And Down To Look Up And Down
+      glRotatef( Lookup_Down, 1.0, 0.0 , 0.0 );
+      --  Rotate Depending On Direction Player Is Facing
+      glRotatef( Scene_Rot_y, 0.0, 1.0 , 0.0 );
 
-      glRotatef( xrot, 1.0, 0.0, 0.0); -- Rotate On The X Axis
-      glRotatef( yrot, 0.0, 1.0, 0.0); -- Rotate On The Y Axis
-
+      -- Translate The Scene Based On Player Position
+      glTranslatef( xtrans, ytrans, ztrans );
       -- Select A Texture Based On filter
-      glBindTexture( GL_TEXTURE_2D, Texture(Integer(Filter)));
+      glBindTexture( GL_TEXTURE_2D, texture(Integer(Filter)) );
 
-      -- Start Drawing Quads
-      glBegin( GL_QUADS );
-      -- Front Face */
-      -- Normal Pointing Towards Viewer
-      glNormal3f( 0.0, 0.0, 1.0 );
-      -- Point 1 (Front)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f( -1.0, -1.0,  1.0 );
-      -- Point 2 (Front)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f(  1.0, -1.0,  1.0 );
-      -- Point 3 (Front)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f(  1.0,  1.0,  1.0 );
-      -- Point 4 (Front)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f( -1.0,  1.0,  1.0 );
+      --  Process Each Triangle */
+      for loop_m in sector1.all'Range loop
+         --  Start Drawing Triangles
+         glBegin(GL_TRIANGLES);
+         --  Normal Pointing Forward
+         glNormal3f( 0.0, 0.0, 1.0);
+         -- X Vertex Of 1st Point
+         x_m := sector1(loop_m).vertex(1).x;
+         -- Y Vertex Of 1st Point
+         y_m := sector1(loop_m).vertex(1).y;
+         -- Z Vertex Of 1st Point
+         z_m := sector1(loop_m).vertex(1).z;
+         -- U Texture Coord Of 1st Point
+         u_m := sector1(loop_m).vertex(1).u;
+         -- V Texture Coord Of 1st Point
+         v_m := sector1(loop_m).vertex(1).v;
 
-      -- Back Face
-      -- Normal Pointing Away From Viewer
-      glNormal3f( 0.0, 0.0, -1.0);
-      -- Point 1 (Back)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f( -1.0, -1.0, -1.0 );
-      -- Point 2 (Back)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f( -1.0,  1.0, -1.0 );
-      -- Point 3 (Back)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f(  1.0,  1.0, -1.0 );
-      -- Point 4 (Back)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f(  1.0, -1.0, -1.0 );
+         --  Set The TexCoord And Vertice
+         glTexCoord2f( u_m, v_m );
+         glVertex3f( x_m, y_m, z_m );
 
-      -- Top Face
-      -- Normal Pointing Up
-      glNormal3f( 0.0, 1.0, 0.0 );
-      -- Point 1 (Top)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f( -1.0,  1.0, -1.0 );
-      -- Point 2 (Top)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f( -1.0,  1.0,  1.0 );
-      -- Point 3 (Top)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f(  1.0,  1.0,  1.0 );
-      -- Point 4 (Top)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f(  1.0,  1.0, -1.0 );
+         -- X Vertex Of 2nd Point
+         x_m := sector1(loop_m).vertex(2).x;
+         -- Y Vertex Of 2nd Point
+         y_m := sector1(loop_m).vertex(2).y;
+         -- Z Vertex Of 2nd Point
+         z_m := sector1(loop_m).vertex(2).z;
+         -- U Texture Coord Of 2nd Point
+         u_m := sector1(loop_m).vertex(2).u;
+         -- V Texture Coord Of 2nd Point
+         v_m := sector1(loop_m).vertex(2).v;
 
-      -- Bottom Face
-      -- Normal Pointing Down
-      glNormal3f( 0.0, -1.0, 0.0 );
-      -- Point 1 (Bottom)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f( -1.0, -1.0, -1.0 );
-      -- Point 2 (Bottom)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f(  1.0, -1.0, -1.0 );
-      -- Point 3 (Bottom)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f(  1.0, -1.0,  1.0 );
-      -- Point 4 (Bottom)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f( -1.0, -1.0,  1.0 );
+         -- Set The TexCoord And Vertice
+         glTexCoord2f( u_m, v_m );
+         glVertex3f( x_m, y_m, z_m );
 
-      -- Right face
-      -- Normal Pointing Right
-      glNormal3f( 1.0, 0.0, 0.0);
-      -- Point 1 (Right)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f( 1.0, -1.0, -1.0 );
-      -- Point 2 (Right)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f( 1.0,  1.0, -1.0 );
-      -- Point 3 (Right)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f( 1.0,  1.0,  1.0 );
-      -- Point 4 (Right)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f( 1.0, -1.0,  1.0 );
+         -- X Vertex Of 3rd Point
+         x_m := sector1(loop_m).vertex(3).x;
+         -- Y Vertex Of 3rd Point
+         y_m := sector1(loop_m).vertex(3).y;
+         -- Z Vertex Of 3rd Point
+         z_m := sector1(loop_m).vertex(3).z;
+         --  Texture Coord Of 3rd Point
+         u_m := sector1(loop_m).vertex(3).u;
+         -- V Texture Coord Of 3rd Point
+         v_m := sector1(loop_m).vertex(3).v;
 
-      -- Left Face
-      -- Normal Pointing Left
-      glNormal3f( -1.0, 0.0, 0.0 );
-      -- Point 1 (Left)
-      glTexCoord2f( 1.0, 0.0 ); glVertex3f( -1.0, -1.0, -1.0 );
-      -- Point 2 (Left)
-      glTexCoord2f( 0.0, 0.0 ); glVertex3f( -1.0, -1.0,  1.0 );
-      -- Point 3 (Left)
-      glTexCoord2f( 0.0, 1.0 ); glVertex3f( -1.0,  1.0,  1.0 );
-      -- Point 4 (Left)
-      glTexCoord2f( 1.0, 1.0 ); glVertex3f( -1.0,  1.0, -1.0 );
-      glEnd;
-
-      --  Draw it to the screen
-      Vd.GL_SwapBuffers;
+         -- Set The TexCoord And Vertice
+         glTexCoord2f( u_m, v_m );
+         glVertex3f( x_m, y_m, z_m );
+         glEnd;
+      end loop;
+         --   Draw it to the screen
+       Vd.GL_SwapBuffers;
 
       -- Gather our frames per second */
       Frames := Frames + 1;
@@ -426,17 +546,7 @@ procedure Lesson08 is
          end if;
       end;
 
-    xrot := xrot + xspeed; -- Add xspeed To xrot
-    yrot := yrot + yspeed; -- Add yspeed To yrot
-
    end Draw_Scene;
-
-   --  ===================================================================
-
-   procedure Idle is
-   begin
-      null;
-   end Idle;
 
    --  ===================================================================
    procedure Manage_Command_Line is
@@ -476,50 +586,53 @@ procedure Lesson08 is
       case keysym.sym is
          when Ks.K_ESCAPE =>
             done := True;
-         when Ks.K_b =>
-            --  toggles blending
-            Blend := not Blend;
-            if Blend then
-               glEnable(GL_BLEND);
-               glDisable(GL_DEPTH_TEST);
-            else
-               glDisable(GL_BLEND);
-               glEnable(GL_DEPTH_TEST);
-            end if;
-         when Ks.K_f =>
-            -- pages through the different filters
-            Filter := Filter + 1;  --  Filter is mod 3
-         when Ks.K_l =>
-            -- this toggles the light
-            Light := not Light;
-            if not Light  then
-               glDisable( GL_LIGHTING );
-            else
-               glEnable( GL_LIGHTING );
-            end if;
-         when Ks.K_PAGEUP =>
-            -- zooms into the scene
-            z := z - 0.05;
-         when Ks.K_PAGEDOWN =>
-            --  zooms out of the scene
-            z := z + 0.05;
-            when Ks.K_UP =>
-            --  affects the x rotation
-            xspeed := xspeed - 0.02;
-         when Ks.K_DOWN =>
-            --  affects the x rotation
-            xspeed := xspeed + 0.02;
-         when Ks.K_RIGHT =>
-            --  affects the y rotation
-            yspeed := yspeed + 0.02;
-         when Ks.K_LEFT =>
-            --  affects the y rotation
-            yspeed := yspeed - 0.02;
          when Ks.K_F1 =>
             --  toggles fullscreen mode
             if Vd.WM_ToggleFullScreen( screen ) = 0 then
                Put_Line("Sorry: FullScreen not available!");
             end if;
+         when Ks.K_RIGHT =>
+            --  Right arrow key was pressed
+            --  this effectively turns the camera right, but does it by
+            --  rotating the scene left
+            yrot := yrot - 1.5;
+         when Ks.K_LEFT =>
+            --  Left arrow key was pressed
+            --  this effectively turns the camera left, but does it by
+            --  rotating the scene right
+            yrot := yrot + 1.5;
+         when Ks.K_UP =>
+            --  Up arrow key was pressed
+            -- this moves the player forward
+            --
+            --  Move On The X-Plane Based On Player Direction
+            xpos := xpos - Sin(yrot * Pi_Over_180) * 0.05;
+            --  Move On The Z-Plane Based On Player Direction
+            zpos := zpos - Cos( yrot * Pi_Over_180 ) * 0.05;
+            if Walk_Bias_Angle >= 359.0 then
+               Walk_Bias_Angle := 0.0;
+            else
+               Walk_Bias_Angle := Walk_Bias_Angle + 10.0;
+            end if;
+
+            --  Causes the player to bounce
+            Walk_Bias := Sin( Walk_Bias_Angle * Pi_Over_180 ) / 20.0;
+         when Ks.K_DOWN =>
+            --  Up arrow key was pressed
+            -- this moves the player forward
+            --
+            --  Move On The X-Plane Based On Player Direction
+            xpos := xpos + Sin(yrot * Pi_Over_180) * 0.05;
+            --  Move On The Z-Plane Based On Player Direction
+            zpos := zpos + Cos( yrot * Pi_Over_180 ) * 0.05;
+            if Walk_Bias_Angle <= 1.0 then
+               Walk_Bias_Angle := 359.0;
+            else
+               Walk_Bias_Angle := Walk_Bias_Angle - 10.0;
+            end if;
+
+            --  Causes the player to bounce
+            Walk_Bias := Sin( Walk_Bias_Angle * Pi_Over_180 ) / 20.0;
          when others => null;
       end case;
 
@@ -527,6 +640,7 @@ procedure Lesson08 is
    end;
 
    --  ===================================================================
+
    procedure Main_System_Loop is
    begin
       while not done loop
@@ -534,7 +648,7 @@ procedure Lesson08 is
             event : Ev.Event;
             PollEvent_Result : C.int;
          begin
-            Idle;
+            idle;
             loop
                Ev.PollEventVP (PollEvent_Result, event);
                exit when PollEvent_Result = 0;
@@ -544,7 +658,7 @@ procedure Lesson08 is
                      screen := Vd.SetVideoMode (
                                   event.resize.w,
                                   event.resize.h,
-                                  16,
+                                  Screen_Bpp,
                                   Vd.OPENGL or Vd.RESIZABLE);
                      if screen /= null then
                         Resize_Window (screen.w, screen.h);
@@ -552,16 +666,17 @@ procedure Lesson08 is
                         --  Couldn't set the new video mode
                         null;
                      end if;
-                  when Ev.QUIT =>
-                     Quit(0);
                   when Ev.KEYDOWN =>
                      --  handle key presses
                      Handle_Key_Press( event.key.keysym );
+                  when Ev.QUIT =>
+                     Quit(0);
                   when others => null;
                end case;
             end loop;
 
             Draw_Scene;
+
          end; -- declare
       end loop;
    end Main_System_Loop;
@@ -605,7 +720,7 @@ begin
    -- Sets up OpenGL double buffering
    Vd.GL_SetAttribute( Vd.GL_DOUBLEBUFFER, 1 );
 
-   screen := Vd.SetVideoMode (Screen_Width, Screen_Hight, 16, Video_Flags);
+   screen := Vd.SetVideoMode (Screen_Width, Screen_Hight, Screen_Bpp, Video_Flags);
    if screen = null then
       Put_Line ("Couldn't set " & C.int'Image (Screen_Width) & "x" &
                 C.int'Image (Screen_Hight) & " GL video mode: " & Er.Get_Error);
@@ -619,12 +734,11 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   Vd.WM_Set_Caption ("b (to blend); l (to Light);"
-                      & "f (to filter); Up,Down,Left,Right (to rotate);"
-                      &" PgUp,PgDown (to zoom)",
-                      "Blending");
+   Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
 
    Init_GL (Info);
+
+   Setup_World("data/world.txt");
 
    Resize_Window (screen.w, screen.h);
    done := False;
@@ -632,4 +746,4 @@ begin
    Main_System_Loop;
 
    Quit(0);
-end Lesson08;
+end Lesson10;

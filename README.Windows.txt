@@ -1,14 +1,22 @@
-If you don't want to use the portable environment.
+-------------------------------------------------------------------------
+Easy way:
 
-Install Gnat 2012 in your system.
+1. Install Gnat 2012 normally on your system.
+2. Go to Thin/
+3. Execute WinDevelConsole.cmd
+4. Use the options presented there.
 
-place  "supportFilesW32\devel\bin" and "supportFilesW32\runtime\bin"
+-------------------------------------------------------------------------
+Hard way (If you don't want to use the portable environment).
+
+1. Install Gnat 2012 in your system.
+
+2. place  "supportFilesW32\devel\bin" and "supportFilesW32\runtime\bin"
 in your system PATH.
 
-Open a console in the Thin directory and:
+3. Create the environment variable: DE=penWin32
 
-create the environment variable: DE=penWin32
---------------------------------
+4. --------------------------------
 Use 1
     Open a console in /local/prog_Ada/adasdl/Thin
     do  -–>         make conf2w32 (just once)

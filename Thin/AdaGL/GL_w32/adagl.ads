@@ -42,6 +42,18 @@ with gl_h; use gl_h;
 package AdaGL is
 
    type GLubyte_Array is array (Integer range <>) of aliased GLubyte;
+
+   --  This is practical but very unsafe because because it is not a
+   --  bounded type. So we don't use it.
+   --  We prefer to do it explicitly with a bounded array subtype in
+   --  a case by case base.
+   --  ----------------------------------------------------------
+   --  pragma Warnings (Off);
+   --  package GLubyte_Array_Address is
+   --    new System.Address_To_Access_Conversions(GLubyte_Array);
+   ---  pragma Warnings (On);
+   --  ----------------------------------------------------------
+
    type GLbyte_Array is array (Integer range <>) of aliased GLbyte;
    type GLushort_Array is array (Integer range <>) of aliased GLushort;
    type GLshort_Array is array (Integer range <>) of aliased GLshort;

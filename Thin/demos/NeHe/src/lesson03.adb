@@ -1,5 +1,5 @@
 ---------------------------------------------------------
--- This is a port to AdaSDL of the NeHe Lessons
+-- This is a port to AdaSDL of the Legacy NeHe Lessons
 -- Author of the Port:
 --     Antonio F. Vargas - Manhente - Barcelos - Portugal
 --     mailto: amfvargas@gmail.com
@@ -51,6 +51,7 @@ procedure Lesson03 is
    package Vd  renames SDL.Video;
    use type Vd.Surface_ptr;
    use type Vd.Surface_Flags;
+   use type Vd.VideoInfo_ConstPtr;
    package Er  renames SDL.Error;
    package Ev  renames SDL.Events;
    package Kb  renames SDL.Keyboard;
@@ -71,11 +72,23 @@ procedure Lesson03 is
    argc        : Integer := CL.Argument_Count;
    Video_Flags : Vd.Surface_Flags := 0;
    Initialization_Flags : SDL.Init_Flags := 0;
+   -- this holds some info about our display */
+   Video_Info : Vd.VideoInfo_ConstPtr;
 
    -- NeHe variables
    -- These are to calculate our fps
    T0: GLint := 0;
    Frames: GLint := 0;
+
+   --  ===================================================================
+
+   --  procedure to release/destroy our resources and restoring the old desktop
+   procedure Quit (Return_Code : Integer) is
+   begin
+      SDL.SDL_Quit;
+      Done := True;
+      GNAT.OS_Lib.OS_Exit (Return_Code);
+   end;
 
    --  ===================================================================
    procedure Init_GL (info : Boolean) is
@@ -237,7 +250,7 @@ procedure Lesson03 is
          when Ks.K_F1 =>
             --  toggles fullscreen mode
             if Vd.WM_ToggleFullScreen( screen ) = 0 then
-               Put_Line("Sory: FullScreen not available!");
+               Put_Line("Sorry: FullScreen not available!");
             end if;
          when others => null;
       end case;
@@ -275,7 +288,7 @@ procedure Lesson03 is
                      --  handle key presses
                      Handle_Key_Press( event.key.keysym );
                   when Ev.QUIT =>
-                     done := True;
+                     Quit(0);
                   when others => null;
                end case;
             end loop;
@@ -299,17 +312,36 @@ begin
       GNAT.OS_Lib.OS_Exit (1);
    end if;
 
-   Video_Flags := Vd.OPENGL or Vd.RESIZABLE;
+   Video_Flags :=
+     Vd.OPENGL        --  Enable OpenGL in SDL
+     or Vd.HWPALETTE  --  Store the palette in hardware
+     or Vd.RESIZABLE; -- Enable window resizing
+
+   -- Fetch the video info */
+   Video_Info := Vd.GetVideoInfo;
+   if (Video_Info.hw_available /= 0) then
+      Video_Flags := Video_Flags or Vd.HWSURFACE;
+   else
+      Video_Flags := Video_Flags or Vd.SWSURFACE;
+   end if;
+
+    -- This checks if hardware blits can be done
+   if Video_Info.blit_hw /= 0 then
+      Video_Flags := Video_Flags or Vd.HWACCEL;
+   end if;
+
    if Full_Screen then
          Video_Flags := Video_Flags or Vd.FULLSCREEN;
    end if;
+
+   -- Sets up OpenGL double buffering
+   Vd.GL_SetAttribute( Vd.GL_DOUBLEBUFFER, 1 );
 
    screen := Vd.SetVideoMode (Screen_Width, Screen_Hight, 16, Video_Flags);
    if screen = null then
       Put_Line ("Couldn't set " & C.int'Image (Screen_Width) & "x" &
                 C.int'Image (Screen_Hight) & " GL video mode: " & Er.Get_Error);
-      SDL.SDL_Quit;
-      GNAT.OS_Lib.OS_Exit (2);
+      Quit(2);
    end if;
 
    Vd.WM_Set_Caption ("Generic GL canvas for NeHe", "Generic NeHe canvas");
@@ -321,5 +353,5 @@ begin
 
    Main_System_Loop;
 
-   SDL.SDL_Quit;
+   Quit(0);
 end Lesson03;
