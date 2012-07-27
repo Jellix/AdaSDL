@@ -106,8 +106,9 @@ procedure Lesson10 is
    --  Our sector
    Sector1 : Sector_Access_Type;
 
-   yrot: GLfloat; -- Camera rotation variable
-   xpos, zpos : GLfloat; -- Camera pos variable
+   yrot: GLfloat := 0.0; -- Camera rotation variable
+   xpos: GLfloat := 0.0;
+   zpos: GLfloat := 0.0; -- Camera pos variable
 
    Walk_Bias, Walk_Bias_Angle: GLfloat;
    Lookup_Down: GLfloat;
@@ -743,7 +744,17 @@ begin
    Resize_Window (screen.w, screen.h);
    done := False;
 
+   Put_Line("Initial position: "
+            & " yrot=" & GLfloat'Image(yrot)
+            & " xpos=" & GLfloat'Image(xpos)
+            & " zpos=" & GLfloat'Image(zpos));
+
    Main_System_Loop;
+
+   Put_Line("Final position: "
+            & " yrot=" & GLfloat'Image(yrot)
+            & " xpos=" & GLfloat'Image(xpos)
+            & " zpos=" & GLfloat'Image(zpos));
 
    Quit(0);
 end Lesson10;

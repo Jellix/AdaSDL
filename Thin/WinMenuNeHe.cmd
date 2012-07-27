@@ -9,10 +9,11 @@ echo "[0] Quit"
 echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon;"
 echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping;"
 echo "[7] Texture Filters, Lighting & Keyboard Control; [8] Belnding;"
-echo "[9] Moving Bitmaps In 3D Space"
+echo "[9] Moving Bitmaps In 3D Space"  [a] Loading and Moving Through A 3D World"
 :choice
-set /P C=[0,1,2,3,4,5,6,7,8,9]?
+set /P C=[0,1,2,3,4,5,6,7,8,9,a]?
 echo ###############################################################
+if "%C%"=="a" goto Lesson10
 if "%C%"=="9" goto Lesson09
 if "%C%"=="8" goto Lesson08
 if "%C%"=="7" goto Lesson07
@@ -76,6 +77,13 @@ goto menu
 :Lesson09
 cd demos\NeHe
 lesson09
+cd ..\..
+goto menu
+
+
+:Lesson10
+cd demos\NeHe
+lesson10
 cd ..\..
 goto menu
 
