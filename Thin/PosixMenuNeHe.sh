@@ -11,8 +11,8 @@ echo "[0] Quit"
 echo "[1] Setting Up An OpenGL Window; [2] Your First Polygon"
 echo "[3] Adding Color;  [4] Rotation; [5] 3D Shapes; [6] Texture Mapping"
 echo "[7] Texture Filters, Lighting & Keyboard Control; [8] Blending"
-echo "[9] Moving Bitmaps In 3D Space"
-echo "Choose: [0,1,2,3,4,5,6,7,8,9]?"
+echo "[9] Moving Bitmaps In 3D Space   [a] Loading and Moving Through A 3D World"
+echo "Choose: [0,1,2,3,4,5,6,7,8,9,a]?"
 echo ###############################################################
 read -p " ?" answer
     case $answer in
@@ -53,7 +53,11 @@ read -p " ?" answer
 	  ./lesson09
 	  cd ../..
        ;;
-        *) break ;;
+       A|a) cd demos/NeHe
+	  ./lesson10
+	  cd ../..
+       ;;
+       *) break ;;
    esac
    echo "press RETURN for menu"
    read key
