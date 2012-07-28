@@ -374,8 +374,8 @@ package AdaGL is
 
    pragma Import (C, glDrawPixels, "glDrawPixels");
 
-   procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLenum);
-   pragma Import (C, glTexParameteri, "glTexParameteri");
+   --  procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLenum);
+   --  pragma Import (C, glTexParameteri, "glTexParameteri");
 
    function gluBuild2DMipmaps
      (target     : Gl_H.GLenum;

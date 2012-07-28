@@ -1,415 +1,593 @@
---  Generated from glu.h
---  Date: Wed Sep 22 12:47:09 1999
---
-with Interfaces.C.Extensions;
+with Interfaces.C; use Interfaces.C;
+with System;
 with gl_h;
 
 package glu_h is
-   --   $Id: glu_h.ads,v 1.1.1.1 2001/04/11 01:22:08 afvargas Exp $
-   --
-   --  Mesa 3-D graphics library
-   --  Version:  3.0
-   --  Copyright (C) 1995-1998  Brian Paul
-   --
-   --  This library is free software; you can redistribute it and/or
-   --  modify it under the terms of the GNU Library General Public
-   --  License as published by the Free Software Foundation; either
-   --  version 2 of the License, or (at your option) any later version.
-   --
-   --  This library is distributed in the hope that it will be useful,
-   --  but WITHOUT ANY WARRANTY; without even the implied warranty of
-   --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   --  Library General Public License for more details.
-   --
-   --  You should have received a copy of the GNU Library General Public
-   --  License along with this library; if not, write to the Free
-   --  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-   --
 
-   --
-   --  $Log: glu_h.ads,v $
-   --  Revision 1.1.1.1  2001/04/11 01:22:08  afvargas
-   --
-   --
-   --  Revision 1.1  1999/09/24 08:37:15  briot
-   --  These two files provide a very basic binding to the openGL library (they
-   --  were generated from the Mesa files). These are mainly provided as examples,
-   --  not as a full binding
-   --
-   --  Revision 3.2  1998/07/26 01:36:27  brianp
-   --  changes for Windows compilation per Ted Jump
-   --
-   --  Revision 3.1  1998/06/23 00:33:08  brianp
-   --  added some WIN32 APIENTRY, CALLBACK stuff (Eric Lassauge)
-   --
-   --  Revision 3.0  1998/02/20 05:06:01  brianp
-   --  initial rev
-   --
+   --  Extensions
+   GLU_EXT_object_space_tess : constant := 1;
+   GLU_EXT_nurbs_tessellator : constant := 1;
 
-            --   to facilitate clean DLL building ...
-     --  tag specifying we're building for DLL runtime support
+   --  Boolean
+   GLU_FALSE : constant := 0;
+   GLU_TRUE : constant := 1;
 
+   --  Version
    GLU_VERSION_1_1 : constant := 1;
-   GLU_TRUE        : constant := 1;
-   GLU_FALSE       : constant := 0;
+   GLU_VERSION_1_2 : constant := 1;
+   GLU_VERSION_1_3 : constant := 1;
 
-   type GLUenum is new Integer;
-   for GLUenum 'Size use 32;
+   --  StringName
+   GLU_VERSION : constant := 100800;
+   GLU_EXTENSIONS : constant := 100801;
 
-   GLU_SMOOTH : constant GLUenum := 100000;
-   GLU_FLAT : constant GLUenum := 100001;
-   GLU_NONE : constant GLUenum := 100002;
-   GLU_POINT : constant GLUenum := 100010;
-   GLU_LINE : constant GLUenum := 100011;
-   GLU_FILL : constant GLUenum := 100012;
-   GLU_SILHOUETTE : constant GLUenum := 100013;
-   GLU_OUTSIDE : constant GLUenum := 100020;
-   GLU_INSIDE : constant GLUenum := 100021;
-   GLU_BEGIN : constant GLUenum := 100100;
-   GLU_VERTEX : constant GLUenum := 100101;
-   GLU_END : constant GLUenum := 100102;
-   GLU_ERROR : constant GLUenum := 100103;
-   GLU_EDGE_FLAG : constant GLUenum := 100104;
-   GLU_CW : constant GLUenum := 100120;
-   GLU_CCW : constant GLUenum := 100121;
-   GLU_INTERIOR : constant GLUenum := 100122;
-   GLU_EXTERIOR : constant GLUenum := 100123;
-   GLU_UNKNOWN : constant GLUenum := 100124;
-   GLU_TESS_ERROR1 : constant GLUenum := 100151;
-   GLU_TESS_ERROR2 : constant GLUenum := 100152;
-   GLU_TESS_ERROR3 : constant GLUenum := 100153;
-   GLU_TESS_ERROR4 : constant GLUenum := 100154;
-   GLU_TESS_ERROR5 : constant GLUenum := 100155;
-   GLU_TESS_ERROR6 : constant GLUenum := 100156;
-   GLU_TESS_ERROR7 : constant GLUenum := 100157;
-   GLU_TESS_ERROR8 : constant GLUenum := 100158;
-   GLU_TESS_ERROR9 : constant GLUenum := 100159;
-   GLU_AUTO_LOAD_MATRIX : constant GLUenum := 100200;
-   GLU_CULLING : constant GLUenum := 100201;
-   GLU_PARAMETRIC_TOLERANCE : constant GLUenum := 100202;
-   GLU_SAMPLING_TOLERANCE : constant GLUenum := 100203;
-   GLU_DISPLAY_MODE : constant GLUenum := 100204;
-   GLU_SAMPLING_METHOD : constant GLUenum := 100205;
-   GLU_U_STEP : constant GLUenum := 100206;
-   GLU_V_STEP : constant GLUenum := 100207;
-   GLU_PATH_LENGTH : constant GLUenum := 100215;
-   GLU_PARAMETRIC_ERROR : constant GLUenum := 100216;
-   GLU_DOMAIN_DISTANCE : constant GLUenum := 100217;
-   GLU_MAP1_TRIM_2 : constant GLUenum := 100210;
-   GLU_MAP1_TRIM_3 : constant GLUenum := 100211;
-   GLU_OUTLINE_POLYGON : constant GLUenum := 100240;
-   GLU_OUTLINE_PATCH : constant GLUenum := 100241;
-   GLU_NURBS_ERROR1 : constant GLUenum := 100251;
-   GLU_NURBS_ERROR2 : constant GLUenum := 100252;
-   GLU_NURBS_ERROR3 : constant GLUenum := 100253;
-   GLU_NURBS_ERROR4 : constant GLUenum := 100254;
-   GLU_NURBS_ERROR5 : constant GLUenum := 100255;
-   GLU_NURBS_ERROR6 : constant GLUenum := 100256;
-   GLU_NURBS_ERROR7 : constant GLUenum := 100257;
-   GLU_NURBS_ERROR8 : constant GLUenum := 100258;
-   GLU_NURBS_ERROR9 : constant GLUenum := 100259;
-   GLU_NURBS_ERROR10 : constant GLUenum := 100260;
-   GLU_NURBS_ERROR11 : constant GLUenum := 100261;
-   GLU_NURBS_ERROR12 : constant GLUenum := 100262;
-   GLU_NURBS_ERROR13 : constant GLUenum := 100263;
-   GLU_NURBS_ERROR14 : constant GLUenum := 100264;
-   GLU_NURBS_ERROR15 : constant GLUenum := 100265;
-   GLU_NURBS_ERROR16 : constant GLUenum := 100266;
-   GLU_NURBS_ERROR17 : constant GLUenum := 100267;
-   GLU_NURBS_ERROR18 : constant GLUenum := 100268;
-   GLU_NURBS_ERROR19 : constant GLUenum := 100269;
-   GLU_NURBS_ERROR20 : constant GLUenum := 100270;
-   GLU_NURBS_ERROR21 : constant GLUenum := 100271;
-   GLU_NURBS_ERROR22 : constant GLUenum := 100272;
-   GLU_NURBS_ERROR23 : constant GLUenum := 100273;
-   GLU_NURBS_ERROR24 : constant GLUenum := 100274;
-   GLU_NURBS_ERROR25 : constant GLUenum := 100275;
-   GLU_NURBS_ERROR26 : constant GLUenum := 100276;
-   GLU_NURBS_ERROR27 : constant GLUenum := 100277;
-   GLU_NURBS_ERROR28 : constant GLUenum := 100278;
-   GLU_NURBS_ERROR29 : constant GLUenum := 100279;
-   GLU_NURBS_ERROR30 : constant GLUenum := 100280;
-   GLU_NURBS_ERROR31 : constant GLUenum := 100281;
-   GLU_NURBS_ERROR32 : constant GLUenum := 100282;
-   GLU_NURBS_ERROR33 : constant GLUenum := 100283;
-   GLU_NURBS_ERROR34 : constant GLUenum := 100284;
-   GLU_NURBS_ERROR35 : constant GLUenum := 100285;
-   GLU_NURBS_ERROR36 : constant GLUenum := 100286;
-   GLU_NURBS_ERROR37 : constant GLUenum := 100287;
-   GLU_INVALID_ENUM : constant GLUenum := 100900;
-   GLU_INVALID_VALUE : constant GLUenum := 100901;
-   GLU_OUT_OF_MEMORY : constant GLUenum := 100902;
-   GLU_INCOMPATIBLE_GL_VERSION : constant GLUenum := 100903;
-   GLU_VERSION : constant GLUenum := 100800;
-   GLU_EXTENSIONS : constant GLUenum := 100801;
+   --  ErrorCode
+   GLU_INVALID_ENUM : constant := 100900;
+   GLU_INVALID_VALUE : constant := 100901;
+   GLU_OUT_OF_MEMORY : constant := 100902;
+   GLU_INCOMPATIBLE_GL_VERSION : constant := 100903;
+   GLU_INVALID_OPERATION : constant := 100904;
 
-            --   Normal vectors
-            --   Quadric draw styles
-            --   Quadric orientation
-            --   Tesselator
-            --   Contour types
-            --   Tesselation errors
-            --   NURBS
-            --   Errors
-            --   New in GLU 1.1
-   --
-   --  These are the GLU 1.1 typedefs.  GLU 1.2 has different ones!
-   --
+   --  NurbsDisplay
+   GLU_OUTLINE_POLYGON : constant := 100240;
+   GLU_OUTLINE_PATCH : constant := 100241;
 
-   type GLUquadricObj is new Interfaces.C.Extensions.opaque_structure_def;
-   type GLUquadricObj_Ptr      is access GLUquadricObj;
-   type GLUtriangulatorObj is new     Interfaces.C.Extensions.opaque_structure_def;
-   type GLUtriangulatorObj_Ptr is access GLUtriangulatorObj;
-   type GLUnurbsObj is new Interfaces.C.Extensions.opaque_structure_def;
-   type GLUnurbsObj_Ptr        is access GLUnurbsObj;
+   --  NurbsCallback
+   GLU_NURBS_ERROR : constant := 100103;
+   GLU_ERROR : constant := 100103;
+   GLU_NURBS_BEGIN : constant := 100164;
+   GLU_NURBS_BEGIN_EXT : constant := 100164;
+   GLU_NURBS_VERTEX : constant := 100165;
+   GLU_NURBS_VERTEX_EXT : constant := 100165;
+   GLU_NURBS_NORMAL : constant := 100166;
+   GLU_NURBS_NORMAL_EXT : constant := 100166;
+   GLU_NURBS_COLOR : constant := 100167;
+   GLU_NURBS_COLOR_EXT : constant := 100167;
+   GLU_NURBS_TEXTURE_COORD : constant := 100168;
+   GLU_NURBS_TEX_COORD_EXT : constant := 100168;
+   GLU_NURBS_END : constant := 100169;
+   GLU_NURBS_END_EXT : constant := 100169;
+   GLU_NURBS_BEGIN_DATA : constant := 100170;
+   GLU_NURBS_BEGIN_DATA_EXT : constant := 100170;
+   GLU_NURBS_VERTEX_DATA : constant := 100171;
+   GLU_NURBS_VERTEX_DATA_EXT : constant := 100171;
+   GLU_NURBS_NORMAL_DATA : constant := 100172;
+   GLU_NURBS_NORMAL_DATA_EXT : constant := 100172;
+   GLU_NURBS_COLOR_DATA : constant := 100173;
+   GLU_NURBS_COLOR_DATA_EXT : constant := 100173;
+   GLU_NURBS_TEXTURE_COORD_DATA : constant := 100174;
+   GLU_NURBS_TEX_COORD_DATA_EXT : constant := 100174;
+   GLU_NURBS_END_DATA : constant := 100175;
+   GLU_NURBS_END_DATA_EXT : constant := 100175;
 
-   --
-   --  Miscellaneous functions
-   --
+   --  NurbsError
+   GLU_NURBS_ERROR1 : constant := 100251;
+   GLU_NURBS_ERROR2 : constant := 100252;
+   GLU_NURBS_ERROR3 : constant := 100253;
+   GLU_NURBS_ERROR4 : constant := 100254;
+   GLU_NURBS_ERROR5 : constant := 100255;
+   GLU_NURBS_ERROR6 : constant := 100256;
+   GLU_NURBS_ERROR7 : constant := 100257;
+   GLU_NURBS_ERROR8 : constant := 100258;
+   GLU_NURBS_ERROR9 : constant := 100259;
+   GLU_NURBS_ERROR10 : constant := 100260;
+   GLU_NURBS_ERROR11 : constant := 100261;
+   GLU_NURBS_ERROR12 : constant := 100262;
+   GLU_NURBS_ERROR13 : constant := 100263;
+   GLU_NURBS_ERROR14 : constant := 100264;
+   GLU_NURBS_ERROR15 : constant := 100265;
+   GLU_NURBS_ERROR16 : constant := 100266;
+   GLU_NURBS_ERROR17 : constant := 100267;
+   GLU_NURBS_ERROR18 : constant := 100268;
+   GLU_NURBS_ERROR19 : constant := 100269;
+   GLU_NURBS_ERROR20 : constant := 100270;
+   GLU_NURBS_ERROR21 : constant := 100271;
+   GLU_NURBS_ERROR22 : constant := 100272;
+   GLU_NURBS_ERROR23 : constant := 100273;
+   GLU_NURBS_ERROR24 : constant := 100274;
+   GLU_NURBS_ERROR25 : constant := 100275;
+   GLU_NURBS_ERROR26 : constant := 100276;
+   GLU_NURBS_ERROR27 : constant := 100277;
+   GLU_NURBS_ERROR28 : constant := 100278;
+   GLU_NURBS_ERROR29 : constant := 100279;
+   GLU_NURBS_ERROR30 : constant := 100280;
+   GLU_NURBS_ERROR31 : constant := 100281;
+   GLU_NURBS_ERROR32 : constant := 100282;
+   GLU_NURBS_ERROR33 : constant := 100283;
+   GLU_NURBS_ERROR34 : constant := 100284;
+   GLU_NURBS_ERROR35 : constant := 100285;
+   GLU_NURBS_ERROR36 : constant := 100286;
+   GLU_NURBS_ERROR37 : constant := 100287;
 
-   procedure gluLookAt (eyex    : Gl_H.GLdouble;
-                        eyey    : Gl_H.GLdouble;
-                        eyez    : Gl_H.GLdouble;
-                        centerx : Gl_H.GLdouble;
-                        centery : Gl_H.GLdouble;
-                        centerz : Gl_H.GLdouble;
-                        upx     : Gl_H.GLdouble;
-                        upy     : Gl_H.GLdouble;
-                        upz     : Gl_H.GLdouble);
-   procedure gluOrtho2D (left   : Gl_H.GLdouble;
-                         right  : Gl_H.GLdouble;
-                         bottom : Gl_H.GLdouble;
-                         top    : Gl_H.GLdouble);
-   procedure gluPerspective (fovy   : Gl_H.GLdouble;
-                             aspect : Gl_H.GLdouble;
-                             zNear  : Gl_H.GLdouble;
-                             zFar   : Gl_H.GLdouble);
-   procedure gluPickMatrix (x        : Gl_H.GLdouble;
-                            y        : Gl_H.GLdouble;
-                            width    : Gl_H.GLdouble;
-                            height   : Gl_H.GLdouble;
-                            viewport : Gl_H.GLint_Vec_4);
-   function gluProject (objx        : Gl_H.GLdouble;
-                        objy        : Gl_H.GLdouble;
-                        objz        : Gl_H.GLdouble;
-                        modelMatrix : Gl_H.GLdouble_Vec_16;
-                        projMatrix  : Gl_H.GLdouble_Vec_16;
-                        viewport    : Gl_H.GLint_Vec_4;
-                        winx        : access Gl_H.GLdouble;
-                        winy        : access Gl_H.GLdouble;
-                        winz        : access Gl_H.GLdouble) return Gl_H.GLint;
-   function gluUnProject
-       (winx        : Gl_H.GLdouble;
-        winy        : Gl_H.GLdouble;
-        winz        : Gl_H.GLdouble;
-        modelMatrix : Gl_H.GLdouble_Vec_16;
-        projMatrix  : Gl_H.GLdouble_Vec_16;
-        viewport    : Gl_H.GLint_Vec_4;
-        objx        : access Gl_H.GLdouble;
-        objy        : access Gl_H.GLdouble;
-        objz        : access Gl_H.GLdouble) return Gl_H.GLint;
-   function gluErrorString (errorCode : Gl_H.GLenum) return Gl_H.GLubyte_Ptr;
+   --  NurbsProperty
+   GLU_AUTO_LOAD_MATRIX : constant := 100200;
+   GLU_CULLING : constant := 100201;
+   GLU_SAMPLING_TOLERANCE : constant := 100203;
+   GLU_DISPLAY_MODE : constant := 100204;
+   GLU_PARAMETRIC_TOLERANCE : constant := 100202;
+   GLU_SAMPLING_METHOD : constant := 100205;
+   GLU_U_STEP : constant := 100206;
+   GLU_V_STEP : constant := 100207;
+   GLU_NURBS_MODE : constant := 100160;
+   GLU_NURBS_MODE_EXT : constant := 100160;
+   GLU_NURBS_TESSELLATOR : constant := 100161;
+   GLU_NURBS_TESSELLATOR_EXT : constant := 100161;
+   GLU_NURBS_RENDERER : constant := 100162;
+   GLU_NURBS_RENDERER_EXT : constant := 100162;
 
-   --
-   --  Mipmapping and image scaling
-   --
+   --  NurbsSampling
+   GLU_OBJECT_PARAMETRIC_ERROR : constant := 100208;
+   GLU_OBJECT_PARAMETRIC_ERROR_EXT : constant := 100208;
+   GLU_OBJECT_PATH_LENGTH : constant := 100209;
+   GLU_OBJECT_PATH_LENGTH_EXT : constant := 100209;
+   GLU_PATH_LENGTH : constant := 100215;
+   GLU_PARAMETRIC_ERROR : constant := 100216;
+   GLU_DOMAIN_DISTANCE : constant := 100217;
 
-   function gluScaleImage
-       (format    : Gl_H.GLenum;
-        widthin   : Gl_H.GLint;
-        heightin  : Gl_H.GLint;
-        typein    : Gl_H.GLenum;
-        datain    : Interfaces.C.Extensions.Void_Ptr;
-        widthout  : Gl_H.GLint;
-        heightout : Gl_H.GLint;
-        typeout   : Gl_H.GLenum;
-        dataout   : Interfaces.C.Extensions.Void_Ptr) return Gl_H.GLint;
-   function gluBuild1DMipmaps
-       (target     : Gl_H.GLenum;
-        components : Gl_H.GLint;
-        width      : Gl_H.GLint;
-        format     : Gl_H.GLenum;
-        type_Id    : Gl_H.GLenum;
-        data       : Interfaces.C.Extensions.Void_Ptr) return Gl_H.GLint;
-   function gluBuild2DMipmaps
-       (target     : Gl_H.GLenum;
-        components : Gl_H.GLint;
-        width      : Gl_H.GLint;
-        height     : Gl_H.GLint;
-        format     : Gl_H.GLenum;
-        type_Id    : Gl_H.GLenum;
-        data       : Interfaces.C.Extensions.Void_Ptr) return Gl_H.GLint;
+   --  NurbsTrim
+   GLU_MAP1_TRIM_2 : constant := 100210;
+   GLU_MAP1_TRIM_3 : constant := 100211;
 
-   --
-   --  Quadrics
-   --
+   --  QuadricDrawStyle
+   GLU_POINT : constant := 100010;
+   GLU_LINE : constant := 100011;
+   GLU_FILL : constant := 100012;
+   GLU_SILHOUETTE : constant := 100013;
 
-   function gluNewQuadric return GLUquadricObj_Ptr;
-   procedure gluDeleteQuadric (state : access GLUquadricObj);
-   procedure gluQuadricDrawStyle (quadObject : access GLUquadricObj;
-                                  drawStyle  : Gl_H.GLenum);
-   procedure gluQuadricOrientation (quadObject  : access GLUquadricObj;
-                                    orientation : Gl_H.GLenum);
-   procedure gluQuadricNormals (quadObject : access GLUquadricObj;
-                                normals    : Gl_H.GLenum);
-   procedure gluQuadricTexture (quadObject    : access GLUquadricObj;
-                                textureCoords : Gl_H.GLboolean);
+   -- QuadricCallback
+   --      GLU_ERROR
 
-   type glu_h_proc_1 is access procedure;
-   Pragma Convention(C, glu_h_proc_1);  --  Added by AMFVargas
+   --  QuadricNormal
+   GLU_SMOOTH : constant := 100000;
+   GLU_FLAT : constant := 100001;
+   GLU_NONE : constant := 100002;
 
-   procedure gluQuadricCallback (qobj  : access GLUquadricObj;
-                                 which : Gl_H.GLenum;
-                                 fn    : glu_h_proc_1);
-   procedure gluCylinder (qobj       : access GLUquadricObj;
-                          baseRadius : Gl_H.GLdouble;
-                          topRadius  : Gl_H.GLdouble;
-                          height     : Gl_H.GLdouble;
-                          slices     : Gl_H.GLint;
-                          stacks     : Gl_H.GLint);
-   procedure gluSphere (qobj   : access GLUquadricObj;
-                        radius : Gl_H.GLdouble;
-                        slices : Gl_H.GLint;
-                        stacks : Gl_H.GLint);
-   procedure gluDisk (qobj        : access GLUquadricObj;
-                      innerRadius : Gl_H.GLdouble;
-                      outerRadius : Gl_H.GLdouble;
-                      slices      : Gl_H.GLint;
-                      loops       : Gl_H.GLint);
-   procedure gluPartialDisk (qobj        : access GLUquadricObj;
-                             innerRadius : Gl_H.GLdouble;
-                             outerRadius : Gl_H.GLdouble;
-                             slices      : Gl_H.GLint;
-                             loops       : Gl_H.GLint;
-                             startAngle  : Gl_H.GLdouble;
-                             sweepAngle  : Gl_H.GLdouble);
+   --  QuadricOrientation
+   GLU_OUTSIDE : constant := 100020;
+   GLU_INSIDE : constant := 100021;
 
-   --
-   --  Nurbs
-   --
+   --  TessCallback
+   GLU_TESS_BEGIN : constant := 100100;
+   GLU_BEGIN : constant := 100100;
+   GLU_TESS_VERTEX : constant := 100101;
+   GLU_VERTEX : constant := 100101;
+   GLU_TESS_END : constant := 100102;
+   GLU_END : constant := 100102;
+   GLU_TESS_ERROR : constant := 100103;
+   GLU_TESS_EDGE_FLAG : constant := 100104;
+   GLU_EDGE_FLAG : constant := 100104;
+   GLU_TESS_COMBINE : constant := 100105;
+   GLU_TESS_BEGIN_DATA : constant := 100106;
+   GLU_TESS_VERTEX_DATA : constant := 100107;
+   GLU_TESS_END_DATA : constant := 100108;
+   GLU_TESS_ERROR_DATA : constant := 100109;
+   GLU_TESS_EDGE_FLAG_DATA : constant := 100110;
+   GLU_TESS_COMBINE_DATA : constant := 100111;
 
-   function gluNewNurbsRenderer return GLUnurbsObj_Ptr;
-   procedure gluDeleteNurbsRenderer (nobj : access GLUnurbsObj);
-   procedure gluLoadSamplingMatrices (nobj        : access GLUnurbsObj;
-                                      modelMatrix : Gl_H.GLfloat_Vec_16;
-                                      projMatrix  : Gl_H.GLfloat_Vec_16;
-                                      viewport    : Gl_H.GLint_Vec_4);
-   procedure gluNurbsProperty (nobj     : access GLUnurbsObj;
-                               property : Gl_H.GLenum;
-                               value    : Gl_H.GLfloat);
-   procedure gluGetNurbsProperty (nobj     : access GLUnurbsObj;
-                                  property : Gl_H.GLenum;
-                                  value    : access Gl_H.GLfloat);
-   procedure gluBeginCurve (nobj : access GLUnurbsObj);
-   procedure gluEndCurve (nobj : access GLUnurbsObj);
-   procedure gluNurbsCurve (nobj     : access GLUnurbsObj;
-                            nknots   : Gl_H.GLint;
-                            knot     : access Gl_H.GLfloat;
-                            stride   : Gl_H.GLint;
-                            ctlarray : access Gl_H.GLfloat;
-                            order    : Gl_H.GLint;
-                            type_Id  : Gl_H.GLenum);
-   procedure gluBeginSurface (nobj : access GLUnurbsObj);
-   procedure gluEndSurface (nobj : access GLUnurbsObj);
-   procedure gluNurbsSurface (nobj        : access GLUnurbsObj;
-                              sknot_count : Gl_H.GLint;
-                              sknot       : access Gl_H.GLfloat;
-                              tknot_count : Gl_H.GLint;
-                              tknot       : access Gl_H.GLfloat;
-                              s_stride    : Gl_H.GLint;
-                              t_stride    : Gl_H.GLint;
-                              ctlarray    : access Gl_H.GLfloat;
-                              sorder      : Gl_H.GLint;
-                              torder      : Gl_H.GLint;
-                              type_Id     : Gl_H.GLenum);
-   procedure gluBeginTrim (nobj : access GLUnurbsObj);
-   procedure gluEndTrim (nobj : access GLUnurbsObj);
-   procedure gluPwlCurve (nobj     : access GLUnurbsObj;
-                          count    : Gl_H.GLint;
-                          array_Id : access Gl_H.GLfloat;
-                          stride   : Gl_H.GLint;
-                          type_Id  : Gl_H.GLenum);
+   --  TessContour
+   GLU_CW : constant := 100120;
+   GLU_CCW : constant := 100121;
+   GLU_INTERIOR : constant := 100122;
+   GLU_EXTERIOR : constant := 100123;
+   GLU_UNKNOWN : constant := 100124;
 
-   type glu_h_proc_2 is access procedure;
-   pragma Convention(C, glu_h_proc_2); --  Added by AMFVargas
+   --  TessProperty
+   GLU_TESS_WINDING_RULE : constant := 100140;
+   GLU_TESS_BOUNDARY_ONLY : constant := 100141;
+   GLU_TESS_TOLERANCE : constant := 100142;
 
-   procedure gluNurbsCallback (nobj  : access GLUnurbsObj;
-                               which : Gl_H.GLenum;
-                               fn    : glu_h_proc_2);
+   --  TessError
+   GLU_TESS_ERROR1 : constant := 100151;
+   GLU_TESS_ERROR2 : constant := 100152;
+   GLU_TESS_ERROR3 : constant := 100153;
+   GLU_TESS_ERROR4 : constant := 100154;
+   GLU_TESS_ERROR5 : constant := 100155;
+   GLU_TESS_ERROR6 : constant := 100156;
+   GLU_TESS_ERROR7 : constant := 100157;
+   GLU_TESS_ERROR8 : constant := 100158;
+   GLU_TESS_MISSING_BEGIN_POLYGON : constant := 100151;
+   GLU_TESS_MISSING_BEGIN_CONTOUR : constant := 100152;
+   GLU_TESS_MISSING_END_POLYGON : constant := 100153;
+   GLU_TESS_MISSING_END_CONTOUR : constant := 100154;
+   GLU_TESS_COORD_TOO_LARGE : constant := 100155;
+   GLU_TESS_NEED_COMBINE_CALLBACK : constant := 100156;
 
-   --
-   --  Polygon tesselation
-   --
+   --  TessWinding
+   GLU_TESS_WINDING_ODD : constant := 100130;
+   GLU_TESS_WINDING_NONZERO : constant := 100131;
+   GLU_TESS_WINDING_POSITIVE : constant := 100132;
+   GLU_TESS_WINDING_NEGATIVE : constant := 100133;
+   GLU_TESS_WINDING_ABS_GEQ_TWO : constant := 100134;
 
-   function gluNewTess return GLUtriangulatorObj_Ptr;
+   GLU_TESS_MAX_COORD : constant := 1.0e150;
 
-   type glu_h_proc_3 is access procedure;
-   pragma Convention(C, glu_h_proc_3);  --  Added by AMFVargas
+  -- Internal convenience typedefs
+   type u_GLUfuncptr is access procedure;
 
-   procedure gluTessCallback (tobj  : access GLUtriangulatorObj;
-                              which : Gl_H.GLenum;
-                              fn    : glu_h_proc_3);
-   procedure gluDeleteTess (tobj : access GLUtriangulatorObj);
-   procedure gluBeginPolygon (tobj : access GLUtriangulatorObj);
-   procedure gluEndPolygon (tobj : access GLUtriangulatorObj);
-   procedure gluNextContour (tobj    : access GLUtriangulatorObj;
-                             type_Id : Gl_H.GLenum);
-   procedure gluTessVertex (tobj : access GLUtriangulatorObj;
-                            v    : Gl_H.GLdouble_Vec_3;
-                            data : Interfaces.C.Extensions.Void_Ptr);
-
-   --
-   --  New functions in GLU 1.1
-   --
-
-   function gluGetString (name : Gl_H.GLenum) return Gl_H.GLubyte_Ptr;
-
-private
-
-   pragma Import (C, gluLookAt, "gluLookAt");
-   pragma Import (C, gluOrtho2D, "gluOrtho2D");
-   pragma Import (C, gluPerspective, "gluPerspective");
-   pragma Import (C, gluPickMatrix, "gluPickMatrix");
-   pragma Import (C, gluProject, "gluProject");
-   pragma Import (C, gluUnProject, "gluUnProject");
-   pragma Import (C, gluErrorString, "gluErrorString");
-   pragma Import (C, gluScaleImage, "gluScaleImage");
-   pragma Import (C, gluBuild1DMipmaps, "gluBuild1DMipmaps");
-   pragma Import (C, gluBuild2DMipmaps, "gluBuild2DMipmaps");
-   pragma Import (C, gluNewQuadric, "gluNewQuadric");
-   pragma Import (C, gluDeleteQuadric, "gluDeleteQuadric");
-   pragma Import (C, gluQuadricDrawStyle, "gluQuadricDrawStyle");
-   pragma Import (C, gluQuadricOrientation, "gluQuadricOrientation");
-   pragma Import (C, gluQuadricNormals, "gluQuadricNormals");
-   pragma Import (C, gluQuadricTexture, "gluQuadricTexture");
-   pragma Import (C, gluQuadricCallback, "gluQuadricCallback");
-   pragma Import (C, gluCylinder, "gluCylinder");
-   pragma Import (C, gluSphere, "gluSphere");
-   pragma Import (C, gluDisk, "gluDisk");
-   pragma Import (C, gluPartialDisk, "gluPartialDisk");
-   pragma Import (C, gluNewNurbsRenderer, "gluNewNurbsRenderer");
-   pragma Import (C, gluDeleteNurbsRenderer, "gluDeleteNurbsRenderer");
-   pragma Import (C, gluLoadSamplingMatrices, "gluLoadSamplingMatrices");
-   pragma Import (C, gluNurbsProperty, "gluNurbsProperty");
-   pragma Import (C, gluGetNurbsProperty, "gluGetNurbsProperty");
+   procedure gluBeginCurve (nurb : System.Address);
    pragma Import (C, gluBeginCurve, "gluBeginCurve");
-   pragma Import (C, gluEndCurve, "gluEndCurve");
-   pragma Import (C, gluNurbsCurve, "gluNurbsCurve");
-   pragma Import (C, gluBeginSurface, "gluBeginSurface");
-   pragma Import (C, gluEndSurface, "gluEndSurface");
-   pragma Import (C, gluNurbsSurface, "gluNurbsSurface");
-   pragma Import (C, gluBeginTrim, "gluBeginTrim");
-   pragma Import (C, gluEndTrim, "gluEndTrim");
-   pragma Import (C, gluPwlCurve, "gluPwlCurve");
-   pragma Import (C, gluNurbsCallback, "gluNurbsCallback");
-   pragma Import (C, gluNewTess, "gluNewTess");
-   pragma Import (C, gluTessCallback, "gluTessCallback");
-   pragma Import (C, gluDeleteTess, "gluDeleteTess");
+
+   procedure gluBeginPolygon (tess : System.Address);
    pragma Import (C, gluBeginPolygon, "gluBeginPolygon");
+
+   procedure gluBeginSurface (nurb : System.Address);
+   pragma Import (C, gluBeginSurface, "gluBeginSurface");
+
+   procedure gluBeginTrim (nurb : System.Address);
+   pragma Import (C, gluBeginTrim, "gluBeginTrim");
+
+   function gluBuild1DMipmapLevels
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      level : GL_H.GLint;
+      base : GL_H.GLint;
+      max : GL_H.GLint;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild1DMipmapLevels,
+		  "gluBuild1DMipmapLevels");
+
+   function gluBuild1DMipmaps
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild1DMipmaps, "gluBuild1DMipmaps");
+
+   function gluBuild2DMipmapLevels
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      height : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      level : GL_H.GLint;
+      base : GL_H.GLint;
+      max : GL_H.GLint;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild2DMipmapLevels,
+		  "gluBuild2DMipmapLevels");
+
+   function gluBuild2DMipmaps
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      height : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild2DMipmaps,
+		  "gluBuild2DMipmaps");
+
+   function gluBuild3DMipmapLevels
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      height : GL_H.GLsizei;
+      depth : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      level : GL_H.GLint;
+      base : GL_H.GLint;
+      max : GL_H.GLint;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild3DMipmapLevels,
+		  "gluBuild3DMipmapLevels");
+
+   function gluBuild3DMipmaps
+     (target : GL_H.GLenum;
+      internalFormat : GL_H.GLint;
+      width : GL_H.GLsizei;
+      height : GL_H.GLsizei;
+      depth : GL_H.GLsizei;
+      format : GL_H.GLenum;
+      c_type : GL_H.GLenum;
+      data : System.Address) return GL_H.GLint;
+   pragma Import (C, gluBuild3DMipmaps,
+		  "gluBuild3DMipmaps");
+
+   function gluCheckExtension (extName : access GL_H.GLubyte;
+			       extString : access GL_H.GLubyte) return GL_H.GLboolean;
+   pragma Import (C, gluCheckExtension, "gluCheckExtension");
+
+   procedure gluCylinder
+     (quad : System.Address;
+      base : GL_H.GLdouble;
+      top : GL_H.GLdouble;
+      height : GL_H.GLdouble;
+      slices : GL_H.GLint;
+      stacks : GL_H.GLint);
+   pragma Import (C, gluCylinder, "gluCylinder");
+
+   procedure gluDeleteNurbsRenderer (nurb : System.Address);  -- /usr/include/GL/glu.h:301
+   pragma Import (C, gluDeleteNurbsRenderer,
+		  "gluDeleteNurbsRenderer");
+
+   procedure gluDeleteQuadric (quad : System.Address);
+   pragma Import (C, gluDeleteQuadric, "gluDeleteQuadric");
+
+   procedure gluDeleteTess (tess : System.Address);
+   pragma Import (C, gluDeleteTess, "gluDeleteTess");
+
+   procedure gluDisk
+     (quad : System.Address;
+      inner : GL_H.GLdouble;
+      outer : GL_H.GLdouble;
+      slices : GL_H.GLint;
+      loops : GL_H.GLint);
+   pragma Import (C, gluDisk, "gluDisk");
+
+   procedure gluEndCurve (nurb : System.Address);
+   pragma Import (C, gluEndCurve, "gluEndCurve");
+
+   procedure gluEndPolygon (tess : System.Address);
    pragma Import (C, gluEndPolygon, "gluEndPolygon");
-   pragma Import (C, gluNextContour, "gluNextContour");
-   pragma Import (C, gluTessVertex, "gluTessVertex");
+
+   procedure gluEndSurface (nurb : System.Address);
+   pragma Import (C, gluEndSurface, "gluEndSurface");
+
+   procedure gluEndTrim (nurb : System.Address);
+   pragma Import (C, gluEndTrim, "gluEndTrim");
+
+   function gluErrorString (error : GL_H.GLenum) return access GL_H.GLubyte;
+   pragma Import (C, gluErrorString, "gluErrorString");
+
+   procedure gluGetNurbsProperty
+     (nurb : System.Address;
+      property : GL_H.GLenum;
+      data : access GL_H.GLfloat);
+   pragma Import (C, gluGetNurbsProperty,
+		  "gluGetNurbsProperty");
+
+   function gluGetString (name : GL_H.GLenum) return access GL_H.GLubyte;
    pragma Import (C, gluGetString, "gluGetString");
 
-end glu_h;
+   procedure gluGetTessProperty
+     (tess : System.Address;
+      which : GL_H.GLenum;
+      data : access GL_H.GLdouble);
+   pragma Import (C, gluGetTessProperty,
+		  "gluGetTessProperty");
 
+   procedure gluLoadSamplingMatrices
+     (nurb : System.Address;
+      model : access GL_H.GLfloat;
+      perspective : access GL_H.GLfloat;
+      view : access GL_H.GLint);
+   pragma Import (C, gluLoadSamplingMatrices,
+		  "gluLoadSamplingMatrices");
+
+   procedure gluLookAt
+     (eyeX : GL_H.GLdouble;
+      eyeY : GL_H.GLdouble;
+      eyeZ : GL_H.GLdouble;
+      centerX : GL_H.GLdouble;
+      centerY : GL_H.GLdouble;
+      centerZ : GL_H.GLdouble;
+      upX : GL_H.GLdouble;
+      upY : GL_H.GLdouble;
+      upZ : GL_H.GLdouble);
+   pragma Import (C, gluLookAt, "gluLookAt");
+
+   function gluNewNurbsRenderer return System.Address;
+   pragma Import (C, gluNewNurbsRenderer, "gluNewNurbsRenderer");
+
+   function gluNewQuadric return System.Address;
+   pragma Import (C, gluNewQuadric, "gluNewQuadric");
+
+   function gluNewTess return System.Address;
+   pragma Import (C, gluNewTess, "gluNewTess");
+
+   procedure gluNextContour (tess : System.Address;
+			     c_type : GL_H.GLenum);
+   pragma Import (C, gluNextContour, "gluNextContour");
+
+   procedure gluNurbsCallback
+     (nurb : System.Address;
+      which : GL_H.GLenum;
+      CallBackFunc : access procedure);
+   pragma Import (C, gluNurbsCallback,
+		  "gluNurbsCallback");
+
+   procedure gluNurbsCallbackData (nurb : System.Address; userData : System.Address);
+   pragma Import (C, gluNurbsCallbackData,
+		  "gluNurbsCallbackData");
+
+   procedure gluNurbsCallbackDataEXT (nurb : System.Address;
+				      userData : System.Address);
+   pragma Import (C, gluNurbsCallbackDataEXT,
+		  "gluNurbsCallbackDataEXT");
+
+   procedure gluNurbsCurve
+     (nurb : System.Address;
+      knotCount : GL_H.GLint;
+      knots : access GL_H.GLfloat;
+      stride : GL_H.GLint;
+      control : access GL_H.GLfloat;
+      order : GL_H.GLint;
+      c_type : GL_H.GLenum);
+   pragma Import (C, gluNurbsCurve, "gluNurbsCurve");
+
+   procedure gluNurbsProperty
+     (nurb : System.Address;
+      property : GL_H.GLenum;
+      value : GL_H.GLfloat);
+   pragma Import (C, gluNurbsProperty, "gluNurbsProperty");
+
+   procedure gluNurbsSurface
+     (nurb : System.Address;
+      sKnotCount : GL_H.GLint;
+      sKnots : access GL_H.GLfloat;
+      tKnotCount : GL_H.GLint;
+      tKnots : access GL_H.GLfloat;
+      sStride : GL_H.GLint;
+      tStride : GL_H.GLint;
+      control : access GL_H.GLfloat;
+      sOrder : GL_H.GLint;
+      tOrder : GL_H.GLint;
+      c_type : GL_H.GLenum);
+   pragma Import (C, gluNurbsSurface, "gluNurbsSurface");
+
+   procedure gluOrtho2D
+     (left : GL_H.GLdouble;
+      right : GL_H.GLdouble;
+      bottom : GL_H.GLdouble;
+      top : GL_H.GLdouble);
+   pragma Import (C, gluOrtho2D, "gluOrtho2D");
+
+   procedure gluPartialDisk
+     (quad : System.Address;
+      inner : GL_H.GLdouble;
+      outer : GL_H.GLdouble;
+      slices : GL_H.GLint;
+      loops : GL_H.GLint;
+      start : GL_H.GLdouble;
+      sweep : GL_H.GLdouble);
+   pragma Import (C, gluPartialDisk, "gluPartialDisk");
+
+   procedure gluPerspective
+     (fovy : GL_H.GLdouble;
+      aspect : GL_H.GLdouble;
+      zNear : GL_H.GLdouble;
+      zFar : GL_H.GLdouble);
+   pragma Import (C, gluPerspective, "gluPerspective");
+
+   procedure gluPickMatrix
+     (x : GL_H.GLdouble;
+      y : GL_H.GLdouble;
+      delX : GL_H.GLdouble;
+      delY : GL_H.GLdouble;
+      viewport : access GL_H.GLint);
+   pragma Import (C, gluPickMatrix, "gluPickMatrix");
+
+   function gluProject
+     (objX : GL_H.GLdouble;
+      objY : GL_H.GLdouble;
+      objZ : GL_H.GLdouble;
+      model : access GL_H.GLdouble;
+      proj : access GL_H.GLdouble;
+      view : access GL_H.GLint;
+      winX : access GL_H.GLdouble;
+      winY : access GL_H.GLdouble;
+      winZ : access GL_H.GLdouble) return GL_H.GLint;
+   pragma Import (C, gluProject, "gluProject");
+
+   procedure gluPwlCurve
+     (nurb : System.Address;
+      count : GL_H.GLint;
+      data : access GL_H.GLfloat;
+      stride : GL_H.GLint;
+      c_type : GL_H.GLenum);
+   pragma Import (C, gluPwlCurve, "gluPwlCurve");
+
+   procedure gluQuadricCallback
+     (quad : System.Address;
+      which : GL_H.GLenum;
+      CallBackFunc : access procedure);
+   pragma Import (C, gluQuadricCallback, "gluQuadricCallback");
+
+   procedure gluQuadricDrawStyle (quad : System.Address;
+				  draw : GL_H.GLenum);
+   pragma Import (C, gluQuadricDrawStyle, "gluQuadricDrawStyle");
+
+   procedure gluQuadricNormals (quad : System.Address; normal : GL_H.GLenum);
+   pragma Import (C, gluQuadricNormals, "gluQuadricNormals");
+
+   procedure gluQuadricOrientation (quad : System.Address;
+				    orientation : GL_H.GLenum);
+   pragma Import (C, gluQuadricOrientation,
+		  "gluQuadricOrientation");
+
+   procedure gluQuadricTexture (quad : System.Address; texture : GL_H.GLboolean);
+   pragma Import (C, gluQuadricTexture, "gluQuadricTexture");
+
+   function gluScaleImage
+     (format : GL_H.GLenum;
+      wIn : GL_H.GLsizei;
+      hIn : GL_H.GLsizei;
+      typeIn : GL_H.GLenum;
+      dataIn : System.Address;
+      wOut : GL_H.GLsizei;
+      hOut : GL_H.GLsizei;
+      typeOut : GL_H.GLenum;
+      dataOut : System.Address) return GL_H.GLint;
+   pragma Import (C, gluScaleImage, "gluScaleImage");
+
+   procedure gluSphere
+     (quad : System.Address;
+      radius : GL_H.GLdouble;
+      slices : GL_H.GLint;
+      stacks : GL_H.GLint);
+   pragma Import (C, gluSphere, "gluSphere");
+
+   procedure gluTessBeginContour (tess : System.Address);
+   pragma Import (C, gluTessBeginContour, "gluTessBeginContour");
+
+   procedure gluTessBeginPolygon (tess : System.Address;
+				  data : System.Address);
+   pragma Import (C, gluTessBeginPolygon, "gluTessBeginPolygon");
+
+   procedure gluTessCallback
+     (tess : System.Address;
+      which : GL_H.GLenum;
+      CallBackFunc : access procedure);
+   pragma Import (C, gluTessCallback, "gluTessCallback");
+
+   procedure gluTessEndContour (tess : System.Address);
+   pragma Import (C, gluTessEndContour, "gluTessEndContour");
+
+   procedure gluTessEndPolygon (tess : System.Address);
+   pragma Import (C, gluTessEndPolygon, "gluTessEndPolygon");
+
+   procedure gluTessNormal
+     (tess : System.Address;
+      valueX : GL_H.GLdouble;
+      valueY : GL_H.GLdouble;
+      valueZ : GL_H.GLdouble);
+   pragma Import (C, gluTessNormal, "gluTessNormal");
+
+   procedure gluTessProperty
+     (tess : System.Address;
+      which : GL_H.GLenum;
+      data : GL_H.GLdouble);
+   pragma Import (C, gluTessProperty, "gluTessProperty");
+
+   procedure gluTessVertex
+     (tess : System.Address;
+      location : access GL_H.GLdouble;
+      data : System.Address);
+   pragma Import (C, gluTessVertex, "gluTessVertex");
+
+   function gluUnProject
+     (winX : GL_H.GLdouble;
+      winY : GL_H.GLdouble;
+      winZ : GL_H.GLdouble;
+      model : access GL_H.GLdouble;
+      proj : access GL_H.GLdouble;
+      view : access GL_H.GLint;
+      objX : access GL_H.GLdouble;
+      objY : access GL_H.GLdouble;
+      objZ : access GL_H.GLdouble) return GL_H.GLint;
+   pragma Import (C, gluUnProject, "gluUnProject");
+
+   function gluUnProject4
+     (winX : GL_H.GLdouble;
+      winY : GL_H.GLdouble;
+      winZ : GL_H.GLdouble;
+      clipW : GL_H.GLdouble;
+      model : access GL_H.GLdouble;
+      proj : access GL_H.GLdouble;
+      view : access GL_H.GLint;
+      nearVal : GL_H.GLdouble;
+      farVal : GL_H.GLdouble;
+      objX : access GL_H.GLdouble;
+      objY : access GL_H.GLdouble;
+      objZ : access GL_H.GLdouble;
+      objW : access GL_H.GLdouble) return GL_H.GLint;
+   pragma Import (C, gluUnProject4, "gluUnProject4");
+
+end glu_h;

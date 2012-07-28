@@ -49,6 +49,7 @@ procedure Lesson09 is
    package C  renames Interfaces.C;
    use type C.unsigned;
    use type C.int;
+   use type C.double;
    use type SDL.Init_Flags;
    package Vd  renames SDL.Video;
    use type Vd.Surface_ptr;
@@ -384,7 +385,7 @@ procedure Lesson09 is
          then
             seconds := GLfloat(t - T0) / 1000.0;
             fps := GLfloat(Frames) / GLfloat(seconds);
-            Put_Line(Integer'Image(Frames) & " frames in "
+            Put_Line(GLint'Image(Frames) & " frames in "
                      & GLfloat'Image(seconds) & " seconds = "
                      & GLfloat'Image(fps) & " FPS");
             T0 := t;

@@ -29,7 +29,7 @@ project SDL_Standard_Demos is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95");
+      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat05");
    end Compiler;
 
    type Devel_Environment_Type is ("penWin32","general");

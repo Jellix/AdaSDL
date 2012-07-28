@@ -1,2436 +1,3529 @@
---  Generated from GL/gl.h
---  Date: Wed Sep 22 12:47:08 1999
---
-with Interfaces.C;
-with Interfaces.C.Extensions;
+with Interfaces.C; use Interfaces.C;
+with System;
 
 package gl_h is
-   --   $Id: gl_h.ads,v 1.1.1.1 2001/04/11 01:22:06 afvargas Exp $
-   --
-   --  Mesa 3-D graphics library
-   --  Version:  3.0
-   --  Copyright (C) 1995-1998  Brian Paul
-   --
-   --  This library is free software; you can redistribute it and/or
-   --  modify it under the terms of the GNU Library General Public
-   --  License as published by the Free Software Foundation; either
-   --  version 2 of the License, or (at your option) any later version.
-   --
-   --  This library is distributed in the hope that it will be useful,
-   --  but WITHOUT ANY WARRANTY; without even the implied warranty of
-   --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   --  Library General Public License for more details.
-   --
-   --  You should have received a copy of the GNU Library General Public
-   --  License along with this library; if not, write to the Free
-   --  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-   --
 
---
---  $Log: gl_h.ads,v $
---  Revision 1.1.1.1  2001/04/11 01:22:06  afvargas
---
---
---  Revision 1.1  1999/09/24 08:37:14  briot
---  These two files provide a very basic binding to the openGL library (they
---  were generated from the Mesa files). These are mainly provided as examples,
---  not as a full binding
---
---  Revision 3.19  1998/07/31 03:23:36  brianp
---  Added Ted Jump's latest Win32 changes
---
---  Revision 3.18  1998/07/26 03:10:28  brianp
---  added defines for non-Windows compilation!
---
---  Revision 3.17  1998/07/26 01:38:39  brianp
---  updated for Windows compilation per Ted Jump
---
---  Revision 3.16  1998/07/18 02:43:07  brianp
---  added missing enums: GL_SELECTION_BUFFER_POINTER, GL_SELECTION_BUFFER_SIZE
---  added missing enums: GL_TEXTURE_INTERNAL_FORMAT
---
---  Revision 3.15  1998/06/07 22:17:58  brianp
---  added GL_EXT_multitexture extension
---
---  Revision 3.14  1998/04/01 03:01:20  brianp
---  added void parameter to glResizeBuffersMESA()
---
---  Revision 3.13  1998/03/19 02:03:51  brianp
---  added GL_SGIS_texture_edge_clamp
---
---  Revision 3.12  1998/03/15 18:48:55  brianp
---  added GL_EXT_abgr extension
---
---  Revision 3.11  1998/02/28 15:15:05  brianp
---  added official enum values for some constants
---
---  Revision 3.10  1998/02/20 04:54:45  brianp
---  implemented GL_SGIS_multitexture
---
---  Revision 3.9  1998/02/10 03:31:31  brianp
---  added static Win32 lib support (Theodore Jump)
---
---  Revision 3.8  1998/02/06 01:57:42  brianp
---  added GL 1.2 3-D texture enums and functions
---
---  Revision 3.7  1998/02/03 04:27:54  brianp
---  added texture lod clamping
---
---  Revision 3.6  1998/02/02 03:09:34  brianp
---  added GL_LIGHT_MODEL_COLOR_CONTROL (separate specular color interpolation)
---
---  Revision 3.5  1998/02/01 22:29:09  brianp
---  added support for packed pixel formats
---
---  Revision 3.4  1998/02/01 20:47:42  brianp
---  added GL_BGR and GL_BGRA pixel formats
---
---  Revision 3.3  1998/02/01 20:05:10  brianp
---  added glDrawRangeElements()
---
---  Revision 3.2  1998/02/01 19:39:36  brianp
---  added GL_CLAMP_TO_EDGE texture wrap mode
---
---  Revision 3.1  1998/02/01 16:36:47  brianp
---  added GL_EXT_rescale_normal extension
---
---  Revision 3.0  1998/02/01 16:03:04  brianp
---  initial rev
---
+   GL_VERSION_1_1 : constant := 1;
+   GL_VERSION_1_2 : constant := 1;
+   GL_VERSION_1_3 : constant := 1;
+   GL_ARB_imaging : constant := 1;
 
-     --  '=' : conversion from 'const double ' to 'float ', possible loss of data
-     --  '<' : signed/unsigned mismatch
-     --  '=' : truncation from 'const double ' to 'float '
-     --  'function' undefined; assuming extern returning int
-     --  integral size mismatch in argument; conversion supplied
-     --  'identifier' : inconsistent DLL linkage. dllexport assumed
-     --  unary minus operator applied to unsigned type, result still unsigned
-     --  tag specifying we're building for DLL runtime support
-   --   non-Windows compilation
-   --
-   --  Apps can test for this symbol to do conditional compilation if needed.
-   --
+  -- "P" suffix to be used for a pointer to a function
 
-   MESA_MAJOR_VERSION : constant := 3;
-   MESA_MINOR_VERSION : constant := 0;
-   GL_VERSION_1_1     : constant := 1;
-   GL_VERSION_1_2     : constant := 1;
+  --  --------
+  --  Datatypes
+  --  ---------
 
-   --
-   --  Enumerations
-   --
+   subtype GLenum is unsigned;
 
-            --   Boolean values
-            --   Data types
-            --   Primitives
-            --   Vertex Arrays
-            --   Matrix Mode
-            --   Points
-            --   Lines
-            --   Polygons
-            --   Display Lists
-            --   Depth buffer
-            --   Lighting
-            --   User clipping planes
-            --   Accumulation buffer
-            --   Alpha testing
-            --   Blending
-            --   Render Mode
-            --   Feedback
-            --   Selection
-            --   Fog
-            --   Logic Ops
-            --   Stencil
-            --   Buffers, Pixel Drawing/Reading
-            --   GL_FRONT                      = 0x0404,
-            --   GL_BACK                       = 0x0405,
-            --   GL_FRONT_AND_BACK             = 0x0408,
-            --   Implementation limits
-            --   Gets
-            --   Evaluators
-            --   Hints
-            --   Scissor box
-            --   Pixel Mode / Transfer
-            --   Texture mapping
-            --   GL 1.1 texturing
-            --   GL 1.2 texturing
-            --   Internal texture formats (GL 1.1)
-            --   Utility
-            --   Errors
-   --
-   --  Extensions
-   --
+   subtype GLboolean is unsigned_char;
 
-            --   GL_EXT_blend_minmax and GL_EXT_blend_color
-            --   GL_EXT_polygon_offset
-            --   GL_EXT_vertex_array
-            --   GL_EXT_texture_object
-            --   GL_EXT_texture3D
-            --   GL_EXT_paletted_texture
-            --   GL_EXT_shared_texture_palette
-            --   GL_EXT_point_parameters
-            --   GL_EXT_rescale_normal
-            --   GL_EXT_abgr
-            --   GL_SGIS_multitexture
-            --   GL_EXT_multitexture
-            --   GL_SGIS_texture_edge_clamp
-            --   OpenGL 1.2
-   --   CenterLine C++ workaround:
-   --   all other compilers
+   subtype GLbitfield is unsigned;
 
-   type GLenum is new Integer;
-   for GLenum 'Size use 32;
+   subtype GLvoid is System.Address;
 
-   GL_FALSE : constant GLenum := 0;
-   GL_TRUE : constant GLenum := 1;
-   GL_BYTE : constant GLenum := 5120;
-   GL_UNSIGNED_BYTE : constant GLenum := 5121;
-   GL_SHORT : constant GLenum := 5122;
-   GL_UNSIGNED_SHORT : constant GLenum := 5123;
-   GL_INT : constant GLenum := 5124;
-   GL_UNSIGNED_INT : constant GLenum := 5125;
-   GL_FLOAT : constant GLenum := 5126;
-   GL_2_BYTES : constant GLenum := 5127;
-   GL_3_BYTES : constant GLenum := 5128;
-   GL_4_BYTES : constant GLenum := 5129;
-   GL_DOUBLE : constant GLenum := 5130;
-   GL_LINES : constant GLenum := 1;
-   GL_POINTS : constant GLenum := 0;
-   GL_LINE_STRIP : constant GLenum := 3;
-   GL_LINE_LOOP : constant GLenum := 2;
-   GL_TRIANGLES : constant GLenum := 4;
-   GL_TRIANGLE_STRIP : constant GLenum := 5;
-   GL_TRIANGLE_FAN : constant GLenum := 6;
-   GL_QUADS : constant GLenum := 7;
-   GL_QUAD_STRIP : constant GLenum := 8;
-   GL_POLYGON : constant GLenum := 9;
-   GL_EDGE_FLAG : constant GLenum := 2883;
-   GL_VERTEX_ARRAY : constant GLenum := 32884;
-   GL_NORMAL_ARRAY : constant GLenum := 32885;
-   GL_COLOR_ARRAY : constant GLenum := 32886;
-   GL_INDEX_ARRAY : constant GLenum := 32887;
-   GL_TEXTURE_COORD_ARRAY : constant GLenum := 32888;
-   GL_EDGE_FLAG_ARRAY : constant GLenum := 32889;
-   GL_VERTEX_ARRAY_SIZE : constant GLenum := 32890;
-   GL_VERTEX_ARRAY_TYPE : constant GLenum := 32891;
-   GL_VERTEX_ARRAY_STRIDE : constant GLenum := 32892;
-   GL_NORMAL_ARRAY_TYPE : constant GLenum := 32894;
-   GL_NORMAL_ARRAY_STRIDE : constant GLenum := 32895;
-   GL_COLOR_ARRAY_SIZE : constant GLenum := 32897;
-   GL_COLOR_ARRAY_TYPE : constant GLenum := 32898;
-   GL_COLOR_ARRAY_STRIDE : constant GLenum := 32899;
-   GL_INDEX_ARRAY_TYPE : constant GLenum := 32901;
-   GL_INDEX_ARRAY_STRIDE : constant GLenum := 32902;
-   GL_TEXTURE_COORD_ARRAY_SIZE : constant GLenum := 32904;
-   GL_TEXTURE_COORD_ARRAY_TYPE : constant GLenum := 32905;
-   GL_TEXTURE_COORD_ARRAY_STRIDE : constant GLenum := 32906;
-   GL_EDGE_FLAG_ARRAY_STRIDE : constant GLenum := 32908;
-   GL_VERTEX_ARRAY_POINTER : constant GLenum := 32910;
-   GL_NORMAL_ARRAY_POINTER : constant GLenum := 32911;
-   GL_COLOR_ARRAY_POINTER : constant GLenum := 32912;
-   GL_INDEX_ARRAY_POINTER : constant GLenum := 32913;
-   GL_TEXTURE_COORD_ARRAY_POINTER : constant GLenum := 32914;
-   GL_EDGE_FLAG_ARRAY_POINTER : constant GLenum := 32915;
-   GL_V2F : constant GLenum := 10784;
-   GL_V3F : constant GLenum := 10785;
-   GL_C4UB_V2F : constant GLenum := 10786;
-   GL_C4UB_V3F : constant GLenum := 10787;
-   GL_C3F_V3F : constant GLenum := 10788;
-   GL_N3F_V3F : constant GLenum := 10789;
-   GL_C4F_N3F_V3F : constant GLenum := 10790;
-   GL_T2F_V3F : constant GLenum := 10791;
-   GL_T4F_V4F : constant GLenum := 10792;
-   GL_T2F_C4UB_V3F : constant GLenum := 10793;
-   GL_T2F_C3F_V3F : constant GLenum := 10794;
-   GL_T2F_N3F_V3F : constant GLenum := 10795;
-   GL_T2F_C4F_N3F_V3F : constant GLenum := 10796;
-   GL_T4F_C4F_N3F_V4F : constant GLenum := 10797;
-   GL_MATRIX_MODE : constant GLenum := 2976;
-   GL_MODELVIEW : constant GLenum := 5888;
-   GL_PROJECTION : constant GLenum := 5889;
-   GL_TEXTURE : constant GLenum := 5890;
-   GL_POINT_SMOOTH : constant GLenum := 2832;
-   GL_POINT_SIZE : constant GLenum := 2833;
-   GL_POINT_SIZE_GRANULARITY : constant GLenum := 2835;
-   GL_POINT_SIZE_RANGE : constant GLenum := 2834;
-   GL_LINE_SMOOTH : constant GLenum := 2848;
-   GL_LINE_STIPPLE : constant GLenum := 2852;
-   GL_LINE_STIPPLE_PATTERN : constant GLenum := 2853;
-   GL_LINE_STIPPLE_REPEAT : constant GLenum := 2854;
-   GL_LINE_WIDTH : constant GLenum := 2849;
-   GL_LINE_WIDTH_GRANULARITY : constant GLenum := 2851;
-   GL_LINE_WIDTH_RANGE : constant GLenum := 2850;
-   GL_POINT : constant GLenum := 6912;
-   GL_LINE : constant GLenum := 6913;
-   GL_FILL : constant GLenum := 6914;
-   GL_CCW : constant GLenum := 2305;
-   GL_CW : constant GLenum := 2304;
-   GL_FRONT : constant GLenum := 1028;
-   GL_BACK : constant GLenum := 1029;
-   GL_CULL_FACE : constant GLenum := 2884;
-   GL_CULL_FACE_MODE : constant GLenum := 2885;
-   GL_POLYGON_SMOOTH : constant GLenum := 2881;
-   GL_POLYGON_STIPPLE : constant GLenum := 2882;
-   GL_FRONT_FACE : constant GLenum := 2886;
-   GL_POLYGON_MODE : constant GLenum := 2880;
-   GL_POLYGON_OFFSET_FACTOR : constant GLenum := 32824;
-   GL_POLYGON_OFFSET_UNITS : constant GLenum := 10752;
-   GL_POLYGON_OFFSET_POINT : constant GLenum := 10753;
-   GL_POLYGON_OFFSET_LINE : constant GLenum := 10754;
-   GL_POLYGON_OFFSET_FILL : constant GLenum := 32823;
-   GL_COMPILE : constant GLenum := 4864;
-   GL_COMPILE_AND_EXECUTE : constant GLenum := 4865;
-   GL_LIST_BASE : constant GLenum := 2866;
-   GL_LIST_INDEX : constant GLenum := 2867;
-   GL_LIST_MODE : constant GLenum := 2864;
-   GL_NEVER : constant GLenum := 512;
-   GL_LESS : constant GLenum := 513;
-   GL_GEQUAL : constant GLenum := 518;
-   GL_LEQUAL : constant GLenum := 515;
-   GL_GREATER : constant GLenum := 516;
-   GL_NOTEQUAL : constant GLenum := 517;
-   GL_EQUAL : constant GLenum := 514;
-   GL_ALWAYS : constant GLenum := 519;
-   GL_DEPTH_TEST : constant GLenum := 2929;
-   GL_DEPTH_BITS : constant GLenum := 3414;
-   GL_DEPTH_CLEAR_VALUE : constant GLenum := 2931;
-   GL_DEPTH_FUNC : constant GLenum := 2932;
-   GL_DEPTH_RANGE : constant GLenum := 2928;
-   GL_DEPTH_WRITEMASK : constant GLenum := 2930;
-   GL_DEPTH_COMPONENT : constant GLenum := 6402;
-   GL_LIGHTING : constant GLenum := 2896;
-   GL_LIGHT0 : constant GLenum := 16384;
-   GL_LIGHT1 : constant GLenum := 16385;
-   GL_LIGHT2 : constant GLenum := 16386;
-   GL_LIGHT3 : constant GLenum := 16387;
-   GL_LIGHT4 : constant GLenum := 16388;
-   GL_LIGHT5 : constant GLenum := 16389;
-   GL_LIGHT6 : constant GLenum := 16390;
-   GL_LIGHT7 : constant GLenum := 16391;
-   GL_SPOT_EXPONENT : constant GLenum := 4613;
-   GL_SPOT_CUTOFF : constant GLenum := 4614;
-   GL_CONSTANT_ATTENUATION : constant GLenum := 4615;
-   GL_LINEAR_ATTENUATION : constant GLenum := 4616;
-   GL_QUADRATIC_ATTENUATION : constant GLenum := 4617;
-   GL_AMBIENT : constant GLenum := 4608;
-   GL_DIFFUSE : constant GLenum := 4609;
-   GL_SPECULAR : constant GLenum := 4610;
-   GL_SHININESS : constant GLenum := 5633;
-   GL_EMISSION : constant GLenum := 5632;
-   GL_POSITION : constant GLenum := 4611;
-   GL_SPOT_DIRECTION : constant GLenum := 4612;
-   GL_AMBIENT_AND_DIFFUSE : constant GLenum := 5634;
-   GL_COLOR_INDEXES : constant GLenum := 5635;
-   GL_LIGHT_MODEL_TWO_SIDE : constant GLenum := 2898;
-   GL_LIGHT_MODEL_LOCAL_VIEWER : constant GLenum := 2897;
-   GL_LIGHT_MODEL_AMBIENT : constant GLenum := 2899;
-   GL_FRONT_AND_BACK : constant GLenum := 1032;
-   GL_SHADE_MODEL : constant GLenum := 2900;
-   GL_FLAT : constant GLenum := 7424;
-   GL_SMOOTH : constant GLenum := 7425;
-   GL_COLOR_MATERIAL : constant GLenum := 2903;
-   GL_COLOR_MATERIAL_FACE : constant GLenum := 2901;
-   GL_COLOR_MATERIAL_PARAMETER : constant GLenum := 2902;
-   GL_NORMALIZE : constant GLenum := 2977;
-   GL_CLIP_PLANE0 : constant GLenum := 12288;
-   GL_CLIP_PLANE1 : constant GLenum := 12289;
-   GL_CLIP_PLANE2 : constant GLenum := 12290;
-   GL_CLIP_PLANE3 : constant GLenum := 12291;
-   GL_CLIP_PLANE4 : constant GLenum := 12292;
-   GL_CLIP_PLANE5 : constant GLenum := 12293;
-   GL_ACCUM_RED_BITS : constant GLenum := 3416;
-   GL_ACCUM_GREEN_BITS : constant GLenum := 3417;
-   GL_ACCUM_BLUE_BITS : constant GLenum := 3418;
-   GL_ACCUM_ALPHA_BITS : constant GLenum := 3419;
-   GL_ACCUM_CLEAR_VALUE : constant GLenum := 2944;
-   GL_ACCUM : constant GLenum := 256;
-   GL_ADD : constant GLenum := 260;
-   GL_LOAD : constant GLenum := 257;
-   GL_MULT : constant GLenum := 259;
-   GL_RETURN : constant GLenum := 258;
-   GL_ALPHA_TEST : constant GLenum := 3008;
-   GL_ALPHA_TEST_REF : constant GLenum := 3010;
-   GL_ALPHA_TEST_FUNC : constant GLenum := 3009;
-   GL_BLEND : constant GLenum := 3042;
-   GL_BLEND_SRC : constant GLenum := 3041;
-   GL_BLEND_DST : constant GLenum := 3040;
-   GL_ZERO : constant GLenum := 0;
-   GL_ONE : constant GLenum := 1;
-   GL_SRC_COLOR : constant GLenum := 768;
-   GL_ONE_MINUS_SRC_COLOR : constant GLenum := 769;
-   GL_DST_COLOR : constant GLenum := 774;
-   GL_ONE_MINUS_DST_COLOR : constant GLenum := 775;
-   GL_SRC_ALPHA : constant GLenum := 770;
-   GL_ONE_MINUS_SRC_ALPHA : constant GLenum := 771;
-   GL_DST_ALPHA : constant GLenum := 772;
-   GL_ONE_MINUS_DST_ALPHA : constant GLenum := 773;
-   GL_SRC_ALPHA_SATURATE : constant GLenum := 776;
-   GL_CONSTANT_COLOR : constant GLenum := 32769;
-   GL_ONE_MINUS_CONSTANT_COLOR : constant GLenum := 32770;
-   GL_CONSTANT_ALPHA : constant GLenum := 32771;
-   GL_ONE_MINUS_CONSTANT_ALPHA : constant GLenum := 32772;
-   GL_FEEDBACK : constant GLenum := 7169;
-   GL_RENDER : constant GLenum := 7168;
-   GL_SELECT : constant GLenum := 7170;
-   GL_2D : constant GLenum := 1536;
-   GL_3D : constant GLenum := 1537;
-   GL_3D_COLOR : constant GLenum := 1538;
-   GL_3D_COLOR_TEXTURE : constant GLenum := 1539;
-   GL_4D_COLOR_TEXTURE : constant GLenum := 1540;
-   GL_POINT_TOKEN : constant GLenum := 1793;
-   GL_LINE_TOKEN : constant GLenum := 1794;
-   GL_LINE_RESET_TOKEN : constant GLenum := 1799;
-   GL_POLYGON_TOKEN : constant GLenum := 1795;
-   GL_BITMAP_TOKEN : constant GLenum := 1796;
-   GL_DRAW_PIXEL_TOKEN : constant GLenum := 1797;
-   GL_COPY_PIXEL_TOKEN : constant GLenum := 1798;
-   GL_PASS_THROUGH_TOKEN : constant GLenum := 1792;
-   GL_FEEDBACK_BUFFER_POINTER : constant GLenum := 3568;
-   GL_FEEDBACK_BUFFER_SIZE : constant GLenum := 3569;
-   GL_FEEDBACK_BUFFER_TYPE : constant GLenum := 3570;
-   GL_SELECTION_BUFFER_POINTER : constant GLenum := 3571;
-   GL_SELECTION_BUFFER_SIZE : constant GLenum := 3572;
-   GL_FOG : constant GLenum := 2912;
-   GL_FOG_MODE : constant GLenum := 2917;
-   GL_FOG_DENSITY : constant GLenum := 2914;
-   GL_FOG_COLOR : constant GLenum := 2918;
-   GL_FOG_INDEX : constant GLenum := 2913;
-   GL_FOG_START : constant GLenum := 2915;
-   GL_FOG_END : constant GLenum := 2916;
-   GL_LINEAR : constant GLenum := 9729;
-   GL_EXP : constant GLenum := 2048;
-   GL_EXP2 : constant GLenum := 2049;
-   GL_LOGIC_OP : constant GLenum := 3057;
-   GL_INDEX_LOGIC_OP : constant GLenum := 3057;
-   GL_COLOR_LOGIC_OP : constant GLenum := 3058;
-   GL_LOGIC_OP_MODE : constant GLenum := 3056;
-   GL_CLEAR : constant GLenum := 5376;
-   GL_SET : constant GLenum := 5391;
-   GL_COPY : constant GLenum := 5379;
-   GL_COPY_INVERTED : constant GLenum := 5388;
-   GL_NOOP : constant GLenum := 5381;
-   GL_INVERT : constant GLenum := 5386;
-   GL_AND : constant GLenum := 5377;
-   GL_NAND : constant GLenum := 5390;
-   GL_OR : constant GLenum := 5383;
-   GL_NOR : constant GLenum := 5384;
-   GL_XOR : constant GLenum := 5382;
-   GL_EQUIV : constant GLenum := 5385;
-   GL_AND_REVERSE : constant GLenum := 5378;
-   GL_AND_INVERTED : constant GLenum := 5380;
-   GL_OR_REVERSE : constant GLenum := 5387;
-   GL_OR_INVERTED : constant GLenum := 5389;
-   GL_STENCIL_TEST : constant GLenum := 2960;
-   GL_STENCIL_WRITEMASK : constant GLenum := 2968;
-   GL_STENCIL_BITS : constant GLenum := 3415;
-   GL_STENCIL_FUNC : constant GLenum := 2962;
-   GL_STENCIL_VALUE_MASK : constant GLenum := 2963;
-   GL_STENCIL_REF : constant GLenum := 2967;
-   GL_STENCIL_FAIL : constant GLenum := 2964;
-   GL_STENCIL_PASS_DEPTH_PASS : constant GLenum := 2966;
-   GL_STENCIL_PASS_DEPTH_FAIL : constant GLenum := 2965;
-   GL_STENCIL_CLEAR_VALUE : constant GLenum := 2961;
-   GL_STENCIL_INDEX : constant GLenum := 6401;
-   GL_KEEP : constant GLenum := 7680;
-   GL_REPLACE : constant GLenum := 7681;
-   GL_INCR : constant GLenum := 7682;
-   GL_DECR : constant GLenum := 7683;
-   GL_NONE : constant GLenum := 0;
-   GL_LEFT : constant GLenum := 1030;
-   GL_RIGHT : constant GLenum := 1031;
-   GL_FRONT_LEFT : constant GLenum := 1024;
-   GL_FRONT_RIGHT : constant GLenum := 1025;
-   GL_BACK_LEFT : constant GLenum := 1026;
-   GL_BACK_RIGHT : constant GLenum := 1027;
-   GL_AUX0 : constant GLenum := 1033;
-   GL_AUX1 : constant GLenum := 1034;
-   GL_AUX2 : constant GLenum := 1035;
-   GL_AUX3 : constant GLenum := 1036;
-   GL_COLOR_INDEX : constant GLenum := 6400;
-   GL_RED : constant GLenum := 6403;
-   GL_GREEN : constant GLenum := 6404;
-   GL_BLUE : constant GLenum := 6405;
-   GL_ALPHA : constant GLenum := 6406;
-   GL_LUMINANCE : constant GLenum := 6409;
-   GL_LUMINANCE_ALPHA : constant GLenum := 6410;
-   GL_ALPHA_BITS : constant GLenum := 3413;
-   GL_RED_BITS : constant GLenum := 3410;
-   GL_GREEN_BITS : constant GLenum := 3411;
-   GL_BLUE_BITS : constant GLenum := 3412;
-   GL_INDEX_BITS : constant GLenum := 3409;
-   GL_SUBPIXEL_BITS : constant GLenum := 3408;
-   GL_AUX_BUFFERS : constant GLenum := 3072;
-   GL_READ_BUFFER : constant GLenum := 3074;
-   GL_DRAW_BUFFER : constant GLenum := 3073;
-   GL_DOUBLEBUFFER : constant GLenum := 3122;
-   GL_STEREO : constant GLenum := 3123;
-   GL_BITMAP : constant GLenum := 6656;
-   GL_COLOR : constant GLenum := 6144;
-   GL_DEPTH : constant GLenum := 6145;
-   GL_STENCIL : constant GLenum := 6146;
-   GL_DITHER : constant GLenum := 3024;
-   GL_RGB : constant GLenum := 6407;
-   GL_RGBA : constant GLenum := 6408;
-   GL_MAX_LIST_NESTING : constant GLenum := 2865;
-   GL_MAX_ATTRIB_STACK_DEPTH : constant GLenum := 3381;
-   GL_MAX_MODELVIEW_STACK_DEPTH : constant GLenum := 3382;
-   GL_MAX_NAME_STACK_DEPTH : constant GLenum := 3383;
-   GL_MAX_PROJECTION_STACK_DEPTH : constant GLenum := 3384;
-   GL_MAX_TEXTURE_STACK_DEPTH : constant GLenum := 3385;
-   GL_MAX_EVAL_ORDER : constant GLenum := 3376;
-   GL_MAX_LIGHTS : constant GLenum := 3377;
-   GL_MAX_CLIP_PLANES : constant GLenum := 3378;
-   GL_MAX_TEXTURE_SIZE : constant GLenum := 3379;
-   GL_MAX_PIXEL_MAP_TABLE : constant GLenum := 3380;
-   GL_MAX_VIEWPORT_DIMS : constant GLenum := 3386;
-   GL_MAX_CLIENT_ATTRIB_STACK_DEPTH : constant GLenum := 3387;
-   GL_ATTRIB_STACK_DEPTH : constant GLenum := 2992;
-   GL_CLIENT_ATTRIB_STACK_DEPTH : constant GLenum := 2993;
-   GL_COLOR_CLEAR_VALUE : constant GLenum := 3106;
-   GL_COLOR_WRITEMASK : constant GLenum := 3107;
-   GL_CURRENT_INDEX : constant GLenum := 2817;
-   GL_CURRENT_COLOR : constant GLenum := 2816;
-   GL_CURRENT_NORMAL : constant GLenum := 2818;
-   GL_CURRENT_RASTER_COLOR : constant GLenum := 2820;
-   GL_CURRENT_RASTER_DISTANCE : constant GLenum := 2825;
-   GL_CURRENT_RASTER_INDEX : constant GLenum := 2821;
-   GL_CURRENT_RASTER_POSITION : constant GLenum := 2823;
-   GL_CURRENT_RASTER_TEXTURE_COORDS : constant GLenum := 2822;
-   GL_CURRENT_RASTER_POSITION_VALID : constant GLenum := 2824;
-   GL_CURRENT_TEXTURE_COORDS : constant GLenum := 2819;
-   GL_INDEX_CLEAR_VALUE : constant GLenum := 3104;
-   GL_INDEX_MODE : constant GLenum := 3120;
-   GL_INDEX_WRITEMASK : constant GLenum := 3105;
-   GL_MODELVIEW_MATRIX : constant GLenum := 2982;
-   GL_MODELVIEW_STACK_DEPTH : constant GLenum := 2979;
-   GL_NAME_STACK_DEPTH : constant GLenum := 3440;
-   GL_PROJECTION_MATRIX : constant GLenum := 2983;
-   GL_PROJECTION_STACK_DEPTH : constant GLenum := 2980;
-   GL_RENDER_MODE : constant GLenum := 3136;
-   GL_RGBA_MODE : constant GLenum := 3121;
-   GL_TEXTURE_MATRIX : constant GLenum := 2984;
-   GL_TEXTURE_STACK_DEPTH : constant GLenum := 2981;
-   GL_VIEWPORT : constant GLenum := 2978;
-   GL_AUTO_NORMAL : constant GLenum := 3456;
-   GL_MAP1_COLOR_4 : constant GLenum := 3472;
-   GL_MAP1_GRID_DOMAIN : constant GLenum := 3536;
-   GL_MAP1_GRID_SEGMENTS : constant GLenum := 3537;
-   GL_MAP1_INDEX : constant GLenum := 3473;
-   GL_MAP1_NORMAL : constant GLenum := 3474;
-   GL_MAP1_TEXTURE_COORD_1 : constant GLenum := 3475;
-   GL_MAP1_TEXTURE_COORD_2 : constant GLenum := 3476;
-   GL_MAP1_TEXTURE_COORD_3 : constant GLenum := 3477;
-   GL_MAP1_TEXTURE_COORD_4 : constant GLenum := 3478;
-   GL_MAP1_VERTEX_3 : constant GLenum := 3479;
-   GL_MAP1_VERTEX_4 : constant GLenum := 3480;
-   GL_MAP2_COLOR_4 : constant GLenum := 3504;
-   GL_MAP2_GRID_DOMAIN : constant GLenum := 3538;
-   GL_MAP2_GRID_SEGMENTS : constant GLenum := 3539;
-   GL_MAP2_INDEX : constant GLenum := 3505;
-   GL_MAP2_NORMAL : constant GLenum := 3506;
-   GL_MAP2_TEXTURE_COORD_1 : constant GLenum := 3507;
-   GL_MAP2_TEXTURE_COORD_2 : constant GLenum := 3508;
-   GL_MAP2_TEXTURE_COORD_3 : constant GLenum := 3509;
-   GL_MAP2_TEXTURE_COORD_4 : constant GLenum := 3510;
-   GL_MAP2_VERTEX_3 : constant GLenum := 3511;
-   GL_MAP2_VERTEX_4 : constant GLenum := 3512;
-   GL_COEFF : constant GLenum := 2560;
-   GL_DOMAIN : constant GLenum := 2562;
-   GL_ORDER : constant GLenum := 2561;
-   GL_FOG_HINT : constant GLenum := 3156;
-   GL_LINE_SMOOTH_HINT : constant GLenum := 3154;
-   GL_PERSPECTIVE_CORRECTION_HINT : constant GLenum := 3152;
-   GL_POINT_SMOOTH_HINT : constant GLenum := 3153;
-   GL_POLYGON_SMOOTH_HINT : constant GLenum := 3155;
-   GL_DONT_CARE : constant GLenum := 4352;
-   GL_FASTEST : constant GLenum := 4353;
-   GL_NICEST : constant GLenum := 4354;
-   GL_SCISSOR_TEST : constant GLenum := 3089;
-   GL_SCISSOR_BOX : constant GLenum := 3088;
-   GL_MAP_COLOR : constant GLenum := 3344;
-   GL_MAP_STENCIL : constant GLenum := 3345;
-   GL_INDEX_SHIFT : constant GLenum := 3346;
-   GL_INDEX_OFFSET : constant GLenum := 3347;
-   GL_RED_SCALE : constant GLenum := 3348;
-   GL_RED_BIAS : constant GLenum := 3349;
-   GL_GREEN_SCALE : constant GLenum := 3352;
-   GL_GREEN_BIAS : constant GLenum := 3353;
-   GL_BLUE_SCALE : constant GLenum := 3354;
-   GL_BLUE_BIAS : constant GLenum := 3355;
-   GL_ALPHA_SCALE : constant GLenum := 3356;
-   GL_ALPHA_BIAS : constant GLenum := 3357;
-   GL_DEPTH_SCALE : constant GLenum := 3358;
-   GL_DEPTH_BIAS : constant GLenum := 3359;
-   GL_PIXEL_MAP_S_TO_S_SIZE : constant GLenum := 3249;
-   GL_PIXEL_MAP_I_TO_I_SIZE : constant GLenum := 3248;
-   GL_PIXEL_MAP_I_TO_R_SIZE : constant GLenum := 3250;
-   GL_PIXEL_MAP_I_TO_G_SIZE : constant GLenum := 3251;
-   GL_PIXEL_MAP_I_TO_B_SIZE : constant GLenum := 3252;
-   GL_PIXEL_MAP_I_TO_A_SIZE : constant GLenum := 3253;
-   GL_PIXEL_MAP_R_TO_R_SIZE : constant GLenum := 3254;
-   GL_PIXEL_MAP_G_TO_G_SIZE : constant GLenum := 3255;
-   GL_PIXEL_MAP_B_TO_B_SIZE : constant GLenum := 3256;
-   GL_PIXEL_MAP_A_TO_A_SIZE : constant GLenum := 3257;
-   GL_PIXEL_MAP_S_TO_S : constant GLenum := 3185;
-   GL_PIXEL_MAP_I_TO_I : constant GLenum := 3184;
-   GL_PIXEL_MAP_I_TO_R : constant GLenum := 3186;
-   GL_PIXEL_MAP_I_TO_G : constant GLenum := 3187;
-   GL_PIXEL_MAP_I_TO_B : constant GLenum := 3188;
-   GL_PIXEL_MAP_I_TO_A : constant GLenum := 3189;
-   GL_PIXEL_MAP_R_TO_R : constant GLenum := 3190;
-   GL_PIXEL_MAP_G_TO_G : constant GLenum := 3191;
-   GL_PIXEL_MAP_B_TO_B : constant GLenum := 3192;
-   GL_PIXEL_MAP_A_TO_A : constant GLenum := 3193;
-   GL_PACK_ALIGNMENT : constant GLenum := 3333;
-   GL_PACK_LSB_FIRST : constant GLenum := 3329;
-   GL_PACK_ROW_LENGTH : constant GLenum := 3330;
-   GL_PACK_SKIP_PIXELS : constant GLenum := 3332;
-   GL_PACK_SKIP_ROWS : constant GLenum := 3331;
-   GL_PACK_SWAP_BYTES : constant GLenum := 3328;
-   GL_UNPACK_ALIGNMENT : constant GLenum := 3317;
-   GL_UNPACK_LSB_FIRST : constant GLenum := 3313;
-   GL_UNPACK_ROW_LENGTH : constant GLenum := 3314;
-   GL_UNPACK_SKIP_PIXELS : constant GLenum := 3316;
-   GL_UNPACK_SKIP_ROWS : constant GLenum := 3315;
-   GL_UNPACK_SWAP_BYTES : constant GLenum := 3312;
-   GL_ZOOM_X : constant GLenum := 3350;
-   GL_ZOOM_Y : constant GLenum := 3351;
-   GL_TEXTURE_ENV : constant GLenum := 8960;
-   GL_TEXTURE_ENV_MODE : constant GLenum := 8704;
-   GL_TEXTURE_1D : constant GLenum := 3552;
-   GL_TEXTURE_2D : constant GLenum := 3553;
-   GL_TEXTURE_WRAP_S : constant GLenum := 10242;
-   GL_TEXTURE_WRAP_T : constant GLenum := 10243;
-   GL_TEXTURE_MAG_FILTER : constant GLenum := 10240;
-   GL_TEXTURE_MIN_FILTER : constant GLenum := 10241;
-   GL_TEXTURE_ENV_COLOR : constant GLenum := 8705;
-   GL_TEXTURE_GEN_S : constant GLenum := 3168;
-   GL_TEXTURE_GEN_T : constant GLenum := 3169;
-   GL_TEXTURE_GEN_MODE : constant GLenum := 9472;
-   GL_TEXTURE_BORDER_COLOR : constant GLenum := 4100;
-   GL_TEXTURE_WIDTH : constant GLenum := 4096;
-   GL_TEXTURE_HEIGHT : constant GLenum := 4097;
-   GL_TEXTURE_BORDER : constant GLenum := 4101;
-   GL_TEXTURE_COMPONENTS : constant GLenum := 4099;
-   GL_TEXTURE_RED_SIZE : constant GLenum := 32860;
-   GL_TEXTURE_GREEN_SIZE : constant GLenum := 32861;
-   GL_TEXTURE_BLUE_SIZE : constant GLenum := 32862;
-   GL_TEXTURE_ALPHA_SIZE : constant GLenum := 32863;
-   GL_TEXTURE_LUMINANCE_SIZE : constant GLenum := 32864;
-   GL_TEXTURE_INTENSITY_SIZE : constant GLenum := 32865;
-   GL_NEAREST_MIPMAP_NEAREST : constant GLenum := 9984;
-   GL_NEAREST_MIPMAP_LINEAR : constant GLenum := 9986;
-   GL_LINEAR_MIPMAP_NEAREST : constant GLenum := 9985;
-   GL_LINEAR_MIPMAP_LINEAR : constant GLenum := 9987;
-   GL_OBJECT_LINEAR : constant GLenum := 9217;
-   GL_OBJECT_PLANE : constant GLenum := 9473;
-   GL_EYE_LINEAR : constant GLenum := 9216;
-   GL_EYE_PLANE : constant GLenum := 9474;
-   GL_SPHERE_MAP : constant GLenum := 9218;
-   GL_DECAL : constant GLenum := 8449;
-   GL_MODULATE : constant GLenum := 8448;
-   GL_NEAREST : constant GLenum := 9728;
-   GL_REPEAT : constant GLenum := 10497;
-   GL_CLAMP : constant GLenum := 10496;
-   GL_S : constant GLenum := 8192;
-   GL_T : constant GLenum := 8193;
-   GL_R : constant GLenum := 8194;
-   GL_Q : constant GLenum := 8195;
-   GL_TEXTURE_GEN_R : constant GLenum := 3170;
-   GL_TEXTURE_GEN_Q : constant GLenum := 3171;
-   GL_PROXY_TEXTURE_1D : constant GLenum := 32867;
-   GL_PROXY_TEXTURE_2D : constant GLenum := 32868;
-   GL_TEXTURE_PRIORITY : constant GLenum := 32870;
-   GL_TEXTURE_RESIDENT : constant GLenum := 32871;
-   GL_TEXTURE_BINDING_1D : constant GLenum := 32872;
-   GL_TEXTURE_BINDING_2D : constant GLenum := 32873;
-   GL_TEXTURE_INTERNAL_FORMAT : constant GLenum := 4099;
-   GL_PACK_SKIP_IMAGES : constant GLenum := 32875;
-   GL_PACK_IMAGE_HEIGHT : constant GLenum := 32876;
-   GL_UNPACK_SKIP_IMAGES : constant GLenum := 32877;
-   GL_UNPACK_IMAGE_HEIGHT : constant GLenum := 32878;
-   GL_TEXTURE_3D : constant GLenum := 32879;
-   GL_PROXY_TEXTURE_3D : constant GLenum := 32880;
-   GL_TEXTURE_DEPTH : constant GLenum := 32881;
-   GL_TEXTURE_WRAP_R : constant GLenum := 32882;
-   GL_MAX_3D_TEXTURE_SIZE : constant GLenum := 32883;
-   GL_TEXTURE_BINDING_3D : constant GLenum := 32874;
-   GL_ALPHA4 : constant GLenum := 32827;
-   GL_ALPHA8 : constant GLenum := 32828;
-   GL_ALPHA12 : constant GLenum := 32829;
-   GL_ALPHA16 : constant GLenum := 32830;
-   GL_LUMINANCE4 : constant GLenum := 32831;
-   GL_LUMINANCE8 : constant GLenum := 32832;
-   GL_LUMINANCE12 : constant GLenum := 32833;
-   GL_LUMINANCE16 : constant GLenum := 32834;
-   GL_LUMINANCE4_ALPHA4 : constant GLenum := 32835;
-   GL_LUMINANCE6_ALPHA2 : constant GLenum := 32836;
-   GL_LUMINANCE8_ALPHA8 : constant GLenum := 32837;
-   GL_LUMINANCE12_ALPHA4 : constant GLenum := 32838;
-   GL_LUMINANCE12_ALPHA12 : constant GLenum := 32839;
-   GL_LUMINANCE16_ALPHA16 : constant GLenum := 32840;
-   GL_INTENSITY : constant GLenum := 32841;
-   GL_INTENSITY4 : constant GLenum := 32842;
-   GL_INTENSITY8 : constant GLenum := 32843;
-   GL_INTENSITY12 : constant GLenum := 32844;
-   GL_INTENSITY16 : constant GLenum := 32845;
-   GL_R3_G3_B2 : constant GLenum := 10768;
-   GL_RGB4 : constant GLenum := 32847;
-   GL_RGB5 : constant GLenum := 32848;
-   GL_RGB8 : constant GLenum := 32849;
-   GL_RGB10 : constant GLenum := 32850;
-   GL_RGB12 : constant GLenum := 32851;
-   GL_RGB16 : constant GLenum := 32852;
-   GL_RGBA2 : constant GLenum := 32853;
-   GL_RGBA4 : constant GLenum := 32854;
-   GL_RGB5_A1 : constant GLenum := 32855;
-   GL_RGBA8 : constant GLenum := 32856;
-   GL_RGB10_A2 : constant GLenum := 32857;
-   GL_RGBA12 : constant GLenum := 32858;
-   GL_RGBA16 : constant GLenum := 32859;
-   GL_VENDOR : constant GLenum := 7936;
-   GL_RENDERER : constant GLenum := 7937;
-   GL_VERSION : constant GLenum := 7938;
-   GL_EXTENSIONS : constant GLenum := 7939;
-   GL_INVALID_VALUE : constant GLenum := 1281;
-   GL_INVALID_ENUM : constant GLenum := 1280;
-   GL_INVALID_OPERATION : constant GLenum := 1282;
-   GL_STACK_OVERFLOW : constant GLenum := 1283;
-   GL_STACK_UNDERFLOW : constant GLenum := 1284;
-   GL_OUT_OF_MEMORY : constant GLenum := 1285;
-   GL_CONSTANT_COLOR_EXT : constant GLenum := 32769;
-   GL_ONE_MINUS_CONSTANT_COLOR_EXT : constant GLenum := 32770;
-   GL_CONSTANT_ALPHA_EXT : constant GLenum := 32771;
-   GL_ONE_MINUS_CONSTANT_ALPHA_EXT : constant GLenum := 32772;
-   GL_BLEND_EQUATION_EXT : constant GLenum := 32777;
-   GL_MIN_EXT : constant GLenum := 32775;
-   GL_MAX_EXT : constant GLenum := 32776;
-   GL_FUNC_ADD_EXT : constant GLenum := 32774;
-   GL_FUNC_SUBTRACT_EXT : constant GLenum := 32778;
-   GL_FUNC_REVERSE_SUBTRACT_EXT : constant GLenum := 32779;
-   GL_BLEND_COLOR_EXT : constant GLenum := 32773;
-   GL_POLYGON_OFFSET_EXT : constant GLenum := 32823;
-   GL_POLYGON_OFFSET_FACTOR_EXT : constant GLenum := 32824;
-   GL_POLYGON_OFFSET_BIAS_EXT : constant GLenum := 32825;
-   GL_VERTEX_ARRAY_EXT : constant GLenum := 32884;
-   GL_NORMAL_ARRAY_EXT : constant GLenum := 32885;
-   GL_COLOR_ARRAY_EXT : constant GLenum := 32886;
-   GL_INDEX_ARRAY_EXT : constant GLenum := 32887;
-   GL_TEXTURE_COORD_ARRAY_EXT : constant GLenum := 32888;
-   GL_EDGE_FLAG_ARRAY_EXT : constant GLenum := 32889;
-   GL_VERTEX_ARRAY_SIZE_EXT : constant GLenum := 32890;
-   GL_VERTEX_ARRAY_TYPE_EXT : constant GLenum := 32891;
-   GL_VERTEX_ARRAY_STRIDE_EXT : constant GLenum := 32892;
-   GL_VERTEX_ARRAY_COUNT_EXT : constant GLenum := 32893;
-   GL_NORMAL_ARRAY_TYPE_EXT : constant GLenum := 32894;
-   GL_NORMAL_ARRAY_STRIDE_EXT : constant GLenum := 32895;
-   GL_NORMAL_ARRAY_COUNT_EXT : constant GLenum := 32896;
-   GL_COLOR_ARRAY_SIZE_EXT : constant GLenum := 32897;
-   GL_COLOR_ARRAY_TYPE_EXT : constant GLenum := 32898;
-   GL_COLOR_ARRAY_STRIDE_EXT : constant GLenum := 32899;
-   GL_COLOR_ARRAY_COUNT_EXT : constant GLenum := 32900;
-   GL_INDEX_ARRAY_TYPE_EXT : constant GLenum := 32901;
-   GL_INDEX_ARRAY_STRIDE_EXT : constant GLenum := 32902;
-   GL_INDEX_ARRAY_COUNT_EXT : constant GLenum := 32903;
-   GL_TEXTURE_COORD_ARRAY_SIZE_EXT : constant GLenum := 32904;
-   GL_TEXTURE_COORD_ARRAY_TYPE_EXT : constant GLenum := 32905;
-   GL_TEXTURE_COORD_ARRAY_STRIDE_EXT : constant GLenum := 32906;
-   GL_TEXTURE_COORD_ARRAY_COUNT_EXT : constant GLenum := 32907;
-   GL_EDGE_FLAG_ARRAY_STRIDE_EXT : constant GLenum := 32908;
-   GL_EDGE_FLAG_ARRAY_COUNT_EXT : constant GLenum := 32909;
-   GL_VERTEX_ARRAY_POINTER_EXT : constant GLenum := 32910;
-   GL_NORMAL_ARRAY_POINTER_EXT : constant GLenum := 32911;
-   GL_COLOR_ARRAY_POINTER_EXT : constant GLenum := 32912;
-   GL_INDEX_ARRAY_POINTER_EXT : constant GLenum := 32913;
-   GL_TEXTURE_COORD_ARRAY_POINTER_EXT : constant GLenum := 32914;
-   GL_EDGE_FLAG_ARRAY_POINTER_EXT : constant GLenum := 32915;
-   GL_TEXTURE_PRIORITY_EXT : constant GLenum := 32870;
-   GL_TEXTURE_RESIDENT_EXT : constant GLenum := 32871;
-   GL_TEXTURE_1D_BINDING_EXT : constant GLenum := 32872;
-   GL_TEXTURE_2D_BINDING_EXT : constant GLenum := 32873;
-   GL_PACK_SKIP_IMAGES_EXT : constant GLenum := 32875;
-   GL_PACK_IMAGE_HEIGHT_EXT : constant GLenum := 32876;
-   GL_UNPACK_SKIP_IMAGES_EXT : constant GLenum := 32877;
-   GL_UNPACK_IMAGE_HEIGHT_EXT : constant GLenum := 32878;
-   GL_TEXTURE_3D_EXT : constant GLenum := 32879;
-   GL_PROXY_TEXTURE_3D_EXT : constant GLenum := 32880;
-   GL_TEXTURE_DEPTH_EXT : constant GLenum := 32881;
-   GL_TEXTURE_WRAP_R_EXT : constant GLenum := 32882;
-   GL_MAX_3D_TEXTURE_SIZE_EXT : constant GLenum := 32883;
-   GL_TEXTURE_3D_BINDING_EXT : constant GLenum := 32874;
-   GL_TABLE_TOO_LARGE_EXT : constant GLenum := 32817;
-   GL_COLOR_TABLE_FORMAT_EXT : constant GLenum := 32984;
-   GL_COLOR_TABLE_WIDTH_EXT : constant GLenum := 32985;
-   GL_COLOR_TABLE_RED_SIZE_EXT : constant GLenum := 32986;
-   GL_COLOR_TABLE_GREEN_SIZE_EXT : constant GLenum := 32987;
-   GL_COLOR_TABLE_BLUE_SIZE_EXT : constant GLenum := 32988;
-   GL_COLOR_TABLE_ALPHA_SIZE_EXT : constant GLenum := 32989;
-   GL_COLOR_TABLE_LUMINANCE_SIZE_EXT : constant GLenum := 32990;
-   GL_COLOR_TABLE_INTENSITY_SIZE_EXT : constant GLenum := 32991;
-   GL_TEXTURE_INDEX_SIZE_EXT : constant GLenum := 33005;
-   GL_COLOR_INDEX1_EXT : constant GLenum := 32994;
-   GL_COLOR_INDEX2_EXT : constant GLenum := 32995;
-   GL_COLOR_INDEX4_EXT : constant GLenum := 32996;
-   GL_COLOR_INDEX8_EXT : constant GLenum := 32997;
-   GL_COLOR_INDEX12_EXT : constant GLenum := 32998;
-   GL_COLOR_INDEX16_EXT : constant GLenum := 32999;
-   GL_SHARED_TEXTURE_PALETTE_EXT : constant GLenum := 33275;
-   GL_POINT_SIZE_MIN_EXT : constant GLenum := 33062;
-   GL_POINT_SIZE_MAX_EXT : constant GLenum := 33063;
-   GL_POINT_FADE_THRESHOLD_SIZE_EXT : constant GLenum := 33064;
-   GL_DISTANCE_ATTENUATION_EXT : constant GLenum := 33065;
-   GL_RESCALE_NORMAL_EXT : constant GLenum := 32826;
-   GL_ABGR_EXT : constant GLenum := 32768;
-   GL_SELECTED_TEXTURE_SGIS : constant GLenum := 33628;
-   GL_SELECTED_TEXTURE_COORD_SET_SGIS : constant GLenum := 33629;
-   GL_MAX_TEXTURES_SGIS : constant GLenum := 33630;
-   GL_TEXTURE0_SGIS : constant GLenum := 33631;
-   GL_TEXTURE1_SGIS : constant GLenum := 33632;
-   GL_TEXTURE2_SGIS : constant GLenum := 33633;
-   GL_TEXTURE3_SGIS : constant GLenum := 33634;
-   GL_TEXTURE_COORD_SET_SOURCE_SGIS : constant GLenum := 33635;
-   GL_SELECTED_TEXTURE_EXT : constant GLenum := 33728;
-   GL_SELECTED_TEXTURE_COORD_SET_EXT : constant GLenum := 33729;
-   GL_SELECTED_TEXTURE_TRANSFORM_EXT : constant GLenum := 33730;
-   GL_MAX_TEXTURES_EXT : constant GLenum := 33731;
-   GL_MAX_TEXTURE_COORD_SETS_EXT : constant GLenum := 33732;
-   GL_TEXTURE_ENV_COORD_SET_EXT : constant GLenum := 33733;
-   GL_TEXTURE0_EXT : constant GLenum := 33734;
-   GL_TEXTURE1_EXT : constant GLenum := 33735;
-   GL_TEXTURE2_EXT : constant GLenum := 33736;
-   GL_TEXTURE3_EXT : constant GLenum := 33737;
-   GL_CLAMP_TO_EDGE_SGIS : constant GLenum := 33071;
-   GL_RESCALE_NORMAL : constant GLenum := 32826;
-   GL_CLAMP_TO_EDGE : constant GLenum := 33071;
-   GL_MAX_ELEMENTS_VERTICES : constant GLenum := 61672;
-   GL_MAX_ELEMENTS_INDICES : constant GLenum := 61673;
-   GL_BGR : constant GLenum := 32992;
-   GL_BGRA : constant GLenum := 32993;
-   GL_UNSIGNED_BYTE_3_3_2 : constant GLenum := 32818;
-   GL_UNSIGNED_BYTE_2_3_3_REV : constant GLenum := 33634;
-   GL_UNSIGNED_SHORT_5_6_5 : constant GLenum := 33635;
-   GL_UNSIGNED_SHORT_5_6_5_REV : constant GLenum := 33636;
-   GL_UNSIGNED_SHORT_4_4_4_4 : constant GLenum := 32819;
-   GL_UNSIGNED_SHORT_4_4_4_4_REV : constant GLenum := 33637;
-   GL_UNSIGNED_SHORT_5_5_5_1 : constant GLenum := 32820;
-   GL_UNSIGNED_SHORT_1_5_5_5_REV : constant GLenum := 33638;
-   GL_UNSIGNED_INT_8_8_8_8 : constant GLenum := 32821;
-   GL_UNSIGNED_INT_8_8_8_8_REV : constant GLenum := 33639;
-   GL_UNSIGNED_INT_10_10_10_2 : constant GLenum := 32822;
-   GL_UNSIGNED_INT_2_10_10_10_REV : constant GLenum := 33640;
-   GL_LIGHT_MODEL_COLOR_CONTROL : constant GLenum := 33272;
-   GL_SINGLE_COLOR : constant GLenum := 33273;
-   GL_SEPARATE_SPECULAR_COLOR : constant GLenum := 33274;
-   GL_TEXTURE_MIN_LOD : constant GLenum := 33082;
-   GL_TEXTURE_MAX_LOD : constant GLenum := 33083;
-   GL_TEXTURE_BASE_LEVEL : constant GLenum := 33084;
-   GL_TEXTURE_MAX_LEVEL : constant GLenum := 33085;
+  -- 1-byte signed
+   subtype GLbyte is signed_char;
 
-   --   GL_NO_ERROR must be zero
+  -- 2-byte signed
+   subtype GLshort is short;
 
-   GL_NO_ERROR : constant := 0;
-
-   subtype GLbitfield is Interfaces.C.unsigned;
-
-   GL_CURRENT_BIT         : constant Glbitfield := 16#00000001#;
-   GL_POINT_BIT           : constant Glbitfield := 16#00000002#;
-   GL_LINE_BIT            : constant Glbitfield := 16#00000004#;
-   GL_POLYGON_BIT         : constant Glbitfield := 16#00000008#;
-   GL_POLYGON_STIPPLE_BIT : constant Glbitfield := 16#00000010#;
-   GL_PIXEL_MODE_BIT      : constant Glbitfield := 16#00000020#;
-   GL_LIGHTING_BIT        : constant Glbitfield := 16#00000040#;
-   GL_FOG_BIT             : constant Glbitfield := 16#00000080#;
-   GL_DEPTH_BUFFER_BIT    : constant Glbitfield := 16#00000100#;
-   GL_ACCUM_BUFFER_BIT    : constant Glbitfield := 16#00000200#;
-   GL_STENCIL_BUFFER_BIT  : constant Glbitfield := 16#00000400#;
-   GL_VIEWPORT_BIT        : constant Glbitfield := 16#00000800#;
-   GL_TRANSFORM_BIT       : constant Glbitfield := 16#00001000#;
-   GL_ENABLE_BIT          : constant Glbitfield := 16#00002000#;
-   GL_COLOR_BUFFER_BIT    : constant Glbitfield := 16#00004000#;
-   GL_HINT_BIT            : constant Glbitfield := 16#00008000#;
-   GL_EVAL_BIT            : constant Glbitfield := 16#00010000#;
-   GL_LIST_BIT            : constant Glbitfield := 16#00020000#;
-   GL_TEXTURE_BIT         : constant Glbitfield := 16#00040000#;
-   GL_SCISSOR_BIT         : constant Glbitfield := 16#00080000#;
-   GL_ALL_ATTRIB_BITS     : constant Glbitfield := 16#000fffff#;
-
-
-   --
-   --  Data types (may be architecture dependent in some cases)
-   --
-
-   --  C type              GL type                 storage
---  -------------------------------------------------------------------------
-
-   type Void is null record ;
-
-   subtype GLvoid          is Void;
-   subtype GLboolean       is Interfaces.C.unsigned_char;
-   subtype GLbyte          is Interfaces.C.signed_char;    --  1-byte signed
-   subtype GLshort         is Short_Integer;               --  2-byte signed
-   subtype GLint           is Integer;                     --  4-byte signed
+  -- 4-byte signed
+   subtype GLint is int;
    type    GLint_Vec_4     is array (0 .. 3) of GLint;
-   subtype GLubyte         is Interfaces.C.unsigned_char;  --  1-byte unsigned
+
+  -- 1-byte unsigned
+   subtype GLubyte is unsigned_char;
    type    GLubyte_Ptr     is access GLubyte;
-   subtype GLushort        is Interfaces.C.unsigned_short;  --  2-byte unsigned
-   subtype GLuint          is Interfaces.C.unsigned;        --  4-byte unsigned
-   subtype GLsizei         is Integer;                      --  4-byte signed
-   subtype GLfloat         is Float;  --  single precision float
+
+  -- 2-byte unsigned
+   subtype GLushort is unsigned_short;
+
+  -- 4-byte unsigned
+   subtype GLuint is unsigned;
+
+  -- 4-byte signed
+   subtype GLsizei is int;
+
+  -- single precision float
+   subtype GLfloat is float;
    type    GLfloat_Vec_16  is array (0 .. 15) of GLfloat;
-   subtype GLclampf        is Float;       --  single precision float in [0;1]
-   subtype GLdouble        is Long_Float;  --  double precision float
+
+  -- single precision float in [0,1]
+   subtype GLclampf is float;
+
+  -- double precision float
+   subtype GLdouble is double;
    type    GLdouble_Vec_3  is array (0 .. 2) of GLdouble;
    type    GLdouble_Vec_16 is array (0 .. 15) of GLdouble;
-   subtype GLclampd        is Long_Float;  --  double precision float in [0;1]
 
-   --
-   --  Miscellaneous
-   --
+  -- double precision float in [0,1]
+   subtype GLclampd is double;
+
+   --  ----------
+   --  Constants
+   --  ----------
+
+   --  Boolean values
+   GL_FALSE : constant := 16#0#;
+   GL_TRUE : constant := 16#1#;
+
+   -- Data types
+   GL_BYTE : constant := 16#1400#;
+   GL_UNSIGNED_BYTE : constant := 16#1401#;
+   GL_SHORT : constant := 16#1402#;
+   GL_UNSIGNED_SHORT : constant := 16#1403#;
+   GL_INT : constant := 16#1404#;
+   GL_UNSIGNED_INT : constant := 16#1405#;
+   GL_FLOAT : constant := 16#1406#;
+   GL_2_BYTES : constant := 16#1407#;
+   GL_3_BYTES : constant := 16#1408#;
+   GL_4_BYTES : constant := 16#1409#;
+   GL_DOUBLE : constant := 16#140A#;
+
+   -- Primitives
+   GL_POINTS : constant := 16#0000#;
+   GL_LINES : constant := 16#0001#;
+   GL_LINE_LOOP : constant := 16#0002#;
+   GL_LINE_STRIP : constant := 16#0003#;
+   GL_TRIANGLES : constant := 16#0004#;
+   GL_TRIANGLE_STRIP : constant := 16#0005#;
+   GL_TRIANGLE_FAN : constant := 16#0006#;
+   GL_QUADS : constant := 16#0007#;
+   GL_QUAD_STRIP : constant := 16#0008#;
+   GL_POLYGON : constant := 16#0009#;
+
+   -- Vertex Arrays
+   GL_VERTEX_ARRAY : constant := 16#8074#;
+   GL_NORMAL_ARRAY : constant := 16#8075#;
+   GL_COLOR_ARRAY : constant := 16#8076#;
+   GL_INDEX_ARRAY : constant := 16#8077#;
+   GL_TEXTURE_COORD_ARRAY : constant := 16#8078#;
+   GL_EDGE_FLAG_ARRAY : constant := 16#8079#;
+   GL_VERTEX_ARRAY_SIZE : constant := 16#807A#;
+   GL_VERTEX_ARRAY_TYPE : constant := 16#807B#;
+   GL_VERTEX_ARRAY_STRIDE : constant := 16#807C#;
+   GL_NORMAL_ARRAY_TYPE : constant := 16#807E#;
+   GL_NORMAL_ARRAY_STRIDE : constant := 16#807F#;
+   GL_COLOR_ARRAY_SIZE : constant := 16#8081#;
+   GL_COLOR_ARRAY_TYPE : constant := 16#8082#;
+   GL_COLOR_ARRAY_STRIDE : constant := 16#8083#;
+   GL_INDEX_ARRAY_TYPE : constant := 16#8085#;
+   GL_INDEX_ARRAY_STRIDE : constant := 16#8086#;
+   GL_TEXTURE_COORD_ARRAY_SIZE : constant := 16#8088#;
+   GL_TEXTURE_COORD_ARRAY_TYPE : constant := 16#8089#;
+   GL_TEXTURE_COORD_ARRAY_STRIDE : constant := 16#808A#;
+   GL_EDGE_FLAG_ARRAY_STRIDE : constant := 16#808C#;
+   GL_VERTEX_ARRAY_POINTER : constant := 16#808E#;
+   GL_NORMAL_ARRAY_POINTER : constant := 16#808F#;
+   GL_COLOR_ARRAY_POINTER : constant := 16#8090#;
+   GL_INDEX_ARRAY_POINTER : constant := 16#8091#;
+   GL_TEXTURE_COORD_ARRAY_POINTER : constant := 16#8092#;
+   GL_EDGE_FLAG_ARRAY_POINTER : constant := 16#8093#;
+   GL_V2F : constant := 16#2A20#;
+   GL_V3F : constant := 16#2A21#;
+   GL_C4UB_V2F : constant := 16#2A22#;
+   GL_C4UB_V3F : constant := 16#2A23#;
+   GL_C3F_V3F : constant := 16#2A24#;
+   GL_N3F_V3F : constant := 16#2A25#;
+   GL_C4F_N3F_V3F : constant := 16#2A26#;
+   GL_T2F_V3F : constant := 16#2A27#;
+   GL_T4F_V4F : constant := 16#2A28#;
+   GL_T2F_C4UB_V3F : constant := 16#2A29#;
+   GL_T2F_C3F_V3F : constant := 16#2A2A#;
+   GL_T2F_N3F_V3F : constant := 16#2A2B#;
+   GL_T2F_C4F_N3F_V3F : constant := 16#2A2C#;
+   GL_T4F_C4F_N3F_V4F : constant := 16#2A2D#;
+
+   -- Matrix Mode
+   GL_MATRIX_MODE : constant := 16#0BA0#;
+   GL_MODELVIEW : constant := 16#1700#;
+   GL_PROJECTION : constant := 16#1701#;
+   GL_TEXTURE : constant := 16#1702#;
+
+   -- Points
+   GL_POINT_SMOOTH : constant := 16#0B10#;
+   GL_POINT_SIZE : constant := 16#0B11#;
+   GL_POINT_SIZE_GRANULARITY : constant := 16#0B13#;
+   GL_POINT_SIZE_RANGE : constant := 16#0B12#;
+
+   -- Lines
+   GL_LINE_SMOOTH : constant := 16#0B20#;
+   GL_LINE_STIPPLE : constant := 16#0B24#;
+   GL_LINE_STIPPLE_PATTERN : constant := 16#0B25#;
+   GL_LINE_STIPPLE_REPEAT : constant := 16#0B26#;
+   GL_LINE_WIDTH : constant := 16#0B21#;
+   GL_LINE_WIDTH_GRANULARITY : constant := 16#0B23#;
+   GL_LINE_WIDTH_RANGE : constant := 16#0B22#;
+
+   -- Polygons
+   GL_POINT : constant := 16#1B00#;
+   GL_LINE : constant := 16#1B01#;
+   GL_FILL : constant := 16#1B02#;
+   GL_CW : constant := 16#0900#;
+   GL_CCW : constant := 16#0901#;
+   GL_FRONT : constant := 16#0404#;
+   GL_BACK : constant := 16#0405#;
+   GL_POLYGON_MODE : constant := 16#0B40#;
+   GL_POLYGON_SMOOTH : constant := 16#0B41#;
+   GL_POLYGON_STIPPLE : constant := 16#0B42#;
+   GL_EDGE_FLAG : constant := 16#0B43#;
+   GL_CULL_FACE : constant := 16#0B44#;
+   GL_CULL_FACE_MODE : constant := 16#0B45#;
+   GL_FRONT_FACE : constant := 16#0B46#;
+   GL_POLYGON_OFFSET_FACTOR : constant := 16#8038#;
+   GL_POLYGON_OFFSET_UNITS : constant := 16#2A00#;
+   GL_POLYGON_OFFSET_POINT : constant := 16#2A01#;
+   GL_POLYGON_OFFSET_LINE : constant := 16#2A02#;
+   GL_POLYGON_OFFSET_FILL : constant := 16#8037#;
+
+  -- Display Lists
+   GL_COMPILE : constant := 16#1300#;
+   GL_COMPILE_AND_EXECUTE : constant := 16#1301#;
+   GL_LIST_BASE : constant := 16#0B32#;
+   GL_LIST_INDEX : constant := 16#0B33#;
+   GL_LIST_MODE : constant := 16#0B30#;
+
+   -- Depth buffer
+   GL_NEVER : constant := 16#0200#;
+   GL_LESS : constant := 16#0201#;
+   GL_EQUAL : constant := 16#0202#;
+   GL_LEQUAL : constant := 16#0203#;
+   GL_GREATER : constant := 16#0204#;
+   GL_NOTEQUAL : constant := 16#0205#;
+   GL_GEQUAL : constant := 16#0206#;
+   GL_ALWAYS : constant := 16#0207#;
+   GL_DEPTH_TEST : constant := 16#0B71#;
+   GL_DEPTH_BITS : constant := 16#0D56#;
+   GL_DEPTH_CLEAR_VALUE : constant := 16#0B73#;
+   GL_DEPTH_FUNC : constant := 16#0B74#;
+   GL_DEPTH_RANGE : constant := 16#0B70#;
+   GL_DEPTH_WRITEMASK : constant := 16#0B72#;
+   GL_DEPTH_COMPONENT : constant := 16#1902#;
+
+   -- Lighting
+   GL_LIGHTING : constant := 16#0B50#;
+   GL_LIGHT0 : constant := 16#4000#;
+   GL_LIGHT1 : constant := 16#4001#;
+   GL_LIGHT2 : constant := 16#4002#;
+   GL_LIGHT3 : constant := 16#4003#;
+   GL_LIGHT4 : constant := 16#4004#;
+   GL_LIGHT5 : constant := 16#4005#;
+   GL_LIGHT6 : constant := 16#4006#;
+   GL_LIGHT7 : constant := 16#4007#;
+   GL_SPOT_EXPONENT : constant := 16#1205#;
+   GL_SPOT_CUTOFF : constant := 16#1206#;
+   GL_CONSTANT_ATTENUATION : constant := 16#1207#;
+   GL_LINEAR_ATTENUATION : constant := 16#1208#;
+   GL_QUADRATIC_ATTENUATION : constant := 16#1209#;
+   GL_AMBIENT : constant := 16#1200#;
+   GL_DIFFUSE : constant := 16#1201#;
+   GL_SPECULAR : constant := 16#1202#;
+   GL_SHININESS : constant := 16#1601#;
+   GL_EMISSION : constant := 16#1600#;
+   GL_POSITION : constant := 16#1203#;
+   GL_SPOT_DIRECTION : constant := 16#1204#;
+   GL_AMBIENT_AND_DIFFUSE : constant := 16#1602#;
+   GL_COLOR_INDEXES : constant := 16#1603#;
+   GL_LIGHT_MODEL_TWO_SIDE : constant := 16#0B52#;
+   GL_LIGHT_MODEL_LOCAL_VIEWER : constant := 16#0B51#;
+   GL_LIGHT_MODEL_AMBIENT : constant := 16#0B53#;
+   GL_FRONT_AND_BACK : constant := 16#0408#;
+   GL_SHADE_MODEL : constant := 16#0B54#;
+   GL_FLAT : constant := 16#1D00#;
+   GL_SMOOTH : constant := 16#1D01#;
+   GL_COLOR_MATERIAL : constant := 16#0B57#;
+   GL_COLOR_MATERIAL_FACE : constant := 16#0B55#;
+   GL_COLOR_MATERIAL_PARAMETER : constant := 16#0B56#;
+   GL_NORMALIZE : constant := 16#0BA1#;
+
+   -- User clipping planes
+   GL_CLIP_PLANE0 : constant := 16#3000#;
+   GL_CLIP_PLANE1 : constant := 16#3001#;
+   GL_CLIP_PLANE2 : constant := 16#3002#;
+   GL_CLIP_PLANE3 : constant := 16#3003#;
+   GL_CLIP_PLANE4 : constant := 16#3004#;
+   GL_CLIP_PLANE5 : constant := 16#3005#;
+
+   -- Accumulation buffer
+   GL_ACCUM_RED_BITS : constant := 16#0D58#;
+   GL_ACCUM_GREEN_BITS : constant := 16#0D59#;
+   GL_ACCUM_BLUE_BITS : constant := 16#0D5A#;
+   GL_ACCUM_ALPHA_BITS : constant := 16#0D5B#;
+   GL_ACCUM_CLEAR_VALUE : constant := 16#0B80#;
+   GL_ACCUM : constant := 16#0100#;
+   GL_ADD : constant := 16#0104#;
+   GL_LOAD : constant := 16#0101#;
+   GL_MULT : constant := 16#0103#;
+   GL_RETURN : constant := 16#0102#;
+
+   -- Alpha testing
+   GL_ALPHA_TEST : constant := 16#0BC0#;
+   GL_ALPHA_TEST_REF : constant := 16#0BC2#;
+   GL_ALPHA_TEST_FUNC : constant := 16#0BC1#;
+
+   -- Blending
+   GL_BLEND : constant := 16#0BE2#;
+   GL_BLEND_SRC : constant := 16#0BE1#;
+   GL_BLEND_DST : constant := 16#0BE0#;
+   GL_ZERO : constant := 16#0#;
+   GL_ONE : constant := 16#1#;
+   GL_SRC_COLOR : constant := 16#0300#;
+   GL_ONE_MINUS_SRC_COLOR : constant := 16#0301#;
+   GL_SRC_ALPHA : constant := 16#0302#;
+   GL_ONE_MINUS_SRC_ALPHA : constant := 16#0303#;
+   GL_DST_ALPHA : constant := 16#0304#;
+   GL_ONE_MINUS_DST_ALPHA : constant := 16#0305#;
+   GL_DST_COLOR : constant := 16#0306#;
+   GL_ONE_MINUS_DST_COLOR : constant := 16#0307#;
+   GL_SRC_ALPHA_SATURATE : constant := 16#0308#;
+
+   -- Render Mode
+   GL_FEEDBACK : constant := 16#1C01#;
+   GL_RENDER : constant := 16#1C00#;
+   GL_SELECT : constant := 16#1C02#;
+
+   -- Feedback
+   GL_2D : constant := 16#0600#;
+   GL_3D : constant := 16#0601#;
+   GL_3D_COLOR : constant := 16#0602#;
+   GL_3D_COLOR_TEXTURE : constant := 16#0603#;
+   GL_4D_COLOR_TEXTURE : constant := 16#0604#;
+   GL_POINT_TOKEN : constant := 16#0701#;
+   GL_LINE_TOKEN : constant := 16#0702#;
+   GL_LINE_RESET_TOKEN : constant := 16#0707#;
+   GL_POLYGON_TOKEN : constant := 16#0703#;
+   GL_BITMAP_TOKEN : constant := 16#0704#;
+   GL_DRAW_PIXEL_TOKEN : constant := 16#0705#;
+   GL_COPY_PIXEL_TOKEN : constant := 16#0706#;
+   GL_PASS_THROUGH_TOKEN : constant := 16#0700#;
+   GL_FEEDBACK_BUFFER_POINTER : constant := 16#0DF0#;
+   GL_FEEDBACK_BUFFER_SIZE : constant := 16#0DF1#;
+   GL_FEEDBACK_BUFFER_TYPE : constant := 16#0DF2#;
+
+   -- Selection
+   GL_SELECTION_BUFFER_POINTER : constant := 16#0DF3#;
+   GL_SELECTION_BUFFER_SIZE : constant := 16#0DF4#;
+
+   -- Fog
+   GL_FOG : constant := 16#0B60#;
+   GL_FOG_MODE : constant := 16#0B65#;
+   GL_FOG_DENSITY : constant := 16#0B62#;
+   GL_FOG_COLOR : constant := 16#0B66#;
+   GL_FOG_INDEX : constant := 16#0B61#;
+   GL_FOG_START : constant := 16#0B63#;
+   GL_FOG_END : constant := 16#0B64#;
+   GL_LINEAR : constant := 16#2601#;
+   GL_EXP : constant := 16#0800#;
+   GL_EXP2 : constant := 16#0801#;
+
+   -- Logic Ops
+   GL_LOGIC_OP : constant := 16#0BF1#;
+   GL_INDEX_LOGIC_OP : constant := 16#0BF1#;
+   GL_COLOR_LOGIC_OP : constant := 16#0BF2#;
+   GL_LOGIC_OP_MODE : constant := 16#0BF0#;
+   GL_CLEAR : constant := 16#1500#;
+   GL_SET : constant := 16#150F#;
+   GL_COPY : constant := 16#1503#;
+   GL_COPY_INVERTED : constant := 16#150C#;
+   GL_NOOP : constant := 16#1505#;
+   GL_INVERT : constant := 16#150A#;
+   GL_AND : constant := 16#1501#;
+   GL_NAND : constant := 16#150E#;
+   GL_OR : constant := 16#1507#;
+   GL_NOR : constant := 16#1508#;
+   GL_XOR : constant := 16#1506#;
+   GL_EQUIV : constant := 16#1509#;
+   GL_AND_REVERSE : constant := 16#1502#;
+   GL_AND_INVERTED : constant := 16#1504#;
+   GL_OR_REVERSE : constant := 16#150B#;
+   GL_OR_INVERTED : constant := 16#150D#;
+
+   -- Stencil
+   GL_STENCIL_BITS : constant := 16#0D57#;
+   GL_STENCIL_TEST : constant := 16#0B90#;
+   GL_STENCIL_CLEAR_VALUE : constant := 16#0B91#;
+   GL_STENCIL_FUNC : constant := 16#0B92#;
+   GL_STENCIL_VALUE_MASK : constant := 16#0B93#;
+   GL_STENCIL_FAIL : constant := 16#0B94#;
+   GL_STENCIL_PASS_DEPTH_FAIL : constant := 16#0B95#;
+   GL_STENCIL_PASS_DEPTH_PASS : constant := 16#0B96#;
+   GL_STENCIL_REF : constant := 16#0B97#;
+   GL_STENCIL_WRITEMASK : constant := 16#0B98#;
+   GL_STENCIL_INDEX : constant := 16#1901#;
+   GL_KEEP : constant := 16#1E00#;
+   GL_REPLACE : constant := 16#1E01#;
+   GL_INCR : constant := 16#1E02#;
+   GL_DECR : constant := 16#1E03#;
+
+  -- Buffers, Pixel Drawing/Reading
+   GL_NONE : constant := 16#0#;
+   GL_LEFT : constant := 16#0406#;
+   GL_RIGHT : constant := 16#0407#;
+   --  GL_FRONT : constant := 16#0404#
+   --  GL_BACK : constant := 16#0405#
+   --  GL_FRONT_AND_BACK : constant := 16#0408#
+   GL_FRONT_LEFT : constant := 16#0400#;
+   GL_FRONT_RIGHT : constant := 16#0401#;
+   GL_BACK_LEFT : constant := 16#0402#;
+   GL_BACK_RIGHT : constant := 16#0403#;
+   GL_AUX0 : constant := 16#0409#;
+   GL_AUX1 : constant := 16#040A#;
+   GL_AUX2 : constant := 16#040B#;
+   GL_AUX3 : constant := 16#040C#;
+   GL_COLOR_INDEX : constant := 16#1900#;
+   GL_RED : constant := 16#1903#;
+   GL_GREEN : constant := 16#1904#;
+   GL_BLUE : constant := 16#1905#;
+   GL_ALPHA : constant := 16#1906#;
+   GL_LUMINANCE : constant := 16#1909#;
+   GL_LUMINANCE_ALPHA : constant := 16#190A#;
+   GL_ALPHA_BITS : constant := 16#0D55#;
+   GL_RED_BITS : constant := 16#0D52#;
+   GL_GREEN_BITS : constant := 16#0D53#;
+   GL_BLUE_BITS : constant := 16#0D54#;
+   GL_INDEX_BITS : constant := 16#0D51#;
+   GL_SUBPIXEL_BITS : constant := 16#0D50#;
+   GL_AUX_BUFFERS : constant := 16#0C00#;
+   GL_READ_BUFFER : constant := 16#0C02#;
+   GL_DRAW_BUFFER : constant := 16#0C01#;
+   GL_DOUBLEBUFFER : constant := 16#0C32#;
+   GL_STEREO : constant := 16#0C33#;
+   GL_BITMAP : constant := 16#1A00#;
+   GL_COLOR : constant := 16#1800#;
+   GL_DEPTH : constant := 16#1801#;
+   GL_STENCIL : constant := 16#1802#;
+   GL_DITHER : constant := 16#0BD0#;
+   GL_RGB : constant := 16#1907#;
+   GL_RGBA : constant := 16#1908#;
+
+  -- Implementation limits
+   GL_MAX_LIST_NESTING : constant := 16#0B31#;
+   GL_MAX_EVAL_ORDER : constant := 16#0D30#;
+   GL_MAX_LIGHTS : constant := 16#0D31#;
+   GL_MAX_CLIP_PLANES : constant := 16#0D32#;
+   GL_MAX_TEXTURE_SIZE : constant := 16#0D33#;
+   GL_MAX_PIXEL_MAP_TABLE : constant := 16#0D34#;
+   GL_MAX_ATTRIB_STACK_DEPTH : constant := 16#0D35#;
+   GL_MAX_MODELVIEW_STACK_DEPTH : constant := 16#0D36#;
+   GL_MAX_NAME_STACK_DEPTH : constant := 16#0D37#;
+   GL_MAX_PROJECTION_STACK_DEPTH : constant := 16#0D38#;
+   GL_MAX_TEXTURE_STACK_DEPTH : constant := 16#0D39#;
+   GL_MAX_VIEWPORT_DIMS : constant := 16#0D3A#;
+   GL_MAX_CLIENT_ATTRIB_STACK_DEPTH : constant := 16#0D3B#;
+
+   -- Gets
+   GL_ATTRIB_STACK_DEPTH : constant := 16#0BB0#;
+   GL_CLIENT_ATTRIB_STACK_DEPTH : constant := 16#0BB1#;
+   GL_COLOR_CLEAR_VALUE : constant := 16#0C22#;
+   GL_COLOR_WRITEMASK : constant := 16#0C23#;
+   GL_CURRENT_INDEX : constant := 16#0B01#;
+   GL_CURRENT_COLOR : constant := 16#0B00#;
+   GL_CURRENT_NORMAL : constant := 16#0B02#;
+   GL_CURRENT_RASTER_COLOR : constant := 16#0B04#;
+   GL_CURRENT_RASTER_DISTANCE : constant := 16#0B09#;
+   GL_CURRENT_RASTER_INDEX : constant := 16#0B05#;
+   GL_CURRENT_RASTER_POSITION : constant := 16#0B07#;
+   GL_CURRENT_RASTER_TEXTURE_COORDS : constant := 16#0B06#;
+   GL_CURRENT_RASTER_POSITION_VALID : constant := 16#0B08#;
+   GL_CURRENT_TEXTURE_COORDS : constant := 16#0B03#;
+   GL_INDEX_CLEAR_VALUE : constant := 16#0C20#;
+   GL_INDEX_MODE : constant := 16#0C30#;
+   GL_INDEX_WRITEMASK : constant := 16#0C21#;
+   GL_MODELVIEW_MATRIX : constant := 16#0BA6#;
+   GL_MODELVIEW_STACK_DEPTH : constant := 16#0BA3#;
+   GL_NAME_STACK_DEPTH : constant := 16#0D70#;
+   GL_PROJECTION_MATRIX : constant := 16#0BA7#;
+   GL_PROJECTION_STACK_DEPTH : constant := 16#0BA4#;
+   GL_RENDER_MODE : constant := 16#0C40#;
+   GL_RGBA_MODE : constant := 16#0C31#;
+   GL_TEXTURE_MATRIX : constant := 16#0BA8#;
+   GL_TEXTURE_STACK_DEPTH : constant := 16#0BA5#;
+   GL_VIEWPORT : constant := 16#0BA2#;
+
+   -- Evaluators
+   GL_AUTO_NORMAL : constant := 16#0D80#;
+   GL_MAP1_COLOR_4 : constant := 16#0D90#;
+   GL_MAP1_INDEX : constant := 16#0D91#;
+   GL_MAP1_NORMAL : constant := 16#0D92#;
+   GL_MAP1_TEXTURE_COORD_1 : constant := 16#0D93#;
+   GL_MAP1_TEXTURE_COORD_2 : constant := 16#0D94#;
+   GL_MAP1_TEXTURE_COORD_3 : constant := 16#0D95#;
+   GL_MAP1_TEXTURE_COORD_4 : constant := 16#0D96#;
+   GL_MAP1_VERTEX_3 : constant := 16#0D97#;
+   GL_MAP1_VERTEX_4 : constant := 16#0D98#;
+   GL_MAP2_COLOR_4 : constant := 16#0DB0#;
+   GL_MAP2_INDEX : constant := 16#0DB1#;
+   GL_MAP2_NORMAL : constant := 16#0DB2#;
+   GL_MAP2_TEXTURE_COORD_1 : constant := 16#0DB3#;
+   GL_MAP2_TEXTURE_COORD_2 : constant := 16#0DB4#;
+   GL_MAP2_TEXTURE_COORD_3 : constant := 16#0DB5#;
+   GL_MAP2_TEXTURE_COORD_4 : constant := 16#0DB6#;
+   GL_MAP2_VERTEX_3 : constant := 16#0DB7#;
+   GL_MAP2_VERTEX_4 : constant := 16#0DB8#;
+   GL_MAP1_GRID_DOMAIN : constant := 16#0DD0#;
+   GL_MAP1_GRID_SEGMENTS : constant := 16#0DD1#;
+   GL_MAP2_GRID_DOMAIN : constant := 16#0DD2#;
+   GL_MAP2_GRID_SEGMENTS : constant := 16#0DD3#;
+   GL_COEFF : constant := 16#0A00#;
+   GL_ORDER : constant := 16#0A01#;
+   GL_DOMAIN : constant := 16#0A02#;
+
+   -- Hints
+   GL_PERSPECTIVE_CORRECTION_HINT : constant := 16#0C50#;
+   GL_POINT_SMOOTH_HINT : constant := 16#0C51#;
+   GL_LINE_SMOOTH_HINT : constant := 16#0C52#;
+   GL_POLYGON_SMOOTH_HINT : constant := 16#0C53#;
+   GL_FOG_HINT : constant := 16#0C54#;
+   GL_DONT_CARE : constant := 16#1100#;
+   GL_FASTEST : constant := 16#1101#;
+   GL_NICEST : constant := 16#1102#;
+
+   -- Scissor box
+   GL_SCISSOR_BOX : constant := 16#0C10#;
+   GL_SCISSOR_TEST : constant := 16#0C11#;
+
+   -- Pixel Mode / Transfer
+   GL_MAP_COLOR : constant := 16#0D10#;
+   GL_MAP_STENCIL : constant := 16#0D11#;
+   GL_INDEX_SHIFT : constant := 16#0D12#;
+   GL_INDEX_OFFSET : constant := 16#0D13#;
+   GL_RED_SCALE : constant := 16#0D14#;
+   GL_RED_BIAS : constant := 16#0D15#;
+   GL_GREEN_SCALE : constant := 16#0D18#;
+   GL_GREEN_BIAS : constant := 16#0D19#;
+   GL_BLUE_SCALE : constant := 16#0D1A#;
+   GL_BLUE_BIAS : constant := 16#0D1B#;
+   GL_ALPHA_SCALE : constant := 16#0D1C#;
+   GL_ALPHA_BIAS : constant := 16#0D1D#;
+   GL_DEPTH_SCALE : constant := 16#0D1E#;
+   GL_DEPTH_BIAS : constant := 16#0D1F#;
+   GL_PIXEL_MAP_S_TO_S_SIZE : constant := 16#0CB1#;
+   GL_PIXEL_MAP_I_TO_I_SIZE : constant := 16#0CB0#;
+   GL_PIXEL_MAP_I_TO_R_SIZE : constant := 16#0CB2#;
+   GL_PIXEL_MAP_I_TO_G_SIZE : constant := 16#0CB3#;
+   GL_PIXEL_MAP_I_TO_B_SIZE : constant := 16#0CB4#;
+   GL_PIXEL_MAP_I_TO_A_SIZE : constant := 16#0CB5#;
+   GL_PIXEL_MAP_R_TO_R_SIZE : constant := 16#0CB6#;
+   GL_PIXEL_MAP_G_TO_G_SIZE : constant := 16#0CB7#;
+   GL_PIXEL_MAP_B_TO_B_SIZE : constant := 16#0CB8#;
+   GL_PIXEL_MAP_A_TO_A_SIZE : constant := 16#0CB9#;
+   GL_PIXEL_MAP_S_TO_S : constant := 16#0C71#;
+   GL_PIXEL_MAP_I_TO_I : constant := 16#0C70#;
+   GL_PIXEL_MAP_I_TO_R : constant := 16#0C72#;
+   GL_PIXEL_MAP_I_TO_G : constant := 16#0C73#;
+   GL_PIXEL_MAP_I_TO_B : constant := 16#0C74#;
+   GL_PIXEL_MAP_I_TO_A : constant := 16#0C75#;
+   GL_PIXEL_MAP_R_TO_R : constant := 16#0C76#;
+   GL_PIXEL_MAP_G_TO_G : constant := 16#0C77#;
+   GL_PIXEL_MAP_B_TO_B : constant := 16#0C78#;
+   GL_PIXEL_MAP_A_TO_A : constant := 16#0C79#;
+   GL_PACK_ALIGNMENT : constant := 16#0D05#;
+   GL_PACK_LSB_FIRST : constant := 16#0D01#;
+   GL_PACK_ROW_LENGTH : constant := 16#0D02#;
+   GL_PACK_SKIP_PIXELS : constant := 16#0D04#;
+   GL_PACK_SKIP_ROWS : constant := 16#0D03#;
+   GL_PACK_SWAP_BYTES : constant := 16#0D00#;
+   GL_UNPACK_ALIGNMENT : constant := 16#0CF5#;
+   GL_UNPACK_LSB_FIRST : constant := 16#0CF1#;
+   GL_UNPACK_ROW_LENGTH : constant := 16#0CF2#;
+   GL_UNPACK_SKIP_PIXELS : constant := 16#0CF4#;
+   GL_UNPACK_SKIP_ROWS : constant := 16#0CF3#;
+   GL_UNPACK_SWAP_BYTES : constant := 16#0CF0#;
+   GL_ZOOM_X : constant := 16#0D16#;
+   GL_ZOOM_Y : constant := 16#0D17#;
+
+   -- Texture mapping
+   GL_TEXTURE_ENV : constant := 16#2300#;
+   GL_TEXTURE_ENV_MODE : constant := 16#2200#;
+   GL_TEXTURE_1D : constant := 16#0DE0#;
+   GL_TEXTURE_2D : constant := 16#0DE1#;
+   GL_TEXTURE_WRAP_S : constant := 16#2802#;
+   GL_TEXTURE_WRAP_T : constant := 16#2803#;
+   GL_TEXTURE_MAG_FILTER : constant := 16#2800#;
+   GL_TEXTURE_MIN_FILTER : constant := 16#2801#;
+   GL_TEXTURE_ENV_COLOR : constant := 16#2201#;
+   GL_TEXTURE_GEN_S : constant := 16#0C60#;
+   GL_TEXTURE_GEN_T : constant := 16#0C61#;
+   GL_TEXTURE_GEN_R : constant := 16#0C62#;
+   GL_TEXTURE_GEN_Q : constant := 16#0C63#;
+   GL_TEXTURE_GEN_MODE : constant := 16#2500#;
+   GL_TEXTURE_BORDER_COLOR : constant := 16#1004#;
+   GL_TEXTURE_WIDTH : constant := 16#1000#;
+   GL_TEXTURE_HEIGHT : constant := 16#1001#;
+   GL_TEXTURE_BORDER : constant := 16#1005#;
+   GL_TEXTURE_COMPONENTS : constant := 16#1003#;
+   GL_TEXTURE_RED_SIZE : constant := 16#805C#;
+   GL_TEXTURE_GREEN_SIZE : constant := 16#805D#;
+   GL_TEXTURE_BLUE_SIZE : constant := 16#805E#;
+   GL_TEXTURE_ALPHA_SIZE : constant := 16#805F#;
+   GL_TEXTURE_LUMINANCE_SIZE : constant := 16#8060#;
+   GL_TEXTURE_INTENSITY_SIZE : constant := 16#8061#;
+   GL_NEAREST_MIPMAP_NEAREST : constant := 16#2700#;
+   GL_NEAREST_MIPMAP_LINEAR : constant := 16#2702#;
+   GL_LINEAR_MIPMAP_NEAREST : constant := 16#2701#;
+   GL_LINEAR_MIPMAP_LINEAR : constant := 16#2703#;
+   GL_OBJECT_LINEAR : constant := 16#2401#;
+   GL_OBJECT_PLANE : constant := 16#2501#;
+   GL_EYE_LINEAR : constant := 16#2400#;
+   GL_EYE_PLANE : constant := 16#2502#;
+   GL_SPHERE_MAP : constant := 16#2402#;
+   GL_DECAL : constant := 16#2101#;
+   GL_MODULATE : constant := 16#2100#;
+   GL_NEAREST : constant := 16#2600#;
+   GL_REPEAT : constant := 16#2901#;
+   GL_CLAMP : constant := 16#2900#;
+   GL_S : constant := 16#2000#;
+   GL_T : constant := 16#2001#;
+   GL_R : constant := 16#2002#;
+   GL_Q : constant := 16#2003#;
+
+   -- Utility
+   GL_VENDOR : constant := 16#1F00#;
+   GL_RENDERER : constant := 16#1F01#;
+   GL_VERSION : constant := 16#1F02#;
+   GL_EXTENSIONS : constant := 16#1F03#;
+
+   -- Errors
+   GL_NO_ERROR : constant := 16#0#;
+   GL_INVALID_ENUM : constant := 16#0500#;
+   GL_INVALID_VALUE : constant := 16#0501#;
+   GL_INVALID_OPERATION : constant := 16#0502#;
+   GL_STACK_OVERFLOW : constant := 16#0503#;
+   GL_STACK_UNDERFLOW : constant := 16#0504#;
+   GL_OUT_OF_MEMORY : constant := 16#0505#;
+
+   -- glPush/PopAttrib bits
+   GL_CURRENT_BIT : constant := 16#00000001#;
+   GL_POINT_BIT : constant := 16#00000002#;
+   GL_LINE_BIT : constant := 16#00000004#;
+   GL_POLYGON_BIT : constant := 16#00000008#;
+   GL_POLYGON_STIPPLE_BIT : constant := 16#00000010#;
+   GL_PIXEL_MODE_BIT : constant := 16#00000020#;
+   GL_LIGHTING_BIT : constant := 16#00000040#;
+   GL_FOG_BIT : constant := 16#00000080#;
+   GL_DEPTH_BUFFER_BIT : constant := 16#00000100#;
+   GL_ACCUM_BUFFER_BIT : constant := 16#00000200#;
+   GL_STENCIL_BUFFER_BIT : constant := 16#00000400#;
+   GL_VIEWPORT_BIT : constant := 16#00000800#;
+   GL_TRANSFORM_BIT : constant := 16#00001000#;
+   GL_ENABLE_BIT : constant := 16#00002000#;
+   GL_COLOR_BUFFER_BIT : constant := 16#00004000#;
+   GL_HINT_BIT : constant := 16#00008000#;
+   GL_EVAL_BIT : constant := 16#00010000#;
+   GL_LIST_BIT : constant := 16#00020000#;
+   GL_TEXTURE_BIT : constant := 16#00040000#;
+   GL_SCISSOR_BIT : constant := 16#00080000#;
+   GL_ALL_ATTRIB_BITS : constant := 16#000FFFFF#;
+
+   -- OpenGL 1.1
+   GL_PROXY_TEXTURE_1D : constant := 16#8063#;
+   GL_PROXY_TEXTURE_2D : constant := 16#8064#;
+   GL_TEXTURE_PRIORITY : constant := 16#8066#;
+   GL_TEXTURE_RESIDENT : constant := 16#8067#;
+   GL_TEXTURE_BINDING_1D : constant := 16#8068#;
+   GL_TEXTURE_BINDING_2D : constant := 16#8069#;
+   GL_TEXTURE_INTERNAL_FORMAT : constant := 16#1003#;
+   GL_ALPHA4 : constant := 16#803B#;
+   GL_ALPHA8 : constant := 16#803C#;
+   GL_ALPHA12 : constant := 16#803D#;
+   GL_ALPHA16 : constant := 16#803E#;
+   GL_LUMINANCE4 : constant := 16#803F#;
+   GL_LUMINANCE8 : constant := 16#8040#;
+   GL_LUMINANCE12 : constant := 16#8041#;
+   GL_LUMINANCE16 : constant := 16#8042#;
+   GL_LUMINANCE4_ALPHA4 : constant := 16#8043#;
+   GL_LUMINANCE6_ALPHA2 : constant := 16#8044#;
+   GL_LUMINANCE8_ALPHA8 : constant := 16#8045#;
+   GL_LUMINANCE12_ALPHA4 : constant := 16#8046#;
+   GL_LUMINANCE12_ALPHA12 : constant := 16#8047#;
+   GL_LUMINANCE16_ALPHA16 : constant := 16#8048#;
+   GL_INTENSITY : constant := 16#8049#;
+   GL_INTENSITY4 : constant := 16#804A#;
+   GL_INTENSITY8 : constant := 16#804B#;
+   GL_INTENSITY12 : constant := 16#804C#;
+   GL_INTENSITY16 : constant := 16#804D#;
+   GL_R3_G3_B2 : constant := 16#2A10#;
+   GL_RGB4 : constant := 16#804F#;
+   GL_RGB5 : constant := 16#8050#;
+   GL_RGB8 : constant := 16#8051#;
+   GL_RGB10 : constant := 16#8052#;
+   GL_RGB12 : constant := 16#8053#;
+   GL_RGB16 : constant := 16#8054#;
+   GL_RGBA2 : constant := 16#8055#;
+   GL_RGBA4 : constant := 16#8056#;
+   GL_RGB5_A1 : constant := 16#8057#;
+   GL_RGBA8 : constant := 16#8058#;
+   GL_RGB10_A2 : constant := 16#8059#;
+   GL_RGBA12 : constant := 16#805A#;
+   GL_RGBA16 : constant := 16#805B#;
+   GL_CLIENT_PIXEL_STORE_BIT : constant := 16#00000001#;
+   GL_CLIENT_VERTEX_ARRAY_BIT : constant := 16#00000002#;
+   GL_ALL_CLIENT_ATTRIB_BITS : constant := 16#FFFFFFFF#;
+   GL_CLIENT_ALL_ATTRIB_BITS : constant := 16#FFFFFFFF#;
+
+
+
+
+  --  -------------
+  --  Miscellaneous
+  --  -------------
 
    procedure glClearIndex (c : GLfloat);
-   procedure glClearColor (red   : GLclampf;
-                           green : GLclampf;
-                           blue  : GLclampf;
-                           alpha : GLclampf);
-   procedure glClear (mask : GLbitfield);
-   procedure glIndexMask (mask : GLuint);
-   procedure glColorMask (red   : GLboolean;
-                          green : GLboolean;
-                          blue  : GLboolean;
-                          alpha : GLboolean);
-   procedure glAlphaFunc (func : GLenum; ref : GLclampf);
-   procedure glBlendFunc (sfactor : GLenum; dfactor : GLenum);
-   procedure glLogicOp (opcode : GLenum);
-   procedure glCullFace (mode : GLenum);
-   procedure glFrontFace (mode : GLenum);
-   procedure glPointSize (size : GLfloat);
-   procedure glLineWidth (width : GLfloat);
-   procedure glLineStipple (factor : GLint; pattern : GLushort);
-   procedure glPolygonMode (face : GLenum; mode : GLenum);
-   procedure glPolygonOffset (factor : GLfloat; units : GLfloat);
-   procedure glPolygonStipple (mask : access GLubyte);
-   procedure glGetPolygonStipple (mask : access GLubyte);
-   procedure glEdgeFlag (flag : GLboolean);
-   procedure glEdgeFlagv (flag : access GLboolean);
-   procedure glScissor (x      : GLint;
-                        y      : GLint;
-                        width  : GLsizei;
-                        height : GLsizei);
-   procedure glClipPlane (plane : GLenum; equation : access GLdouble);
-   procedure glGetClipPlane (plane : GLenum; equation : access GLdouble);
-   procedure glDrawBuffer (mode : GLenum);
-   procedure glReadBuffer (mode : GLenum);
-   procedure glEnable (cap : GLenum);
-   procedure glDisable (cap : GLenum);
-   function glIsEnabled (cap : GLenum) return GLboolean;
-   procedure glEnableClientState (cap : GLenum  --  1.1
-         );
-   procedure glDisableClientState (cap : GLenum  --  1.1
-         );
-   procedure glGetBooleanv (pname : GLenum; params : access GLboolean);
-   procedure glGetDoublev (pname : GLenum; params : access GLdouble);
-   procedure glGetFloatv (pname : GLenum; params : access GLfloat);
-   procedure glGetIntegerv (pname : GLenum; params : access GLint);
-   procedure glPushAttrib (mask : GLbitfield);
-   procedure glPopAttrib;
-   procedure glPushClientAttrib (mask : GLbitfield  --  1.1
-         );
-   procedure glPopClientAttrib;    --  1.1
-   function glRenderMode (mode : GLenum) return GLint;
-   function glGetError return GLenum;
-   function glGetString (name : GLenum) return GLubyte_Ptr;
-   procedure glFinish;
-   procedure glFlush;
-   procedure glHint (target : GLenum; mode : GLenum);
+   pragma Import (C, glClearIndex, "glClearIndex");
 
-   --
+   procedure glClearColor
+     (red : GLclampf;
+      green : GLclampf;
+      blue : GLclampf;
+      alpha : GLclampf);
+   pragma Import (C, glClearColor, "glClearColor");
+
+   procedure glClear (mask : GLbitfield);
+   pragma Import (C, glClear, "glClear");
+
+   procedure glIndexMask (mask : GLuint);
+   pragma Import (C, glIndexMask, "glIndexMask");
+
+   procedure glColorMask
+     (red : GLboolean;
+      green : GLboolean;
+      blue : GLboolean;
+      alpha : GLboolean);
+   pragma Import (C, glColorMask, "glColorMask");
+
+   procedure glAlphaFunc (func : GLenum; ref : GLclampf);
+   pragma Import (C, glAlphaFunc, "glAlphaFunc");
+
+   procedure glBlendFunc (sfactor : GLenum; dfactor : GLenum);
+   pragma Import (C, glBlendFunc, "glBlendFunc");
+
+   procedure glLogicOp (opcode : GLenum);
+   pragma Import (C, glLogicOp, "glLogicOp");
+
+   procedure glCullFace (mode : GLenum);
+   pragma Import (C, glCullFace, "glCullFace");
+
+   procedure glFrontFace (mode : GLenum);
+   pragma Import (C, glFrontFace, "glFrontFace");
+
+   procedure glPointSize (size : GLfloat);
+   pragma Import (C, glPointSize, "glPointSize");
+
+   procedure glLineWidth (width : GLfloat);
+   pragma Import (C, glLineWidth, "glLineWidth");
+
+   procedure glLineStipple (factor : GLint; pattern : GLushort);
+   pragma Import (C, glLineStipple, "glLineStipple");
+
+   procedure glPolygonMode (face : GLenum; mode : GLenum);
+   pragma Import (C, glPolygonMode, "glPolygonMode");
+
+   procedure glPolygonOffset (factor : GLfloat; units : GLfloat);
+   pragma Import (C, glPolygonOffset, "glPolygonOffset");
+
+   procedure glPolygonStipple (mask : access GLubyte);
+   pragma Import (C, glPolygonStipple, "glPolygonStipple");
+
+   procedure glGetPolygonStipple (mask : access GLubyte);
+   pragma Import (C, glGetPolygonStipple, "glGetPolygonStipple");
+
+   procedure glEdgeFlag (flag : GLboolean);
+   pragma Import (C, glEdgeFlag, "glEdgeFlag");
+
+   procedure glEdgeFlagv (flag : access GLboolean);
+   pragma Import (C, glEdgeFlagv, "glEdgeFlagv");
+
+   procedure glScissor
+     (x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei);
+   pragma Import (C, glScissor, "glScissor");
+
+   procedure glClipPlane (plane : GLenum; equation : access GLdouble);
+   pragma Import (C, glClipPlane, "glClipPlane");
+
+   procedure glGetClipPlane (plane : GLenum; equation : access GLdouble);
+   pragma Import (C, glGetClipPlane, "glGetClipPlane");
+
+   procedure glDrawBuffer (mode : GLenum);
+   pragma Import (C, glDrawBuffer, "glDrawBuffer");
+
+   procedure glReadBuffer (mode : GLenum);
+   pragma Import (C, glReadBuffer, "glReadBuffer");
+
+   procedure glEnable (cap : GLenum);
+   pragma Import (C, glEnable, "glEnable");
+
+   procedure glDisable (cap : GLenum);
+   pragma Import (C, glDisable, "glDisable");
+
+   function glIsEnabled (cap : GLenum) return GLboolean;
+   pragma Import (C, glIsEnabled, "glIsEnabled");
+
+  -- 1.1
+   procedure glEnableClientState (cap : GLenum);
+   pragma Import (C, glEnableClientState, "glEnableClientState");
+
+  -- 1.1
+   procedure glDisableClientState (cap : GLenum);
+   pragma Import (C, glDisableClientState, "glDisableClientState");
+
+   procedure glGetBooleanv (pname : GLenum; params : access GLboolean);
+   pragma Import (C, glGetBooleanv, "glGetBooleanv");
+
+   procedure glGetDoublev (pname : GLenum; params : access GLdouble);
+   pragma Import (C, glGetDoublev, "glGetDoublev");
+
+   procedure glGetFloatv (pname : GLenum; params : access GLfloat);
+   pragma Import (C, glGetFloatv, "glGetFloatv");
+
+   procedure glGetIntegerv (pname : GLenum; params : access GLint);
+   pragma Import (C, glGetIntegerv, "glGetIntegerv");
+
+   procedure glPushAttrib (mask : GLbitfield);
+   pragma Import (C, glPushAttrib, "glPushAttrib");
+
+   procedure glPopAttrib;
+   pragma Import (C, glPopAttrib, "glPopAttrib");
+
+  -- 1.1
+   procedure glPushClientAttrib (mask : GLbitfield);
+   pragma Import (C, glPushClientAttrib, "glPushClientAttrib");
+
+  -- 1.1
+   procedure glPopClientAttrib;
+   pragma Import (C, glPopClientAttrib, "glPopClientAttrib");
+
+   function glRenderMode (mode : GLenum) return GLint;
+   pragma Import (C, glRenderMode, "glRenderMode");
+
+   function glGetError return GLenum;
+   pragma Import (C, glGetError, "glGetError");
+
+   -- function glGetString (name : GLenum) return access GLubyte;
+   function glGetString (name : GLenum) return GLubyte_Ptr;
+   pragma Import (C, glGetString, "glGetString");
+
+   procedure glFinish;
+   pragma Import (C, glFinish, "glFinish");
+
+   procedure glFlush;
+   pragma Import (C, glFlush, "glFlush");
+
+   procedure glHint (target : GLenum; mode : GLenum);
+   pragma Import (C, glHint, "glHint");
+
+   --  ----------------
    --  Depth Buffer
-   --
+   --  ----------------
 
    procedure glClearDepth (depth : GLclampd);
+   pragma Import (C, glClearDepth, "glClearDepth");
+
    procedure glDepthFunc (func : GLenum);
+   pragma Import (C, glDepthFunc, "glDepthFunc");
+
    procedure glDepthMask (flag : GLboolean);
+   pragma Import (C, glDepthMask, "glDepthMask");
+
    procedure glDepthRange (near_val : GLclampd; far_val : GLclampd);
+   pragma Import (C, glDepthRange, "glDepthRange");
 
-   --
+   --  ---------------------
    --  Accumulation Buffer
-   --
+   --  ---------------------
 
-   procedure glClearAccum (red   : GLfloat;
-                           green : GLfloat;
-                           blue  : GLfloat;
-                           alpha : GLfloat);
+   procedure glClearAccum
+     (red : GLfloat;
+      green : GLfloat;
+      blue : GLfloat;
+      alpha : GLfloat);
+   pragma Import (C, glClearAccum, "glClearAccum");
+
    procedure glAccum (op : GLenum; value : GLfloat);
+   pragma Import (C, glAccum, "glAccum");
 
-   --
-   --  Transformation
-   --
+  --  Transformation
+  --
 
    procedure glMatrixMode (mode : GLenum);
-   procedure glOrtho (left     : GLdouble;
-                      right    : GLdouble;
-                      bottom   : GLdouble;
-                      top      : GLdouble;
-                      near_val : GLdouble;
-                      far_val  : GLdouble);
-   procedure glFrustum (left     : GLdouble;
-                        right    : GLdouble;
-                        bottom   : GLdouble;
-                        top      : GLdouble;
-                        near_val : GLdouble;
-                        far_val  : GLdouble);
-   procedure glViewport (x      : GLint;
-                         y      : GLint;
-                         width  : GLsizei;
-                         height : GLsizei);
-   procedure glPushMatrix;
-   procedure glPopMatrix;
-   procedure glLoadIdentity;
-   procedure glLoadMatrixd (m : access GLdouble);
-   procedure glLoadMatrixf (m : access GLfloat);
-   procedure glMultMatrixd (m : access GLdouble);
-   procedure glMultMatrixf (m : access GLfloat);
-   procedure glRotated (angle : GLdouble;
-                        x     : GLdouble;
-                        y     : GLdouble;
-                        z     : GLdouble);
-   procedure glRotatef (angle : GLfloat;
-                        x     : GLfloat;
-                        y     : GLfloat;
-                        z     : GLfloat);
-   procedure glScaled (x : GLdouble; y : GLdouble; z : GLdouble);
-   procedure glScalef (x : GLfloat; y : GLfloat; z : GLfloat);
-   procedure glTranslated (x : GLdouble; y : GLdouble; z : GLdouble);
-   procedure glTranslatef (x : GLfloat; y : GLfloat; z : GLfloat);
+   pragma Import (C, glMatrixMode, "glMatrixMode");
 
-   --
-   --  Display Lists
-   --
+   procedure glOrtho
+     (left : GLdouble;
+      right : GLdouble;
+      bottom : GLdouble;
+      top : GLdouble;
+      near_val : GLdouble;
+      far_val : GLdouble);
+   pragma Import (C, glOrtho, "glOrtho");
+
+   procedure glFrustum
+     (left : GLdouble;
+      right : GLdouble;
+      bottom : GLdouble;
+      top : GLdouble;
+      near_val : GLdouble;
+      far_val : GLdouble);
+   pragma Import (C, glFrustum, "glFrustum");
+
+   procedure glViewport
+     (x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei);
+   pragma Import (C, glViewport, "glViewport");
+
+   procedure glPushMatrix;
+   pragma Import (C, glPushMatrix, "glPushMatrix");
+
+   procedure glPopMatrix;
+   pragma Import (C, glPopMatrix, "glPopMatrix");
+
+   procedure glLoadIdentity;
+   pragma Import (C, glLoadIdentity, "glLoadIdentity");
+
+   procedure glLoadMatrixd (m : access GLdouble);
+   pragma Import (C, glLoadMatrixd, "glLoadMatrixd");
+
+   procedure glLoadMatrixf (m : access GLfloat);
+   pragma Import (C, glLoadMatrixf, "glLoadMatrixf");
+
+   procedure glMultMatrixd (m : access GLdouble);
+   pragma Import (C, glMultMatrixd, "glMultMatrixd");
+
+   procedure glMultMatrixf (m : access GLfloat);
+   pragma Import (C, glMultMatrixf, "glMultMatrixf");
+
+   procedure glRotated
+     (angle : GLdouble;
+      x : GLdouble;
+      y : GLdouble;
+      z : GLdouble);
+   pragma Import (C, glRotated, "glRotated");
+
+   procedure glRotatef
+     (angle : GLfloat;
+      x : GLfloat;
+      y : GLfloat;
+      z : GLfloat);
+   pragma Import (C, glRotatef, "glRotatef");
+
+   procedure glScaled
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble);
+   pragma Import (C, glScaled, "glScaled");
+
+   procedure glScalef
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat);
+   pragma Import (C, glScalef, "glScalef");
+
+   procedure glTranslated
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble);
+   pragma Import (C, glTranslated, "glTranslated");
+
+   procedure glTranslatef
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat);
+   pragma Import (C, glTranslatef, "glTranslatef");
+
+  -- * Display Lists
+  --
 
    function glIsList (list : GLuint) return GLboolean;
-   procedure glDeleteLists (list : GLuint; range_Id : GLsizei);
-   function glGenLists (range_Id : GLsizei) return GLuint;
-   procedure glNewList (list : GLuint; mode : GLenum);
-   procedure glEndList;
-   procedure glCallList (list : GLuint);
-   procedure glCallLists (n       : GLsizei;
-                          type_Id : GLenum;
-                          lists   : access GLvoid);
-   procedure glListBase (base : GLuint);
+   pragma Import (C, glIsList, "glIsList");
 
-   --
-   --  Drawing Functions
-   --
+   procedure glDeleteLists (list : GLuint; c_range : GLsizei);
+   pragma Import (C, glDeleteLists, "glDeleteLists");
+
+   function glGenLists (c_range : GLsizei) return GLuint;
+   pragma Import (C, glGenLists, "glGenLists");
+
+   procedure glNewList (list : GLuint; mode : GLenum);
+   pragma Import (C, glNewList, "glNewList");
+
+   procedure glEndList;
+   pragma Import (C, glEndList, "glEndList");
+
+   procedure glCallList (list : GLuint);
+   pragma Import (C, glCallList, "glCallList");
+
+   procedure glCallLists
+     (n : GLsizei;
+      c_type : GLenum;
+      lists : System.Address);
+   pragma Import (C, glCallLists, "glCallLists");
+
+   procedure glListBase (base : GLuint);
+   pragma Import (C, glListBase, "glListBase");
+
+   ------------------------
+   --  Drawing Functions --
+   --  --------------------
 
    procedure glBegin (mode : GLenum);
+   pragma Import (C, glBegin, "glBegin");
+
    procedure glEnd;
+   pragma Import (C, glEnd, "glEnd");
+
    procedure glVertex2d (x : GLdouble; y : GLdouble);
+   pragma Import (C, glVertex2d, "glVertex2d");
+
    procedure glVertex2f (x : GLfloat; y : GLfloat);
+   pragma Import (C, glVertex2f, "glVertex2f");
+
    procedure glVertex2i (x : GLint; y : GLint);
+   pragma Import (C, glVertex2i, "glVertex2i");
+
    procedure glVertex2s (x : GLshort; y : GLshort);
-   procedure glVertex3d (x : GLdouble; y : GLdouble; z : GLdouble);
-   procedure glVertex3f (x : GLfloat; y : GLfloat; z : GLfloat);
-   procedure glVertex3i (x : GLint; y : GLint; z : GLint);
-   procedure glVertex3s (x : GLshort; y : GLshort; z : GLshort);
-   procedure glVertex4d (x : GLdouble;
-                         y : GLdouble;
-                         z : GLdouble;
-                         w : GLdouble);
-   procedure glVertex4f (x : GLfloat; y : GLfloat; z : GLfloat; w : GLfloat);
-   procedure glVertex4i (x : GLint; y : GLint; z : GLint; w : GLint);
-   procedure glVertex4s (x : GLshort; y : GLshort; z : GLshort; w : GLshort);
+   pragma Import (C, glVertex2s, "glVertex2s");
+
+   procedure glVertex3d
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble);
+   pragma Import (C, glVertex3d, "glVertex3d");
+
+   procedure glVertex3f
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat);
+   pragma Import (C, glVertex3f, "glVertex3f");
+
+   procedure glVertex3i
+     (x : GLint;
+      y : GLint;
+      z : GLint);
+   pragma Import (C, glVertex3i, "glVertex3i");
+
+   procedure glVertex3s
+     (x : GLshort;
+      y : GLshort;
+      z : GLshort);
+   pragma Import (C, glVertex3s, "glVertex3s");
+
+   procedure glVertex4d
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble;
+      w : GLdouble);
+   pragma Import (C, glVertex4d, "glVertex4d");
+
+   procedure glVertex4f
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat;
+      w : GLfloat);
+   pragma Import (C, glVertex4f, "glVertex4f");
+
+   procedure glVertex4i
+     (x : GLint;
+      y : GLint;
+      z : GLint;
+      w : GLint);
+   pragma Import (C, glVertex4i, "glVertex4i");
+
+   procedure glVertex4s
+     (x : GLshort;
+      y : GLshort;
+      z : GLshort;
+      w : GLshort);
+   pragma Import (C, glVertex4s, "glVertex4s");
+
    procedure glVertex2dv (v : access GLdouble);
+   pragma Import (C, glVertex2dv, "glVertex2dv");
+
    procedure glVertex2fv (v : access GLfloat);
+   pragma Import (C, glVertex2fv, "glVertex2fv");
+
    procedure glVertex2iv (v : access GLint);
+   pragma Import (C, glVertex2iv, "glVertex2iv");
+
    procedure glVertex2sv (v : access GLshort);
+   pragma Import (C, glVertex2sv, "glVertex2sv");
+
    procedure glVertex3dv (v : access GLdouble);
+   pragma Import (C, glVertex3dv, "glVertex3dv");
+
    procedure glVertex3fv (v : access GLfloat);
+   pragma Import (C, glVertex3fv, "glVertex3fv");
+
    procedure glVertex3iv (v : access GLint);
+   pragma Import (C, glVertex3iv, "glVertex3iv");
+
    procedure glVertex3sv (v : access GLshort);
+   pragma Import (C, glVertex3sv, "glVertex3sv");
+
    procedure glVertex4dv (v : access GLdouble);
+   pragma Import (C, glVertex4dv, "glVertex4dv");
+
    procedure glVertex4fv (v : access GLfloat);
+   pragma Import (C, glVertex4fv, "glVertex4fv");
+
    procedure glVertex4iv (v : access GLint);
+   pragma Import (C, glVertex4iv, "glVertex4iv");
+
    procedure glVertex4sv (v : access GLshort);
-   procedure glNormal3b (nx : GLbyte; ny : GLbyte; nz : GLbyte);
-   procedure glNormal3d (nx : GLdouble; ny : GLdouble; nz : GLdouble);
-   procedure glNormal3f (nx : GLfloat; ny : GLfloat; nz : GLfloat);
-   procedure glNormal3i (nx : GLint; ny : GLint; nz : GLint);
-   procedure glNormal3s (nx : GLshort; ny : GLshort; nz : GLshort);
+   pragma Import (C, glVertex4sv, "glVertex4sv");
+
+   procedure glNormal3b
+     (nx : GLbyte;
+      ny : GLbyte;
+      nz : GLbyte);
+   pragma Import (C, glNormal3b, "glNormal3b");
+
+   procedure glNormal3d
+     (nx : GLdouble;
+      ny : GLdouble;
+      nz : GLdouble);
+   pragma Import (C, glNormal3d, "glNormal3d");
+
+   procedure glNormal3f
+     (nx : GLfloat;
+      ny : GLfloat;
+      nz : GLfloat);
+   pragma Import (C, glNormal3f, "glNormal3f");
+
+   procedure glNormal3i
+     (nx : GLint;
+      ny : GLint;
+      nz : GLint);
+   pragma Import (C, glNormal3i, "glNormal3i");
+
+   procedure glNormal3s
+     (nx : GLshort;
+      ny : GLshort;
+      nz : GLshort);
+   pragma Import (C, glNormal3s, "glNormal3s");
+
    procedure glNormal3bv (v : access GLbyte);
+   pragma Import (C, glNormal3bv, "glNormal3bv");
+
    procedure glNormal3dv (v : access GLdouble);
+   pragma Import (C, glNormal3dv, "glNormal3dv");
+
    procedure glNormal3fv (v : access GLfloat);
+   pragma Import (C, glNormal3fv, "glNormal3fv");
+
    procedure glNormal3iv (v : access GLint);
+   pragma Import (C, glNormal3iv, "glNormal3iv");
+
    procedure glNormal3sv (v : access GLshort);
+   pragma Import (C, glNormal3sv, "glNormal3sv");
+
    procedure glIndexd (c : GLdouble);
+   pragma Import (C, glIndexd, "glIndexd");
+
    procedure glIndexf (c : GLfloat);
+   pragma Import (C, glIndexf, "glIndexf");
+
    procedure glIndexi (c : GLint);
+   pragma Import (C, glIndexi, "glIndexi");
+
    procedure glIndexs (c : GLshort);
-   procedure glIndexub (c : GLubyte  --  1.1
-         );
+   pragma Import (C, glIndexs, "glIndexs");
+
+  -- 1.1
+   procedure glIndexub (c : GLubyte);
+   pragma Import (C, glIndexub, "glIndexub");
+
    procedure glIndexdv (c : access GLdouble);
+   pragma Import (C, glIndexdv, "glIndexdv");
+
    procedure glIndexfv (c : access GLfloat);
+   pragma Import (C, glIndexfv, "glIndexfv");
+
    procedure glIndexiv (c : access GLint);
+   pragma Import (C, glIndexiv, "glIndexiv");
+
    procedure glIndexsv (c : access GLshort);
-   procedure glIndexubv (c : access GLubyte  --  1.1
-         );
-   procedure glColor3b (red : GLbyte; green : GLbyte; blue : GLbyte);
-   procedure glColor3d (red : GLdouble; green : GLdouble; blue : GLdouble);
-   procedure glColor3f (red : GLfloat; green : GLfloat; blue : GLfloat);
-   procedure glColor3i (red : GLint; green : GLint; blue : GLint);
-   procedure glColor3s (red : GLshort; green : GLshort; blue : GLshort);
-   procedure glColor3ub (red : GLubyte; green : GLubyte; blue : GLubyte);
-   procedure glColor3ui (red : GLuint; green : GLuint; blue : GLuint);
-   procedure glColor3us (red : GLushort; green : GLushort; blue : GLushort);
-   procedure glColor4b (red   : GLbyte;
-                        green : GLbyte;
-                        blue  : GLbyte;
-                        alpha : GLbyte);
-   procedure glColor4d (red   : GLdouble;
-                        green : GLdouble;
-                        blue  : GLdouble;
-                        alpha : GLdouble);
-   procedure glColor4f (red   : GLfloat;
-                        green : GLfloat;
-                        blue  : GLfloat;
-                        alpha : GLfloat);
-   procedure glColor4i (red   : GLint;
-                        green : GLint;
-                        blue  : GLint;
-                        alpha : GLint);
-   procedure glColor4s (red   : GLshort;
-                        green : GLshort;
-                        blue  : GLshort;
-                        alpha : GLshort);
-   procedure glColor4ub (red   : GLubyte;
-                         green : GLubyte;
-                         blue  : GLubyte;
-                         alpha : GLubyte);
-   procedure glColor4ui (red   : GLuint;
-                         green : GLuint;
-                         blue  : GLuint;
-                         alpha : GLuint);
-   procedure glColor4us (red   : GLushort;
-                         green : GLushort;
-                         blue  : GLushort;
-                         alpha : GLushort);
+   pragma Import (C, glIndexsv, "glIndexsv");
+
+  -- 1.1
+   procedure glIndexubv (c : access GLubyte);
+   pragma Import (C, glIndexubv, "glIndexubv");
+
+   procedure glColor3b
+     (red : GLbyte;
+      green : GLbyte;
+      blue : GLbyte);
+   pragma Import (C, glColor3b, "glColor3b");
+
+   procedure glColor3d
+     (red : GLdouble;
+      green : GLdouble;
+      blue : GLdouble);
+   pragma Import (C, glColor3d, "glColor3d");
+
+   procedure glColor3f
+     (red : GLfloat;
+      green : GLfloat;
+      blue : GLfloat);
+   pragma Import (C, glColor3f, "glColor3f");
+
+   procedure glColor3i
+     (red : GLint;
+      green : GLint;
+      blue : GLint);
+   pragma Import (C, glColor3i, "glColor3i");
+
+   procedure glColor3s
+     (red : GLshort;
+      green : GLshort;
+      blue : GLshort);
+   pragma Import (C, glColor3s, "glColor3s");
+
+   procedure glColor3ub
+     (red : GLubyte;
+      green : GLubyte;
+      blue : GLubyte);
+   pragma Import (C, glColor3ub, "glColor3ub");
+
+   procedure glColor3ui
+     (red : GLuint;
+      green : GLuint;
+      blue : GLuint);
+   pragma Import (C, glColor3ui, "glColor3ui");
+
+   procedure glColor3us
+     (red : GLushort;
+      green : GLushort;
+      blue : GLushort);
+   pragma Import (C, glColor3us, "glColor3us");
+
+   procedure glColor4b
+     (red : GLbyte;
+      green : GLbyte;
+      blue : GLbyte;
+      alpha : GLbyte);
+   pragma Import (C, glColor4b, "glColor4b");
+
+   procedure glColor4d
+     (red : GLdouble;
+      green : GLdouble;
+      blue : GLdouble;
+      alpha : GLdouble);
+   pragma Import (C, glColor4d, "glColor4d");
+
+   procedure glColor4f
+     (red : GLfloat;
+      green : GLfloat;
+      blue : GLfloat;
+      alpha : GLfloat);
+   pragma Import (C, glColor4f, "glColor4f");
+
+   procedure glColor4i
+     (red : GLint;
+      green : GLint;
+      blue : GLint;
+      alpha : GLint);
+   pragma Import (C, glColor4i, "glColor4i");
+
+   procedure glColor4s
+     (red : GLshort;
+      green : GLshort;
+      blue : GLshort;
+      alpha : GLshort);
+   pragma Import (C, glColor4s, "glColor4s");
+
+   procedure glColor4ub
+     (red : GLubyte;
+      green : GLubyte;
+      blue : GLubyte;
+      alpha : GLubyte);
+   pragma Import (C, glColor4ub, "glColor4ub");
+
+   procedure glColor4ui
+     (red : GLuint;
+      green : GLuint;
+      blue : GLuint;
+      alpha : GLuint);
+   pragma Import (C, glColor4ui, "glColor4ui");
+
+   procedure glColor4us
+     (red : GLushort;
+      green : GLushort;
+      blue : GLushort;
+      alpha : GLushort);
+   pragma Import (C, glColor4us, "glColor4us");
+
    procedure glColor3bv (v : access GLbyte);
+   pragma Import (C, glColor3bv, "glColor3bv");
+
    procedure glColor3dv (v : access GLdouble);
+   pragma Import (C, glColor3dv, "glColor3dv");
+
    procedure glColor3fv (v : access GLfloat);
+   pragma Import (C, glColor3fv, "glColor3fv");
+
    procedure glColor3iv (v : access GLint);
+   pragma Import (C, glColor3iv, "glColor3iv");
+
    procedure glColor3sv (v : access GLshort);
+   pragma Import (C, glColor3sv, "glColor3sv");
+
    procedure glColor3ubv (v : access GLubyte);
+   pragma Import (C, glColor3ubv, "glColor3ubv");
+
    procedure glColor3uiv (v : access GLuint);
+   pragma Import (C, glColor3uiv, "glColor3uiv");
+
    procedure glColor3usv (v : access GLushort);
+   pragma Import (C, glColor3usv, "glColor3usv");
+
    procedure glColor4bv (v : access GLbyte);
+   pragma Import (C, glColor4bv, "glColor4bv");
+
    procedure glColor4dv (v : access GLdouble);
+   pragma Import (C, glColor4dv, "glColor4dv");
+
    procedure glColor4fv (v : access GLfloat);
+   pragma Import (C, glColor4fv, "glColor4fv");
+
    procedure glColor4iv (v : access GLint);
+   pragma Import (C, glColor4iv, "glColor4iv");
+
    procedure glColor4sv (v : access GLshort);
+   pragma Import (C, glColor4sv, "glColor4sv");
+
    procedure glColor4ubv (v : access GLubyte);
+   pragma Import (C, glColor4ubv, "glColor4ubv");
+
    procedure glColor4uiv (v : access GLuint);
+   pragma Import (C, glColor4uiv, "glColor4uiv");
+
    procedure glColor4usv (v : access GLushort);
+   pragma Import (C, glColor4usv, "glColor4usv");
+
    procedure glTexCoord1d (s : GLdouble);
+   pragma Import (C, glTexCoord1d, "glTexCoord1d");
+
    procedure glTexCoord1f (s : GLfloat);
+   pragma Import (C, glTexCoord1f, "glTexCoord1f");
+
    procedure glTexCoord1i (s : GLint);
+   pragma Import (C, glTexCoord1i, "glTexCoord1i");
+
    procedure glTexCoord1s (s : GLshort);
+   pragma Import (C, glTexCoord1s, "glTexCoord1s");
+
    procedure glTexCoord2d (s : GLdouble; t : GLdouble);
+   pragma Import (C, glTexCoord2d, "glTexCoord2d");
+
    procedure glTexCoord2f (s : GLfloat; t : GLfloat);
+   pragma Import (C, glTexCoord2f, "glTexCoord2f");
+
    procedure glTexCoord2i (s : GLint; t : GLint);
+   pragma Import (C, glTexCoord2i, "glTexCoord2i");
+
    procedure glTexCoord2s (s : GLshort; t : GLshort);
-   procedure glTexCoord3d (s : GLdouble; t : GLdouble; r : GLdouble);
-   procedure glTexCoord3f (s : GLfloat; t : GLfloat; r : GLfloat);
-   procedure glTexCoord3i (s : GLint; t : GLint; r : GLint);
-   procedure glTexCoord3s (s : GLshort; t : GLshort; r : GLshort);
-   procedure glTexCoord4d (s : GLdouble;
-                           t : GLdouble;
-                           r : GLdouble;
-                           q : GLdouble);
+   pragma Import (C, glTexCoord2s, "glTexCoord2s");
+
+   procedure glTexCoord3d
+     (s : GLdouble;
+      t : GLdouble;
+      r : GLdouble);
+   pragma Import (C, glTexCoord3d, "glTexCoord3d");
+
+   procedure glTexCoord3f
+     (s : GLfloat;
+      t : GLfloat;
+      r : GLfloat);
+   pragma Import (C, glTexCoord3f, "glTexCoord3f");
+
+   procedure glTexCoord3i
+     (s : GLint;
+      t : GLint;
+      r : GLint);
+   pragma Import (C, glTexCoord3i, "glTexCoord3i");
+
+   procedure glTexCoord3s
+     (s : GLshort;
+      t : GLshort;
+      r : GLshort);
+   pragma Import (C, glTexCoord3s, "glTexCoord3s");
+
+   procedure glTexCoord4d
+     (s : GLdouble;
+      t : GLdouble;
+      r : GLdouble;
+      q : GLdouble);
+   pragma Import (C, glTexCoord4d, "glTexCoord4d");
+
    procedure glTexCoord4f
-      (s : GLfloat; t : GLfloat; r : GLfloat; q : GLfloat);
-   procedure glTexCoord4i (s : GLint; t : GLint; r : GLint; q : GLint);
+     (s : GLfloat;
+      t : GLfloat;
+      r : GLfloat;
+      q : GLfloat);
+   pragma Import (C, glTexCoord4f, "glTexCoord4f");
+
+   procedure glTexCoord4i
+     (s : GLint;
+      t : GLint;
+      r : GLint;
+      q : GLint);
+   pragma Import (C, glTexCoord4i, "glTexCoord4i");
+
    procedure glTexCoord4s
-      (s : GLshort; t : GLshort; r : GLshort; q : GLshort);
+     (s : GLshort;
+      t : GLshort;
+      r : GLshort;
+      q : GLshort);
+   pragma Import (C, glTexCoord4s, "glTexCoord4s");
+
    procedure glTexCoord1dv (v : access GLdouble);
+   pragma Import (C, glTexCoord1dv, "glTexCoord1dv");
+
    procedure glTexCoord1fv (v : access GLfloat);
+   pragma Import (C, glTexCoord1fv, "glTexCoord1fv");
+
    procedure glTexCoord1iv (v : access GLint);
+   pragma Import (C, glTexCoord1iv, "glTexCoord1iv");
+
    procedure glTexCoord1sv (v : access GLshort);
+   pragma Import (C, glTexCoord1sv, "glTexCoord1sv");
+
    procedure glTexCoord2dv (v : access GLdouble);
+   pragma Import (C, glTexCoord2dv, "glTexCoord2dv");
+
    procedure glTexCoord2fv (v : access GLfloat);
+   pragma Import (C, glTexCoord2fv, "glTexCoord2fv");
+
    procedure glTexCoord2iv (v : access GLint);
+   pragma Import (C, glTexCoord2iv, "glTexCoord2iv");
+
    procedure glTexCoord2sv (v : access GLshort);
+   pragma Import (C, glTexCoord2sv, "glTexCoord2sv");
+
    procedure glTexCoord3dv (v : access GLdouble);
+   pragma Import (C, glTexCoord3dv, "glTexCoord3dv");
+
    procedure glTexCoord3fv (v : access GLfloat);
+   pragma Import (C, glTexCoord3fv, "glTexCoord3fv");
+
    procedure glTexCoord3iv (v : access GLint);
+   pragma Import (C, glTexCoord3iv, "glTexCoord3iv");
+
    procedure glTexCoord3sv (v : access GLshort);
+   pragma Import (C, glTexCoord3sv, "glTexCoord3sv");
+
    procedure glTexCoord4dv (v : access GLdouble);
+   pragma Import (C, glTexCoord4dv, "glTexCoord4dv");
+
    procedure glTexCoord4fv (v : access GLfloat);
+   pragma Import (C, glTexCoord4fv, "glTexCoord4fv");
+
    procedure glTexCoord4iv (v : access GLint);
+   pragma Import (C, glTexCoord4iv, "glTexCoord4iv");
+
    procedure glTexCoord4sv (v : access GLshort);
+   pragma Import (C, glTexCoord4sv, "glTexCoord4sv");
+
    procedure glRasterPos2d (x : GLdouble; y : GLdouble);
+   pragma Import (C, glRasterPos2d, "glRasterPos2d");
+
    procedure glRasterPos2f (x : GLfloat; y : GLfloat);
+   pragma Import (C, glRasterPos2f, "glRasterPos2f");
+
    procedure glRasterPos2i (x : GLint; y : GLint);
+   pragma Import (C, glRasterPos2i, "glRasterPos2i");
+
    procedure glRasterPos2s (x : GLshort; y : GLshort);
-   procedure glRasterPos3d (x : GLdouble; y : GLdouble; z : GLdouble);
-   procedure glRasterPos3f (x : GLfloat; y : GLfloat; z : GLfloat);
-   procedure glRasterPos3i (x : GLint; y : GLint; z : GLint);
-   procedure glRasterPos3s (x : GLshort; y : GLshort; z : GLshort);
-   procedure glRasterPos4d (x : GLdouble;
-                            y : GLdouble;
-                            z : GLdouble;
-                            w : GLdouble);
-   procedure glRasterPos4f (x : GLfloat;
-                            y : GLfloat;
-                            z : GLfloat;
-                            w : GLfloat);
-   procedure glRasterPos4i (x : GLint; y : GLint; z : GLint; w : GLint);
-   procedure glRasterPos4s (x : GLshort;
-                            y : GLshort;
-                            z : GLshort;
-                            w : GLshort);
+   pragma Import (C, glRasterPos2s, "glRasterPos2s");
+
+   procedure glRasterPos3d
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble);
+   pragma Import (C, glRasterPos3d, "glRasterPos3d");
+
+   procedure glRasterPos3f
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat);
+   pragma Import (C, glRasterPos3f, "glRasterPos3f");
+
+   procedure glRasterPos3i
+     (x : GLint;
+      y : GLint;
+      z : GLint);
+   pragma Import (C, glRasterPos3i, "glRasterPos3i");
+
+   procedure glRasterPos3s
+     (x : GLshort;
+      y : GLshort;
+      z : GLshort);
+   pragma Import (C, glRasterPos3s, "glRasterPos3s");
+
+   procedure glRasterPos4d
+     (x : GLdouble;
+      y : GLdouble;
+      z : GLdouble;
+      w : GLdouble);
+   pragma Import (C, glRasterPos4d, "glRasterPos4d");
+
+   procedure glRasterPos4f
+     (x : GLfloat;
+      y : GLfloat;
+      z : GLfloat;
+      w : GLfloat);
+   pragma Import (C, glRasterPos4f, "glRasterPos4f");
+
+   procedure glRasterPos4i
+     (x : GLint;
+      y : GLint;
+      z : GLint;
+      w : GLint);
+   pragma Import (C, glRasterPos4i, "glRasterPos4i");
+
+   procedure glRasterPos4s
+     (x : GLshort;
+      y : GLshort;
+      z : GLshort;
+      w : GLshort);
+   pragma Import (C, glRasterPos4s, "glRasterPos4s");
+
    procedure glRasterPos2dv (v : access GLdouble);
+   pragma Import (C, glRasterPos2dv, "glRasterPos2dv");
+
    procedure glRasterPos2fv (v : access GLfloat);
+   pragma Import (C, glRasterPos2fv, "glRasterPos2fv");
+
    procedure glRasterPos2iv (v : access GLint);
+   pragma Import (C, glRasterPos2iv, "glRasterPos2iv");
+
    procedure glRasterPos2sv (v : access GLshort);
+   pragma Import (C, glRasterPos2sv, "glRasterPos2sv");
+
    procedure glRasterPos3dv (v : access GLdouble);
+   pragma Import (C, glRasterPos3dv, "glRasterPos3dv");
+
    procedure glRasterPos3fv (v : access GLfloat);
+   pragma Import (C, glRasterPos3fv, "glRasterPos3fv");
+
    procedure glRasterPos3iv (v : access GLint);
+   pragma Import (C, glRasterPos3iv, "glRasterPos3iv");
+
    procedure glRasterPos3sv (v : access GLshort);
+   pragma Import (C, glRasterPos3sv, "glRasterPos3sv");
+
    procedure glRasterPos4dv (v : access GLdouble);
+   pragma Import (C, glRasterPos4dv, "glRasterPos4dv");
+
    procedure glRasterPos4fv (v : access GLfloat);
+   pragma Import (C, glRasterPos4fv, "glRasterPos4fv");
+
    procedure glRasterPos4iv (v : access GLint);
+   pragma Import (C, glRasterPos4iv, "glRasterPos4iv");
+
    procedure glRasterPos4sv (v : access GLshort);
-   procedure glRectd (x1 : GLdouble;
-                      y1 : GLdouble;
-                      x2 : GLdouble;
-                      y2 : GLdouble);
-   procedure glRectf (x1 : GLfloat; y1 : GLfloat; x2 : GLfloat; y2 : GLfloat);
-   procedure glRecti (x1 : GLint; y1 : GLint; x2 : GLint; y2 : GLint);
-   procedure glRects (x1 : GLshort; y1 : GLshort; x2 : GLshort; y2 : GLshort);
+   pragma Import (C, glRasterPos4sv, "glRasterPos4sv");
+
+   procedure glRectd
+     (x1 : GLdouble;
+      y1 : GLdouble;
+      x2 : GLdouble;
+      y2 : GLdouble);
+   pragma Import (C, glRectd, "glRectd");
+
+   procedure glRectf
+     (x1 : GLfloat;
+      y1 : GLfloat;
+      x2 : GLfloat;
+      y2 : GLfloat);
+   pragma Import (C, glRectf, "glRectf");
+
+   procedure glRecti
+     (x1 : GLint;
+      y1 : GLint;
+      x2 : GLint;
+      y2 : GLint);
+   pragma Import (C, glRecti, "glRecti");
+
+   procedure glRects
+     (x1 : GLshort;
+      y1 : GLshort;
+      x2 : GLshort;
+      y2 : GLshort);
+   pragma Import (C, glRects, "glRects");
+
    procedure glRectdv (v1 : access GLdouble; v2 : access GLdouble);
+   pragma Import (C, glRectdv, "glRectdv");
+
    procedure glRectfv (v1 : access GLfloat; v2 : access GLfloat);
+   pragma Import (C, glRectfv, "glRectfv");
+
    procedure glRectiv (v1 : access GLint; v2 : access GLint);
+   pragma Import (C, glRectiv, "glRectiv");
+
    procedure glRectsv (v1 : access GLshort; v2 : access GLshort);
+   pragma Import (C, glRectsv, "glRectsv");
 
-   --
+   --  --------------------
    --  Vertex Arrays  (1.1)
-   --
+   --  --------------------
 
-   procedure glVertexPointer (size    : GLint;
-                              type_Id : GLenum;
-                              stride  : GLsizei;
-                              ptr     : access GLvoid);
-   procedure glNormalPointer (type_Id : GLenum;
-                              stride  : GLsizei;
-                              ptr     : access GLvoid);
-   procedure glColorPointer (size    : GLint;
-                             type_Id : GLenum;
-                             stride  : GLsizei;
-                             ptr     : access GLvoid);
-   procedure glIndexPointer (type_Id : GLenum;
-                             stride  : GLsizei;
-                             ptr     : access GLvoid);
-   procedure glTexCoordPointer (size    : GLint;
-                                type_Id : GLenum;
-                                stride  : GLsizei;
-                                ptr     : access GLvoid);
-   procedure glEdgeFlagPointer (stride : GLsizei; ptr : access GLboolean);
-   procedure glGetPointerv (pname  : GLenum;
-                            params : access Interfaces.C.Extensions.Void_Ptr);
+   procedure glVertexPointer
+     (size : GLint;
+      c_type : GLenum;
+      stride : GLsizei;
+      ptr : System.Address);
+   pragma Import (C, glVertexPointer, "glVertexPointer");
+
+   procedure glNormalPointer
+     (c_type : GLenum;
+      stride : GLsizei;
+      ptr : System.Address);
+   pragma Import (C, glNormalPointer, "glNormalPointer");
+
+   procedure glColorPointer
+     (size : GLint;
+      c_type : GLenum;
+      stride : GLsizei;
+      ptr : System.Address);
+   pragma Import (C, glColorPointer, "glColorPointer");
+
+   procedure glIndexPointer
+     (c_type : GLenum;
+      stride : GLsizei;
+      ptr : System.Address);
+   pragma Import (C, glIndexPointer, "glIndexPointer");
+
+   procedure glTexCoordPointer
+     (size : GLint;
+      c_type : GLenum;
+      stride : GLsizei;
+      ptr : System.Address);
+   pragma Import (C, glTexCoordPointer, "glTexCoordPointer");
+
+   procedure glEdgeFlagPointer (stride : GLsizei; ptr : System.Address);
+   pragma Import (C, glEdgeFlagPointer, "glEdgeFlagPointer");
+
+   procedure glGetPointerv (pname : GLenum; params : System.Address);
+   pragma Import (C, glGetPointerv, "glGetPointerv");
+
    procedure glArrayElement (i : GLint);
-   procedure glDrawArrays (mode : GLenum; first : GLint; count : GLsizei);
-   procedure glDrawElements (mode    : GLenum;
-                             count   : GLsizei;
-                             type_Id : GLenum;
-                             indices : access GLvoid);
-   procedure glInterleavedArrays (format  : GLenum;
-                                  stride  : GLsizei;
-                                  pointer : access GLvoid);
+   pragma Import (C, glArrayElement, "glArrayElement");
 
-   --
-   --  Lighting
-   --
+   procedure glDrawArrays
+     (mode : GLenum;
+      first : GLint;
+      count : GLsizei);
+   pragma Import (C, glDrawArrays, "glDrawArrays");
+
+   procedure glDrawElements
+     (mode : GLenum;
+      count : GLsizei;
+      c_type : GLenum;
+      indices : System.Address);
+   pragma Import (C, glDrawElements, "glDrawElements");
+
+   procedure glInterleavedArrays
+     (format : GLenum;
+      stride : GLsizei;
+      pointer : System.Address);
+   pragma Import (C, glInterleavedArrays, "glInterleavedArrays");
+
+  -- * Lighting
+  --
 
    procedure glShadeModel (mode : GLenum);
-   procedure glLightf (light : GLenum; pname : GLenum; param : GLfloat);
-   procedure glLighti (light : GLenum; pname : GLenum; param : GLint);
-   procedure glLightfv (light  : GLenum;
-                        pname  : GLenum;
-                        params : access GLfloat);
-   procedure glLightiv
-      (light : GLenum; pname : GLenum; params : access GLint);
-   procedure glGetLightfv (light  : GLenum;
-                           pname  : GLenum;
-                           params : access GLfloat);
-   procedure glGetLightiv (light  : GLenum;
-                           pname  : GLenum;
-                           params : access GLint);
-   procedure glLightModelf (pname : GLenum; param : GLfloat);
-   procedure glLightModeli (pname : GLenum; param : GLint);
-   procedure glLightModelfv (pname : GLenum; params : access GLfloat);
-   procedure glLightModeliv (pname : GLenum; params : access GLint);
-   procedure glMaterialf (face : GLenum; pname : GLenum; param : GLfloat);
-   procedure glMateriali (face : GLenum; pname : GLenum; param : GLint);
-   procedure glMaterialfv (face   : GLenum;
-                           pname  : GLenum;
-                           params : access GLfloat);
-   procedure glMaterialiv (face   : GLenum;
-                           pname  : GLenum;
-                           params : access GLint);
-   procedure glGetMaterialfv (face   : GLenum;
-                              pname  : GLenum;
-                              params : access GLfloat);
-   procedure glGetMaterialiv (face   : GLenum;
-                              pname  : GLenum;
-                              params : access GLint);
-   procedure glColorMaterial (face : GLenum; mode : GLenum);
+   pragma Import (C, glShadeModel, "glShadeModel");
 
-   --
-   --  Raster functions
-   --
+   procedure glLightf
+     (light : GLenum;
+      pname : GLenum;
+      param : GLfloat);
+   pragma Import (C, glLightf, "glLightf");
+
+   procedure glLighti
+     (light : GLenum;
+      pname : GLenum;
+      param : GLint);
+   pragma Import (C, glLighti, "glLighti");
+
+   procedure glLightfv
+     (light : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glLightfv, "glLightfv");
+
+   procedure glLightiv
+     (light : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glLightiv, "glLightiv");
+
+   procedure glGetLightfv
+     (light : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetLightfv, "glGetLightfv");
+
+   procedure glGetLightiv
+     (light : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetLightiv, "glGetLightiv");
+
+   procedure glLightModelf (pname : GLenum; param : GLfloat);
+   pragma Import (C, glLightModelf, "glLightModelf");
+
+   procedure glLightModeli (pname : GLenum; param : GLint);
+   pragma Import (C, glLightModeli, "glLightModeli");
+
+   procedure glLightModelfv (pname : GLenum; params : access GLfloat);
+   pragma Import (C, glLightModelfv, "glLightModelfv");
+
+   procedure glLightModeliv (pname : GLenum; params : access GLint);
+   pragma Import (C, glLightModeliv, "glLightModeliv");
+
+   procedure glMaterialf
+     (face : GLenum;
+      pname : GLenum;
+      param : GLfloat);
+   pragma Import (C, glMaterialf, "glMaterialf");
+
+   procedure glMateriali
+     (face : GLenum;
+      pname : GLenum;
+      param : GLint);
+   pragma Import (C, glMateriali, "glMateriali");
+
+   procedure glMaterialfv
+     (face : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glMaterialfv, "glMaterialfv");
+
+   procedure glMaterialiv
+     (face : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glMaterialiv, "glMaterialiv");
+
+   procedure glGetMaterialfv
+     (face : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetMaterialfv, "glGetMaterialfv");
+
+   procedure glGetMaterialiv
+     (face : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetMaterialiv, "glGetMaterialiv");
+
+   procedure glColorMaterial (face : GLenum; mode : GLenum);
+   pragma Import (C, glColorMaterial, "glColorMaterial");
+
+  -- * Raster functions
+  --
 
    procedure glPixelZoom (xfactor : GLfloat; yfactor : GLfloat);
+   pragma Import (C, glPixelZoom, "glPixelZoom");
+
    procedure glPixelStoref (pname : GLenum; param : GLfloat);
+   pragma Import (C, glPixelStoref, "glPixelStoref");
+
    procedure glPixelStorei (pname : GLenum; param : GLint);
+   pragma Import (C, glPixelStorei, "glPixelStorei");
+
    procedure glPixelTransferf (pname : GLenum; param : GLfloat);
+   pragma Import (C, glPixelTransferf, "glPixelTransferf");
+
    procedure glPixelTransferi (pname : GLenum; param : GLint);
-   procedure glPixelMapfv (map     : GLenum;
-                           mapsize : GLint;
-                           values  : access GLfloat);
-   procedure glPixelMapuiv (map     : GLenum;
-                            mapsize : GLint;
-                            values  : access GLuint);
-   procedure glPixelMapusv (map     : GLenum;
-                            mapsize : GLint;
-                            values  : access GLushort);
+   pragma Import (C, glPixelTransferi, "glPixelTransferi");
+
+   procedure glPixelMapfv
+     (map : GLenum;
+      mapsize : GLsizei;
+      values : access GLfloat);
+   pragma Import (C, glPixelMapfv, "glPixelMapfv");
+
+   procedure glPixelMapuiv
+     (map : GLenum;
+      mapsize : GLsizei;
+      values : access GLuint);
+   pragma Import (C, glPixelMapuiv, "glPixelMapuiv");
+
+   procedure glPixelMapusv
+     (map : GLenum;
+      mapsize : GLsizei;
+      values : access GLushort);
+   pragma Import (C, glPixelMapusv, "glPixelMapusv");
+
    procedure glGetPixelMapfv (map : GLenum; values : access GLfloat);
+   pragma Import (C, glGetPixelMapfv, "glGetPixelMapfv");
+
    procedure glGetPixelMapuiv (map : GLenum; values : access GLuint);
+   pragma Import (C, glGetPixelMapuiv, "glGetPixelMapuiv");
+
    procedure glGetPixelMapusv (map : GLenum; values : access GLushort);
-   procedure glBitmap (width  : GLsizei;
-                       height : GLsizei;
-                       xorig  : GLfloat;
-                       yorig  : GLfloat;
-                       xmove  : GLfloat;
-                       ymove  : GLfloat;
-                       bitmap : access GLubyte);
-   procedure glReadPixels (x       : GLint;
-                           y       : GLint;
-                           width   : GLsizei;
-                           height  : GLsizei;
-                           format  : GLenum;
-                           type_Id : GLenum;
-                           pixels  : access GLvoid);
-   procedure glDrawPixels (width   : GLsizei;
-                           height  : GLsizei;
-                           format  : GLenum;
-                           type_Id : GLenum;
-                           pixels  : access GLvoid);
-   procedure glCopyPixels (x       : GLint;
-                           y       : GLint;
-                           width   : GLsizei;
-                           height  : GLsizei;
-                           type_Id : GLenum);
+   pragma Import (C, glGetPixelMapusv, "glGetPixelMapusv");
 
-   --
-   --  Stenciling
-   --
+   procedure glBitmap
+     (width : GLsizei;
+      height : GLsizei;
+      xorig : GLfloat;
+      yorig : GLfloat;
+      xmove : GLfloat;
+      ymove : GLfloat;
+      bitmap : access GLubyte);
+   pragma Import (C, glBitmap, "glBitmap");
 
-   procedure glStencilFunc (func : GLenum; ref : GLint; mask : GLuint);
+   procedure glReadPixels
+     (x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glReadPixels, "glReadPixels");
+
+   procedure glDrawPixels
+     (width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glDrawPixels, "glDrawPixels");
+
+   procedure glCopyPixels
+     (x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      c_type : GLenum);
+   pragma Import (C, glCopyPixels, "glCopyPixels");
+
+  -- * Stenciling
+  --
+
+   procedure glStencilFunc
+     (func : GLenum;
+      ref : GLint;
+      mask : GLuint);
+   pragma Import (C, glStencilFunc, "glStencilFunc");
+
    procedure glStencilMask (mask : GLuint);
-   procedure glStencilOp (fail : GLenum; zfail : GLenum; zpass : GLenum);
+   pragma Import (C, glStencilMask, "glStencilMask");
+
+   procedure glStencilOp
+     (fail : GLenum;
+      zfail : GLenum;
+      zpass : GLenum);
+   pragma Import (C, glStencilOp, "glStencilOp");
+
    procedure glClearStencil (s : GLint);
+   pragma Import (C, glClearStencil, "glClearStencil");
 
-   --
-   --  Texture mapping
-   --
+  -- * Texture mapping
+  --
 
-   procedure glTexGend (coord : GLenum; pname : GLenum; param : GLdouble);
-   procedure glTexGenf (coord : GLenum; pname : GLenum; param : GLfloat);
-   procedure glTexGeni (coord : GLenum; pname : GLenum; param : GLint);
-   procedure glTexGendv (coord  : GLenum;
-                         pname  : GLenum;
-                         params : access GLdouble);
-   procedure glTexGenfv (coord  : GLenum;
-                         pname  : GLenum;
-                         params : access GLfloat);
-   procedure glTexGeniv (coord  : GLenum;
-                         pname  : GLenum;
-                         params : access GLint);
-   procedure glGetTexGendv (coord  : GLenum;
-                            pname  : GLenum;
-                            params : access GLdouble);
-   procedure glGetTexGenfv (coord  : GLenum;
-                            pname  : GLenum;
-                            params : access GLfloat);
-   procedure glGetTexGeniv (coord  : GLenum;
-                            pname  : GLenum;
-                            params : access GLint);
-   procedure glTexEnvf (target : GLenum; pname : GLenum; param : GLfloat);
-   procedure glTexEnvi (target : GLenum; pname : GLenum; param : GLint);
-   procedure glTexEnvfv (target : GLenum;
-                         pname  : GLenum;
-                         params : access GLfloat);
-   procedure glTexEnviv (target : GLenum;
-                         pname  : GLenum;
-                         params : access GLint);
-   procedure glGetTexEnvfv (target : GLenum;
-                            pname  : GLenum;
-                            params : access GLfloat);
-   procedure glGetTexEnviv (target : GLenum;
-                            pname  : GLenum;
-                            params : access GLint);
-   procedure glTexParameterf (target : GLenum;
-                              pname  : GLenum;
-                              param  : GLfloat);
-   procedure glTexParameteri (target : GLenum; pname : GLenum; param : GLint);
-   procedure glTexParameterfv (target : GLenum;
-                               pname  : GLenum;
-                               params : access GLfloat);
-   procedure glTexParameteriv (target : GLenum;
-                               pname  : GLenum;
-                               params : access GLint);
-   procedure glGetTexParameterfv (target : GLenum;
-                                  pname  : GLenum;
-                                  params : access GLfloat);
-   procedure glGetTexParameteriv (target : GLenum;
-                                  pname  : GLenum;
-                                  params : access GLint);
-   procedure glGetTexLevelParameterfv (target : GLenum;
-                                       level  : GLint;
-                                       pname  : GLenum;
-                                       params : access GLfloat);
-   procedure glGetTexLevelParameteriv (target : GLenum;
-                                       level  : GLint;
-                                       pname  : GLenum;
-                                       params : access GLint);
-   procedure glTexImage1D (target         : GLenum;
-                           level          : GLint;
-                           internalFormat : GLint;
-                           width          : GLsizei;
-                           border         : GLint;
-                           format         : GLenum;
-                           type_Id        : GLenum;
-                           pixels         : access GLvoid);
-   procedure glTexImage2D (target         : GLenum;
-                           level          : GLint;
-                           internalFormat : GLint;
-                           width          : GLsizei;
-                           height         : GLsizei;
-                           border         : GLint;
-                           format         : GLenum;
-                           type_Id        : GLenum;
-                           pixels         : access GLvoid);
-   procedure glGetTexImage (target  : GLenum;
-                            level   : GLint;
-                            format  : GLenum;
-                            type_Id : GLenum;
-                            pixels  : access GLvoid);
+   procedure glTexGend
+     (coord : GLenum;
+      pname : GLenum;
+      param : GLdouble);
+   pragma Import (C, glTexGend, "glTexGend");
 
-   --   1.1 functions
+   procedure glTexGenf
+     (coord : GLenum;
+      pname : GLenum;
+      param : GLfloat);
+   pragma Import (C, glTexGenf, "glTexGenf");
 
+   procedure glTexGeni
+     (coord : GLenum;
+      pname : GLenum;
+      param : GLint);
+   pragma Import (C, glTexGeni, "glTexGeni");
+
+   procedure glTexGendv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLdouble);
+   pragma Import (C, glTexGendv, "glTexGendv");
+
+   procedure glTexGenfv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glTexGenfv, "glTexGenfv");
+
+   procedure glTexGeniv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glTexGeniv, "glTexGeniv");
+
+   procedure glGetTexGendv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLdouble);
+   pragma Import (C, glGetTexGendv, "glGetTexGendv");
+
+   procedure glGetTexGenfv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetTexGenfv, "glGetTexGenfv");
+
+   procedure glGetTexGeniv
+     (coord : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetTexGeniv, "glGetTexGeniv");
+
+   procedure glTexEnvf
+     (target : GLenum;
+      pname : GLenum;
+      param : GLfloat);
+   pragma Import (C, glTexEnvf, "glTexEnvf");
+
+   procedure glTexEnvi
+     (target : GLenum;
+      pname : GLenum;
+      param : GLint);
+   pragma Import (C, glTexEnvi, "glTexEnvi");
+
+   procedure glTexEnvfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glTexEnvfv, "glTexEnvfv");
+
+   procedure glTexEnviv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glTexEnviv, "glTexEnviv");
+
+   procedure glGetTexEnvfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetTexEnvfv, "glGetTexEnvfv");
+
+   procedure glGetTexEnviv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetTexEnviv, "glGetTexEnviv");
+
+   procedure glTexParameterf
+     (target : GLenum;
+      pname : GLenum;
+      param : GLfloat);
+   pragma Import (C, glTexParameterf, "glTexParameterf");
+
+   procedure glTexParameteri
+     (target : GLenum;
+      pname : GLenum;
+      param : GLint);
+   pragma Import (C, glTexParameteri, "glTexParameteri");
+
+   procedure glTexParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glTexParameterfv, "glTexParameterfv");
+
+   procedure glTexParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glTexParameteriv, "glTexParameteriv");
+
+   procedure glGetTexParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetTexParameterfv, "glGetTexParameterfv");
+
+   procedure glGetTexParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetTexParameteriv, "glGetTexParameteriv");
+
+   procedure glGetTexLevelParameterfv
+     (target : GLenum;
+      level : GLint;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetTexLevelParameterfv, "glGetTexLevelParameterfv");
+
+   procedure glGetTexLevelParameteriv
+     (target : GLenum;
+      level : GLint;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetTexLevelParameteriv, "glGetTexLevelParameteriv");
+
+   procedure glTexImage1D
+     (target : GLenum;
+      level : GLint;
+      internalFormat : GLint;
+      width : GLsizei;
+      border : GLint;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glTexImage1D, "glTexImage1D");
+
+   procedure glTexImage2D
+     (target : GLenum;
+      level : GLint;
+      internalFormat : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      border : GLint;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glTexImage2D, "glTexImage2D");
+
+   procedure glGetTexImage
+     (target : GLenum;
+      level : GLint;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glGetTexImage, "glGetTexImage");
+
+  -- 1.1 functions
    procedure glGenTextures (n : GLsizei; textures : access GLuint);
+   pragma Import (C, glGenTextures, "glGenTextures");
+
    procedure glDeleteTextures (n : GLsizei; textures : access GLuint);
+   pragma Import (C, glDeleteTextures, "glDeleteTextures");
+
    procedure glBindTexture (target : GLenum; texture : GLuint);
-   procedure glPrioritizeTextures (n          : GLsizei;
-                                   textures   : access GLuint;
-                                   priorities : access GLclampf);
+   pragma Import (C, glBindTexture, "glBindTexture");
+
+   procedure glPrioritizeTextures
+     (n : GLsizei;
+      textures : access GLuint;
+      priorities : access GLclampf);
+   pragma Import (C, glPrioritizeTextures, "glPrioritizeTextures");
+
    function glAreTexturesResident
-      (n : GLsizei;  textures : access GLuint;  residences : access GLboolean)
-      return GLboolean;
+     (n : GLsizei;
+      textures : access GLuint;
+      residences : access GLboolean) return GLboolean;
+   pragma Import (C, glAreTexturesResident, "glAreTexturesResident");
+
    function glIsTexture (texture : GLuint) return GLboolean;
-   procedure glTexSubImage1D (target  : GLenum;
-                              level   : GLint;
-                              xoffset : GLint;
-                              width   : GLsizei;
-                              format  : GLenum;
-                              type_Id : GLenum;
-                              pixels  : access GLvoid);
-   procedure glTexSubImage2D (target  : GLenum;
-                              level   : GLint;
-                              xoffset : GLint;
-                              yoffset : GLint;
-                              width   : GLsizei;
-                              height  : GLsizei;
-                              format  : GLenum;
-                              type_Id : GLenum;
-                              pixels  : access GLvoid);
-   procedure glCopyTexImage1D (target         : GLenum;
-                               level          : GLint;
-                               internalformat : GLenum;
-                               x              : GLint;
-                               y              : GLint;
-                               width          : GLsizei;
-                               border         : GLint);
-   procedure glCopyTexImage2D (target         : GLenum;
-                               level          : GLint;
-                               internalformat : GLenum;
-                               x              : GLint;
-                               y              : GLint;
-                               width          : GLsizei;
-                               height         : GLsizei;
-                               border         : GLint);
-   procedure glCopyTexSubImage1D (target  : GLenum;
-                                  level   : GLint;
-                                  xoffset : GLint;
-                                  x       : GLint;
-                                  y       : GLint;
-                                  width   : GLsizei);
-   procedure glCopyTexSubImage2D (target  : GLenum;
-                                  level   : GLint;
-                                  xoffset : GLint;
-                                  yoffset : GLint;
-                                  x       : GLint;
-                                  y       : GLint;
-                                  width   : GLsizei;
-                                  height  : GLsizei);
+   pragma Import (C, glIsTexture, "glIsTexture");
 
-   --
-   --  Evaluators
-   --
+   procedure glTexSubImage1D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      width : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glTexSubImage1D, "glTexSubImage1D");
 
-   procedure glMap1d (target : GLenum;
-                      u1     : GLdouble;
-                      u2     : GLdouble;
-                      stride : GLint;
-                      order  : GLint;
-                      points : access GLdouble);
-   procedure glMap1f (target : GLenum;
-                      u1     : GLfloat;
-                      u2     : GLfloat;
-                      stride : GLint;
-                      order  : GLint;
-                      points : access GLfloat);
-   procedure glMap2d (target  : GLenum;
-                      u1      : GLdouble;
-                      u2      : GLdouble;
-                      ustride : GLint;
-                      uorder  : GLint;
-                      v1      : GLdouble;
-                      v2      : GLdouble;
-                      vstride : GLint;
-                      vorder  : GLint;
-                      points  : access GLdouble);
-   procedure glMap2f (target  : GLenum;
-                      u1      : GLfloat;
-                      u2      : GLfloat;
-                      ustride : GLint;
-                      uorder  : GLint;
-                      v1      : GLfloat;
-                      v2      : GLfloat;
-                      vstride : GLint;
-                      vorder  : GLint;
-                      points  : access GLfloat);
+   procedure glTexSubImage2D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
+   pragma Import (C, glTexSubImage2D, "glTexSubImage2D");
+
+   procedure glCopyTexImage1D
+     (target : GLenum;
+      level : GLint;
+      internalformat : GLenum;
+      x : GLint;
+      y : GLint;
+      width : GLsizei;
+      border : GLint);
+   pragma Import (C, glCopyTexImage1D, "glCopyTexImage1D");
+
+   procedure glCopyTexImage2D
+     (target : GLenum;
+      level : GLint;
+      internalformat : GLenum;
+      x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      border : GLint);
+   pragma Import (C, glCopyTexImage2D, "glCopyTexImage2D");
+
+   procedure glCopyTexSubImage1D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      x : GLint;
+      y : GLint;
+      width : GLsizei);
+   pragma Import (C, glCopyTexSubImage1D, "glCopyTexSubImage1D");
+
+   procedure glCopyTexSubImage2D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei);
+   pragma Import (C, glCopyTexSubImage2D, "glCopyTexSubImage2D");
+
+  -- * Evaluators
+  --
+
+   procedure glMap1d
+     (target : GLenum;
+      u1 : GLdouble;
+      u2 : GLdouble;
+      stride : GLint;
+      order : GLint;
+      points : access GLdouble);
+   pragma Import (C, glMap1d, "glMap1d");
+
+   procedure glMap1f
+     (target : GLenum;
+      u1 : GLfloat;
+      u2 : GLfloat;
+      stride : GLint;
+      order : GLint;
+      points : access GLfloat);
+   pragma Import (C, glMap1f, "glMap1f");
+
+   procedure glMap2d
+     (target : GLenum;
+      u1 : GLdouble;
+      u2 : GLdouble;
+      ustride : GLint;
+      uorder : GLint;
+      v1 : GLdouble;
+      v2 : GLdouble;
+      vstride : GLint;
+      vorder : GLint;
+      points : access GLdouble);
+   pragma Import (C, glMap2d, "glMap2d");
+
+   procedure glMap2f
+     (target : GLenum;
+      u1 : GLfloat;
+      u2 : GLfloat;
+      ustride : GLint;
+      uorder : GLint;
+      v1 : GLfloat;
+      v2 : GLfloat;
+      vstride : GLint;
+      vorder : GLint;
+      points : access GLfloat);
+   pragma Import (C, glMap2f, "glMap2f");
+
    procedure glGetMapdv
-      (target : GLenum; query : GLenum; v : access GLdouble);
-   procedure glGetMapfv (target : GLenum; query : GLenum; v : access GLfloat);
-   procedure glGetMapiv (target : GLenum; query : GLenum; v : access GLint);
-   procedure glEvalCoord1d (u : GLdouble);
-   procedure glEvalCoord1f (u : GLfloat);
-   procedure glEvalCoord1dv (u : access GLdouble);
-   procedure glEvalCoord1fv (u : access GLfloat);
-   procedure glEvalCoord2d (u : GLdouble; v : GLdouble);
-   procedure glEvalCoord2f (u : GLfloat; v : GLfloat);
-   procedure glEvalCoord2dv (u : access GLdouble);
-   procedure glEvalCoord2fv (u : access GLfloat);
-   procedure glMapGrid1d (un : GLint; u1 : GLdouble; u2 : GLdouble);
-   procedure glMapGrid1f (un : GLint; u1 : GLfloat; u2 : GLfloat);
-   procedure glMapGrid2d (un : GLint;
-                          u1 : GLdouble;
-                          u2 : GLdouble;
-                          vn : GLint;
-                          v1 : GLdouble;
-                          v2 : GLdouble);
-   procedure glMapGrid2f (un : GLint;
-                          u1 : GLfloat;
-                          u2 : GLfloat;
-                          vn : GLint;
-                          v1 : GLfloat;
-                          v2 : GLfloat);
-   procedure glEvalPoint1 (i : GLint);
-   procedure glEvalPoint2 (i : GLint; j : GLint);
-   procedure glEvalMesh1 (mode : GLenum; i1 : GLint; i2 : GLint);
-   procedure glEvalMesh2 (mode : GLenum;
-                          i1   : GLint;
-                          i2   : GLint;
-                          j1   : GLint;
-                          j2   : GLint);
+     (target : GLenum;
+      query : GLenum;
+      v : access GLdouble);
+   pragma Import (C, glGetMapdv, "glGetMapdv");
 
-   --
+   procedure glGetMapfv
+     (target : GLenum;
+      query : GLenum;
+      v : access GLfloat);
+   pragma Import (C, glGetMapfv, "glGetMapfv");
+
+   procedure glGetMapiv
+     (target : GLenum;
+      query : GLenum;
+      v : access GLint);
+   pragma Import (C, glGetMapiv, "glGetMapiv");
+
+   procedure glEvalCoord1d (u : GLdouble);
+   pragma Import (C, glEvalCoord1d, "glEvalCoord1d");
+
+   procedure glEvalCoord1f (u : GLfloat);
+   pragma Import (C, glEvalCoord1f, "glEvalCoord1f");
+
+   procedure glEvalCoord1dv (u : access GLdouble);
+   pragma Import (C, glEvalCoord1dv, "glEvalCoord1dv");
+
+   procedure glEvalCoord1fv (u : access GLfloat);
+   pragma Import (C, glEvalCoord1fv, "glEvalCoord1fv");
+
+   procedure glEvalCoord2d (u : GLdouble; v : GLdouble);
+   pragma Import (C, glEvalCoord2d, "glEvalCoord2d");
+
+   procedure glEvalCoord2f (u : GLfloat; v : GLfloat);
+   pragma Import (C, glEvalCoord2f, "glEvalCoord2f");
+
+   procedure glEvalCoord2dv (u : access GLdouble);
+   pragma Import (C, glEvalCoord2dv, "glEvalCoord2dv");
+
+   procedure glEvalCoord2fv (u : access GLfloat);
+   pragma Import (C, glEvalCoord2fv, "glEvalCoord2fv");
+
+   procedure glMapGrid1d
+     (un : GLint;
+      u1 : GLdouble;
+      u2 : GLdouble);
+   pragma Import (C, glMapGrid1d, "glMapGrid1d");
+
+   procedure glMapGrid1f
+     (un : GLint;
+      u1 : GLfloat;
+      u2 : GLfloat);
+   pragma Import (C, glMapGrid1f, "glMapGrid1f");
+
+   procedure glMapGrid2d
+     (un : GLint;
+      u1 : GLdouble;
+      u2 : GLdouble;
+      vn : GLint;
+      v1 : GLdouble;
+      v2 : GLdouble);
+   pragma Import (C, glMapGrid2d, "glMapGrid2d");
+
+   procedure glMapGrid2f
+     (un : GLint;
+      u1 : GLfloat;
+      u2 : GLfloat;
+      vn : GLint;
+      v1 : GLfloat;
+      v2 : GLfloat);
+   pragma Import (C, glMapGrid2f, "glMapGrid2f");
+
+   procedure glEvalPoint1 (i : GLint);
+   pragma Import (C, glEvalPoint1, "glEvalPoint1");
+
+   procedure glEvalPoint2 (i : GLint; j : GLint);
+   pragma Import (C, glEvalPoint2, "glEvalPoint2");
+
+   procedure glEvalMesh1
+     (mode : GLenum;
+      i1 : GLint;
+      i2 : GLint);
+   pragma Import (C, glEvalMesh1, "glEvalMesh1");
+
+   procedure glEvalMesh2
+     (mode : GLenum;
+      i1 : GLint;
+      i2 : GLint;
+      j1 : GLint;
+      j2 : GLint);
+   pragma Import (C, glEvalMesh2, "glEvalMesh2");
+
+   --  ----
    --  Fog
-   --
+   --  ----
 
    procedure glFogf (pname : GLenum; param : GLfloat);
-   procedure glFogi (pname : GLenum; param : GLint);
-   procedure glFogfv (pname : GLenum; params : access GLfloat);
-   procedure glFogiv (pname : GLenum; params : access GLint);
-
-   --
-   --  Selection and Feedback
-   --
-
-   procedure glFeedbackBuffer (size    : GLsizei;
-                               type_Id : GLenum;
-                               buffer  : access GLfloat);
-   procedure glPassThrough (token : GLfloat);
-   procedure glSelectBuffer (size : GLsizei; buffer : access GLuint);
-   procedure glInitNames;
-   procedure glLoadName (name : GLuint);
-   procedure glPushName (name : GLuint);
-   procedure glPopName;
-
-   --
-   --  1.0 Extensions
-   --
-
-   --   GL_EXT_blend_minmax
-
-   procedure glBlendEquationEXT (mode : GLenum);
-
-   --   GL_EXT_blend_color
-
-   procedure glBlendColorEXT (red   : GLclampf;
-                              green : GLclampf;
-                              blue  : GLclampf;
-                              alpha : GLclampf);
-
-   --   GL_EXT_polygon_offset
-
-   procedure glPolygonOffsetEXT (factor : GLfloat; bias : GLfloat);
-
-   --   GL_EXT_vertex_array
-
-   procedure glVertexPointerEXT (size    : GLint;
-                                 type_Id : GLenum;
-                                 stride  : GLsizei;
-                                 count   : GLsizei;
-                                 ptr     : access GLvoid);
-   procedure glNormalPointerEXT (type_Id : GLenum;
-                                 stride  : GLsizei;
-                                 count   : GLsizei;
-                                 ptr     : access GLvoid);
-   procedure glColorPointerEXT (size    : GLint;
-                                type_Id : GLenum;
-                                stride  : GLsizei;
-                                count   : GLsizei;
-                                ptr     : access GLvoid);
-   procedure glIndexPointerEXT (type_Id : GLenum;
-                                stride  : GLsizei;
-                                count   : GLsizei;
-                                ptr     : access GLvoid);
-   procedure glTexCoordPointerEXT (size    : GLint;
-                                   type_Id : GLenum;
-                                   stride  : GLsizei;
-                                   count   : GLsizei;
-                                   ptr     : access GLvoid);
-   procedure glEdgeFlagPointerEXT (stride : GLsizei;
-                                   count  : GLsizei;
-                                   ptr    : access GLboolean);
-   procedure glGetPointervEXT
-      (pname    : GLenum;
-         params : access Interfaces.C.Extensions.Void_Ptr);
-   procedure glArrayElementEXT (i : GLint);
-   procedure glDrawArraysEXT (mode : GLenum; first : GLint; count : GLsizei);
-
-   --   GL_EXT_texture_object
-
-   procedure glGenTexturesEXT (n : GLsizei; textures : access GLuint);
-   procedure glDeleteTexturesEXT (n : GLsizei; textures : access GLuint);
-   procedure glBindTextureEXT (target : GLenum; texture : GLuint);
-   procedure glPrioritizeTexturesEXT (n          : GLsizei;
-                                      textures   : access GLuint;
-                                      priorities : access GLclampf);
-   function glAreTexturesResidentEXT
-      (n : GLsizei;  textures : access GLuint;  residences : access GLboolean)
-      return GLboolean;
-   function glIsTextureEXT (texture : GLuint) return GLboolean;
-
-   --   GL_EXT_texture3D
-
-   procedure glTexImage3DEXT (target         : GLenum;
-                              level          : GLint;
-                              internalFormat : GLenum;
-                              width          : GLsizei;
-                              height         : GLsizei;
-                              depth          : GLsizei;
-                              border         : GLint;
-                              format         : GLenum;
-                              type_Id        : GLenum;
-                              pixels         : access GLvoid);
-   procedure glTexSubImage3DEXT (target  : GLenum;
-                                 level   : GLint;
-                                 xoffset : GLint;
-                                 yoffset : GLint;
-                                 zoffset : GLint;
-                                 width   : GLsizei;
-                                 height  : GLsizei;
-                                 depth   : GLsizei;
-                                 format  : GLenum;
-                                 type_Id : GLenum;
-                                 pixels  : access GLvoid);
-   procedure glCopyTexSubImage3DEXT (target  : GLenum;
-                                     level   : GLint;
-                                     xoffset : GLint;
-                                     yoffset : GLint;
-                                     zoffset : GLint;
-                                     x       : GLint;
-                                     y       : GLint;
-                                     width   : GLsizei;
-                                     height  : GLsizei);
-
-   --   GL_EXT_color_table
-
-   procedure glColorTableEXT (target         : GLenum;
-                              internalformat : GLenum;
-                              width          : GLsizei;
-                              format         : GLenum;
-                              type_Id        : GLenum;
-                              table          : access GLvoid);
-   procedure glColorSubTableEXT (target  : GLenum;
-                                 start   : GLsizei;
-                                 count   : GLsizei;
-                                 format  : GLenum;
-                                 type_Id : GLenum;
-                                 data    : access GLvoid);
-   procedure glGetColorTableEXT (target  : GLenum;
-                                 format  : GLenum;
-                                 type_Id : GLenum;
-                                 table   : access GLvoid);
-   procedure glGetColorTableParameterfvEXT (target : GLenum;
-                                            pname  : GLenum;
-                                            params : access GLfloat);
-   procedure glGetColorTableParameterivEXT (target : GLenum;
-                                            pname  : GLenum;
-                                            params : access GLint);
-
-   --   GL_SGIS_multitexture
-
-   procedure glMultiTexCoord1dSGIS (target : GLenum; s : GLdouble);
-   procedure glMultiTexCoord1dvSGIS (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord1fSGIS (target : GLenum; s : GLfloat);
-   procedure glMultiTexCoord1fvSGIS (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord1iSGIS (target : GLenum; s : GLint);
-   procedure glMultiTexCoord1ivSGIS (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord1sSGIS (target : GLenum; s : GLshort);
-   procedure glMultiTexCoord1svSGIS (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord2dSGIS (target : GLenum;
-                                    s      : GLdouble;
-                                    t      : GLdouble);
-   procedure glMultiTexCoord2dvSGIS (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord2fSGIS
-      (target : GLenum; s : GLfloat; t : GLfloat);
-   procedure glMultiTexCoord2fvSGIS (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord2iSGIS (target : GLenum; s : GLint; t : GLint);
-   procedure glMultiTexCoord2ivSGIS (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord2sSGIS
-      (target : GLenum; s : GLshort; t : GLshort);
-   procedure glMultiTexCoord2svSGIS (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord3dSGIS (target : GLenum;
-                                    s      : GLdouble;
-                                    t      : GLdouble;
-                                    r      : GLdouble);
-   procedure glMultiTexCoord3dvSGIS (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord3fSGIS (target : GLenum;
-                                    s      : GLfloat;
-                                    t      : GLfloat;
-                                    r      : GLfloat);
-   procedure glMultiTexCoord3fvSGIS (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord3iSGIS (target : GLenum;
-                                    s      : GLint;
-                                    t      : GLint;
-                                    r      : GLint);
-   procedure glMultiTexCoord3ivSGIS (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord3sSGIS (target : GLenum;
-                                    s      : GLshort;
-                                    t      : GLshort;
-                                    r      : GLshort);
-   procedure glMultiTexCoord3svSGIS (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord4dSGIS (target : GLenum;
-                                    s      : GLdouble;
-                                    t      : GLdouble;
-                                    r      : GLdouble;
-                                    q      : GLdouble);
-   procedure glMultiTexCoord4dvSGIS (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord4fSGIS (target : GLenum;
-                                    s      : GLfloat;
-                                    t      : GLfloat;
-                                    r      : GLfloat;
-                                    q      : GLfloat);
-   procedure glMultiTexCoord4fvSGIS (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord4iSGIS (target : GLenum;
-                                    s      : GLint;
-                                    t      : GLint;
-                                    r      : GLint;
-                                    q      : GLint);
-   procedure glMultiTexCoord4ivSGIS (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord4sSGIS (target : GLenum;
-                                    s      : GLshort;
-                                    t      : GLshort;
-                                    r      : GLshort;
-                                    q      : GLshort);
-   procedure glMultiTexCoord4svSGIS (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoordPointerSGIS (target  : GLenum;
-                                         size    : GLint;
-                                         type_Id : GLenum;
-                                         stride  : GLsizei;
-                                         pointer : access GLvoid);
-   procedure glSelectTextureSGIS (target : GLenum);
-   procedure glSelectTextureCoordSetSGIS (target : GLenum);
-
-   --   GL_EXT_multitexture
-
-   procedure glMultiTexCoord1dEXT (target : GLenum; s : GLdouble);
-   procedure glMultiTexCoord1dvEXT (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord1fEXT (target : GLenum; s : GLfloat);
-   procedure glMultiTexCoord1fvEXT (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord1iEXT (target : GLenum; s : GLint);
-   procedure glMultiTexCoord1ivEXT (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord1sEXT (target : GLenum; s : GLshort);
-   procedure glMultiTexCoord1svEXT (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord2dEXT (target : GLenum;
-                                   s      : GLdouble;
-                                   t      : GLdouble);
-   procedure glMultiTexCoord2dvEXT (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord2fEXT (target : GLenum; s : GLfloat; t : GLfloat);
-   procedure glMultiTexCoord2fvEXT (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord2iEXT (target : GLenum; s : GLint; t : GLint);
-   procedure glMultiTexCoord2ivEXT (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord2sEXT (target : GLenum; s : GLshort; t : GLshort);
-   procedure glMultiTexCoord2svEXT (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord3dEXT (target : GLenum;
-                                   s      : GLdouble;
-                                   t      : GLdouble;
-                                   r      : GLdouble);
-   procedure glMultiTexCoord3dvEXT (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord3fEXT (target : GLenum;
-                                   s      : GLfloat;
-                                   t      : GLfloat;
-                                   r      : GLfloat);
-   procedure glMultiTexCoord3fvEXT (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord3iEXT (target : GLenum;
-                                   s      : GLint;
-                                   t      : GLint;
-                                   r      : GLint);
-   procedure glMultiTexCoord3ivEXT (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord3sEXT (target : GLenum;
-                                   s      : GLshort;
-                                   t      : GLshort;
-                                   r      : GLshort);
-   procedure glMultiTexCoord3svEXT (target : GLenum; v : access GLshort);
-   procedure glMultiTexCoord4dEXT (target : GLenum;
-                                   s      : GLdouble;
-                                   t      : GLdouble;
-                                   r      : GLdouble;
-                                   q      : GLdouble);
-   procedure glMultiTexCoord4dvEXT (target : GLenum; v : access GLdouble);
-   procedure glMultiTexCoord4fEXT (target : GLenum;
-                                   s      : GLfloat;
-                                   t      : GLfloat;
-                                   r      : GLfloat;
-                                   q      : GLfloat);
-   procedure glMultiTexCoord4fvEXT (target : GLenum; v : access GLfloat);
-   procedure glMultiTexCoord4iEXT (target : GLenum;
-                                   s      : GLint;
-                                   t      : GLint;
-                                   r      : GLint;
-                                   q      : GLint);
-   procedure glMultiTexCoord4ivEXT (target : GLenum; v : access GLint);
-   procedure glMultiTexCoord4sEXT (target : GLenum;
-                                   s      : GLshort;
-                                   t      : GLshort;
-                                   r      : GLshort;
-                                   q      : GLshort);
-   procedure glMultiTexCoord4svEXT (target : GLenum; v : access GLshort);
-   procedure glInterleavedTextureCoordSetsEXT (factor : GLint);
-   procedure glSelectTextureEXT (target : GLenum);
-   procedure glSelectTextureCoordSetEXT (target : GLenum);
-   procedure glSelectTextureTransformEXT (target : GLenum);
-
-   --   GL_EXT_point_parameters
-
-   procedure glPointParameterfEXT (pname : GLenum; param : GLfloat);
-   procedure glPointParameterfvEXT (pname : GLenum; params : access GLfloat);
-
-   --   GL_MESA_window_pos
-
-   procedure glWindowPos2iMESA (x : GLint; y : GLint);
-   procedure glWindowPos2sMESA (x : GLshort; y : GLshort);
-   procedure glWindowPos2fMESA (x : GLfloat; y : GLfloat);
-   procedure glWindowPos2dMESA (x : GLdouble; y : GLdouble);
-   procedure glWindowPos2ivMESA (p : access GLint);
-   procedure glWindowPos2svMESA (p : access GLshort);
-   procedure glWindowPos2fvMESA (p : access GLfloat);
-   procedure glWindowPos2dvMESA (p : access GLdouble);
-   procedure glWindowPos3iMESA (x : GLint; y : GLint; z : GLint);
-   procedure glWindowPos3sMESA (x : GLshort; y : GLshort; z : GLshort);
-   procedure glWindowPos3fMESA (x : GLfloat; y : GLfloat; z : GLfloat);
-   procedure glWindowPos3dMESA (x : GLdouble; y : GLdouble; z : GLdouble);
-   procedure glWindowPos3ivMESA (p : access GLint);
-   procedure glWindowPos3svMESA (p : access GLshort);
-   procedure glWindowPos3fvMESA (p : access GLfloat);
-   procedure glWindowPos3dvMESA (p : access GLdouble);
-   procedure glWindowPos4iMESA (x : GLint; y : GLint; z : GLint; w : GLint);
-   procedure glWindowPos4sMESA (x : GLshort;
-                                y : GLshort;
-                                z : GLshort;
-                                w : GLshort);
-   procedure glWindowPos4fMESA (x : GLfloat;
-                                y : GLfloat;
-                                z : GLfloat;
-                                w : GLfloat);
-   procedure glWindowPos4dMESA (x : GLdouble;
-                                y : GLdouble;
-                                z : GLdouble;
-                                w : GLdouble);
-   procedure glWindowPos4ivMESA (p : access GLint);
-   procedure glWindowPos4svMESA (p : access GLshort);
-   procedure glWindowPos4fvMESA (p : access GLfloat);
-   procedure glWindowPos4dvMESA (p : access GLdouble);
-
-   --   GL_MESA_resize_buffers
-
-   procedure glResizeBuffersMESA;
-
-   --   1.2 functions
-
-   procedure glDrawRangeElements (mode    : GLenum;
-                                  start   : GLuint;
-                                  end_Id  : GLuint;
-                                  count   : GLsizei;
-                                  type_Id : GLenum;
-                                  indices : access GLvoid);
-   procedure glTexImage3D (target         : GLenum;
-                           level          : GLint;
-                           internalFormat : GLenum;
-                           width          : GLsizei;
-                           height         : GLsizei;
-                           depth          : GLsizei;
-                           border         : GLint;
-                           format         : GLenum;
-                           type_Id        : GLenum;
-                           pixels         : access GLvoid);
-   procedure glTexSubImage3D (target  : GLenum;
-                              level   : GLint;
-                              xoffset : GLint;
-                              yoffset : GLint;
-                              zoffset : GLint;
-                              width   : GLsizei;
-                              height  : GLsizei;
-                              depth   : GLsizei;
-                              format  : GLenum;
-                              type_Id : GLenum;
-                              pixels  : access GLvoid);
-   procedure glCopyTexSubImage3D (target  : GLenum;
-                                  level   : GLint;
-                                  xoffset : GLint;
-                                  yoffset : GLint;
-                                  zoffset : GLint;
-                                  x       : GLint;
-                                  y       : GLint;
-                                  width   : GLsizei;
-                                  height  : GLsizei);
-
-   --
-   --  Compile-time tests for extensions:
-   --
-
-   GL_EXT_blend_color            : constant := 1;
-   GL_EXT_blend_logic_op         : constant := 1;
-   GL_EXT_blend_minmax           : constant := 1;
-   GL_EXT_blend_subtract         : constant := 1;
-   GL_EXT_polygon_offset         : constant := 1;
-   GL_EXT_vertex_array           : constant := 1;
-   GL_EXT_texture_object         : constant := 1;
-   GL_EXT_texture3D              : constant := 1;
-   GL_EXT_paletted_texture       : constant := 1;
-   GL_EXT_shared_texture_palette : constant := 1;
-   GL_EXT_point_parameters       : constant := 1;
-   GL_EXT_rescale_normal         : constant := 1;
-   GL_EXT_abgr                   : constant := 1;
-   GL_EXT_multitexture           : constant := 1;
-   GL_MESA_window_pos            : constant := 1;
-   GL_MESA_resize_buffers        : constant := 1;
-   GL_SGIS_multitexture          : constant := 1;
-   GL_SGIS_texture_edge_clamp    : constant := 1;
-
-private
-
-   pragma Import (C, glClearIndex, "glClearIndex");
-   pragma Import (C, glClearColor, "glClearColor");
-   pragma Import (C, glClear, "glClear");
-   pragma Import (C, glIndexMask, "glIndexMask");
-   pragma Import (C, glColorMask, "glColorMask");
-   pragma Import (C, glAlphaFunc, "glAlphaFunc");
-   pragma Import (C, glBlendFunc, "glBlendFunc");
-   pragma Import (C, glLogicOp, "glLogicOp");
-   pragma Import (C, glCullFace, "glCullFace");
-   pragma Import (C, glFrontFace, "glFrontFace");
-   pragma Import (C, glPointSize, "glPointSize");
-   pragma Import (C, glLineWidth, "glLineWidth");
-   pragma Import (C, glLineStipple, "glLineStipple");
-   pragma Import (C, glPolygonMode, "glPolygonMode");
-   pragma Import (C, glPolygonOffset, "glPolygonOffset");
-   pragma Import (C, glPolygonStipple, "glPolygonStipple");
-   pragma Import (C, glGetPolygonStipple, "glGetPolygonStipple");
-   pragma Import (C, glEdgeFlag, "glEdgeFlag");
-   pragma Import (C, glEdgeFlagv, "glEdgeFlagv");
-   pragma Import (C, glScissor, "glScissor");
-   pragma Import (C, glClipPlane, "glClipPlane");
-   pragma Import (C, glGetClipPlane, "glGetClipPlane");
-   pragma Import (C, glDrawBuffer, "glDrawBuffer");
-   pragma Import (C, glReadBuffer, "glReadBuffer");
-   pragma Import (C, glEnable, "glEnable");
-   pragma Import (C, glDisable, "glDisable");
-   pragma Import (C, glIsEnabled, "glIsEnabled");
-   pragma Import (C, glEnableClientState, "glEnableClientState");
-   pragma Import (C, glDisableClientState, "glDisableClientState");
-   pragma Import (C, glGetBooleanv, "glGetBooleanv");
-   pragma Import (C, glGetDoublev, "glGetDoublev");
-   pragma Import (C, glGetFloatv, "glGetFloatv");
-   pragma Import (C, glGetIntegerv, "glGetIntegerv");
-   pragma Import (C, glPushAttrib, "glPushAttrib");
-   pragma Import (C, glPopAttrib, "glPopAttrib");
-   pragma Import (C, glPushClientAttrib, "glPushClientAttrib");
-   pragma Import (C, glPopClientAttrib, "glPopClientAttrib");
-   pragma Import (C, glRenderMode, "glRenderMode");
-   pragma Import (C, glGetError, "glGetError");
-   pragma Import (C, glGetString, "glGetString");
-   pragma Import (C, glFinish, "glFinish");
-   pragma Import (C, glFlush, "glFlush");
-   pragma Import (C, glHint, "glHint");
-   pragma Import (C, glClearDepth, "glClearDepth");
-   pragma Import (C, glDepthFunc, "glDepthFunc");
-   pragma Import (C, glDepthMask, "glDepthMask");
-   pragma Import (C, glDepthRange, "glDepthRange");
-   pragma Import (C, glClearAccum, "glClearAccum");
-   pragma Import (C, glAccum, "glAccum");
-   pragma Import (C, glMatrixMode, "glMatrixMode");
-   pragma Import (C, glOrtho, "glOrtho");
-   pragma Import (C, glFrustum, "glFrustum");
-   pragma Import (C, glViewport, "glViewport");
-   pragma Import (C, glPushMatrix, "glPushMatrix");
-   pragma Import (C, glPopMatrix, "glPopMatrix");
-   pragma Import (C, glLoadIdentity, "glLoadIdentity");
-   pragma Import (C, glLoadMatrixd, "glLoadMatrixd");
-   pragma Import (C, glLoadMatrixf, "glLoadMatrixf");
-   pragma Import (C, glMultMatrixd, "glMultMatrixd");
-   pragma Import (C, glMultMatrixf, "glMultMatrixf");
-   pragma Import (C, glRotated, "glRotated");
-   pragma Import (C, glRotatef, "glRotatef");
-   pragma Import (C, glScaled, "glScaled");
-   pragma Import (C, glScalef, "glScalef");
-   pragma Import (C, glTranslated, "glTranslated");
-   pragma Import (C, glTranslatef, "glTranslatef");
-   pragma Import (C, glIsList, "glIsList");
-   pragma Import (C, glDeleteLists, "glDeleteLists");
-   pragma Import (C, glGenLists, "glGenLists");
-   pragma Import (C, glNewList, "glNewList");
-   pragma Import (C, glEndList, "glEndList");
-   pragma Import (C, glCallList, "glCallList");
-   pragma Import (C, glCallLists, "glCallLists");
-   pragma Import (C, glListBase, "glListBase");
-   pragma Import (C, glBegin, "glBegin");
-   pragma Import (C, glEnd, "glEnd");
-   pragma Import (C, glVertex2d, "glVertex2d");
-   pragma Import (C, glVertex2f, "glVertex2f");
-   pragma Import (C, glVertex2i, "glVertex2i");
-   pragma Import (C, glVertex2s, "glVertex2s");
-   pragma Import (C, glVertex3d, "glVertex3d");
-   pragma Import (C, glVertex3f, "glVertex3f");
-   pragma Import (C, glVertex3i, "glVertex3i");
-   pragma Import (C, glVertex3s, "glVertex3s");
-   pragma Import (C, glVertex4d, "glVertex4d");
-   pragma Import (C, glVertex4f, "glVertex4f");
-   pragma Import (C, glVertex4i, "glVertex4i");
-   pragma Import (C, glVertex4s, "glVertex4s");
-   pragma Import (C, glVertex2dv, "glVertex2dv");
-   pragma Import (C, glVertex2fv, "glVertex2fv");
-   pragma Import (C, glVertex2iv, "glVertex2iv");
-   pragma Import (C, glVertex2sv, "glVertex2sv");
-   pragma Import (C, glVertex3dv, "glVertex3dv");
-   pragma Import (C, glVertex3fv, "glVertex3fv");
-   pragma Import (C, glVertex3iv, "glVertex3iv");
-   pragma Import (C, glVertex3sv, "glVertex3sv");
-   pragma Import (C, glVertex4dv, "glVertex4dv");
-   pragma Import (C, glVertex4fv, "glVertex4fv");
-   pragma Import (C, glVertex4iv, "glVertex4iv");
-   pragma Import (C, glVertex4sv, "glVertex4sv");
-   pragma Import (C, glNormal3b, "glNormal3b");
-   pragma Import (C, glNormal3d, "glNormal3d");
-   pragma Import (C, glNormal3f, "glNormal3f");
-   pragma Import (C, glNormal3i, "glNormal3i");
-   pragma Import (C, glNormal3s, "glNormal3s");
-   pragma Import (C, glNormal3bv, "glNormal3bv");
-   pragma Import (C, glNormal3dv, "glNormal3dv");
-   pragma Import (C, glNormal3fv, "glNormal3fv");
-   pragma Import (C, glNormal3iv, "glNormal3iv");
-   pragma Import (C, glNormal3sv, "glNormal3sv");
-   pragma Import (C, glIndexd, "glIndexd");
-   pragma Import (C, glIndexf, "glIndexf");
-   pragma Import (C, glIndexi, "glIndexi");
-   pragma Import (C, glIndexs, "glIndexs");
-   pragma Import (C, glIndexub, "glIndexub");
-   pragma Import (C, glIndexdv, "glIndexdv");
-   pragma Import (C, glIndexfv, "glIndexfv");
-   pragma Import (C, glIndexiv, "glIndexiv");
-   pragma Import (C, glIndexsv, "glIndexsv");
-   pragma Import (C, glIndexubv, "glIndexubv");
-   pragma Import (C, glColor3b, "glColor3b");
-   pragma Import (C, glColor3d, "glColor3d");
-   pragma Import (C, glColor3f, "glColor3f");
-   pragma Import (C, glColor3i, "glColor3i");
-   pragma Import (C, glColor3s, "glColor3s");
-   pragma Import (C, glColor3ub, "glColor3ub");
-   pragma Import (C, glColor3ui, "glColor3ui");
-   pragma Import (C, glColor3us, "glColor3us");
-   pragma Import (C, glColor4b, "glColor4b");
-   pragma Import (C, glColor4d, "glColor4d");
-   pragma Import (C, glColor4f, "glColor4f");
-   pragma Import (C, glColor4i, "glColor4i");
-   pragma Import (C, glColor4s, "glColor4s");
-   pragma Import (C, glColor4ub, "glColor4ub");
-   pragma Import (C, glColor4ui, "glColor4ui");
-   pragma Import (C, glColor4us, "glColor4us");
-   pragma Import (C, glColor3bv, "glColor3bv");
-   pragma Import (C, glColor3dv, "glColor3dv");
-   pragma Import (C, glColor3fv, "glColor3fv");
-   pragma Import (C, glColor3iv, "glColor3iv");
-   pragma Import (C, glColor3sv, "glColor3sv");
-   pragma Import (C, glColor3ubv, "glColor3ubv");
-   pragma Import (C, glColor3uiv, "glColor3uiv");
-   pragma Import (C, glColor3usv, "glColor3usv");
-   pragma Import (C, glColor4bv, "glColor4bv");
-   pragma Import (C, glColor4dv, "glColor4dv");
-   pragma Import (C, glColor4fv, "glColor4fv");
-   pragma Import (C, glColor4iv, "glColor4iv");
-   pragma Import (C, glColor4sv, "glColor4sv");
-   pragma Import (C, glColor4ubv, "glColor4ubv");
-   pragma Import (C, glColor4uiv, "glColor4uiv");
-   pragma Import (C, glColor4usv, "glColor4usv");
-   pragma Import (C, glTexCoord1d, "glTexCoord1d");
-   pragma Import (C, glTexCoord1f, "glTexCoord1f");
-   pragma Import (C, glTexCoord1i, "glTexCoord1i");
-   pragma Import (C, glTexCoord1s, "glTexCoord1s");
-   pragma Import (C, glTexCoord2d, "glTexCoord2d");
-   pragma Import (C, glTexCoord2f, "glTexCoord2f");
-   pragma Import (C, glTexCoord2i, "glTexCoord2i");
-   pragma Import (C, glTexCoord2s, "glTexCoord2s");
-   pragma Import (C, glTexCoord3d, "glTexCoord3d");
-   pragma Import (C, glTexCoord3f, "glTexCoord3f");
-   pragma Import (C, glTexCoord3i, "glTexCoord3i");
-   pragma Import (C, glTexCoord3s, "glTexCoord3s");
-   pragma Import (C, glTexCoord4d, "glTexCoord4d");
-   pragma Import (C, glTexCoord4f, "glTexCoord4f");
-   pragma Import (C, glTexCoord4i, "glTexCoord4i");
-   pragma Import (C, glTexCoord4s, "glTexCoord4s");
-   pragma Import (C, glTexCoord1dv, "glTexCoord1dv");
-   pragma Import (C, glTexCoord1fv, "glTexCoord1fv");
-   pragma Import (C, glTexCoord1iv, "glTexCoord1iv");
-   pragma Import (C, glTexCoord1sv, "glTexCoord1sv");
-   pragma Import (C, glTexCoord2dv, "glTexCoord2dv");
-   pragma Import (C, glTexCoord2fv, "glTexCoord2fv");
-   pragma Import (C, glTexCoord2iv, "glTexCoord2iv");
-   pragma Import (C, glTexCoord2sv, "glTexCoord2sv");
-   pragma Import (C, glTexCoord3dv, "glTexCoord3dv");
-   pragma Import (C, glTexCoord3fv, "glTexCoord3fv");
-   pragma Import (C, glTexCoord3iv, "glTexCoord3iv");
-   pragma Import (C, glTexCoord3sv, "glTexCoord3sv");
-   pragma Import (C, glTexCoord4dv, "glTexCoord4dv");
-   pragma Import (C, glTexCoord4fv, "glTexCoord4fv");
-   pragma Import (C, glTexCoord4iv, "glTexCoord4iv");
-   pragma Import (C, glTexCoord4sv, "glTexCoord4sv");
-   pragma Import (C, glRasterPos2d, "glRasterPos2d");
-   pragma Import (C, glRasterPos2f, "glRasterPos2f");
-   pragma Import (C, glRasterPos2i, "glRasterPos2i");
-   pragma Import (C, glRasterPos2s, "glRasterPos2s");
-   pragma Import (C, glRasterPos3d, "glRasterPos3d");
-   pragma Import (C, glRasterPos3f, "glRasterPos3f");
-   pragma Import (C, glRasterPos3i, "glRasterPos3i");
-   pragma Import (C, glRasterPos3s, "glRasterPos3s");
-   pragma Import (C, glRasterPos4d, "glRasterPos4d");
-   pragma Import (C, glRasterPos4f, "glRasterPos4f");
-   pragma Import (C, glRasterPos4i, "glRasterPos4i");
-   pragma Import (C, glRasterPos4s, "glRasterPos4s");
-   pragma Import (C, glRasterPos2dv, "glRasterPos2dv");
-   pragma Import (C, glRasterPos2fv, "glRasterPos2fv");
-   pragma Import (C, glRasterPos2iv, "glRasterPos2iv");
-   pragma Import (C, glRasterPos2sv, "glRasterPos2sv");
-   pragma Import (C, glRasterPos3dv, "glRasterPos3dv");
-   pragma Import (C, glRasterPos3fv, "glRasterPos3fv");
-   pragma Import (C, glRasterPos3iv, "glRasterPos3iv");
-   pragma Import (C, glRasterPos3sv, "glRasterPos3sv");
-   pragma Import (C, glRasterPos4dv, "glRasterPos4dv");
-   pragma Import (C, glRasterPos4fv, "glRasterPos4fv");
-   pragma Import (C, glRasterPos4iv, "glRasterPos4iv");
-   pragma Import (C, glRasterPos4sv, "glRasterPos4sv");
-   pragma Import (C, glRectd, "glRectd");
-   pragma Import (C, glRectf, "glRectf");
-   pragma Import (C, glRecti, "glRecti");
-   pragma Import (C, glRects, "glRects");
-   pragma Import (C, glRectdv, "glRectdv");
-   pragma Import (C, glRectfv, "glRectfv");
-   pragma Import (C, glRectiv, "glRectiv");
-   pragma Import (C, glRectsv, "glRectsv");
-   pragma Import (C, glVertexPointer, "glVertexPointer");
-   pragma Import (C, glNormalPointer, "glNormalPointer");
-   pragma Import (C, glColorPointer, "glColorPointer");
-   pragma Import (C, glIndexPointer, "glIndexPointer");
-   pragma Import (C, glTexCoordPointer, "glTexCoordPointer");
-   pragma Import (C, glEdgeFlagPointer, "glEdgeFlagPointer");
-   pragma Import (C, glGetPointerv, "glGetPointerv");
-   pragma Import (C, glArrayElement, "glArrayElement");
-   pragma Import (C, glDrawArrays, "glDrawArrays");
-   pragma Import (C, glDrawElements, "glDrawElements");
-   pragma Import (C, glInterleavedArrays, "glInterleavedArrays");
-   pragma Import (C, glShadeModel, "glShadeModel");
-   pragma Import (C, glLightf, "glLightf");
-   pragma Import (C, glLighti, "glLighti");
-   pragma Import (C, glLightfv, "glLightfv");
-   pragma Import (C, glLightiv, "glLightiv");
-   pragma Import (C, glGetLightfv, "glGetLightfv");
-   pragma Import (C, glGetLightiv, "glGetLightiv");
-   pragma Import (C, glLightModelf, "glLightModelf");
-   pragma Import (C, glLightModeli, "glLightModeli");
-   pragma Import (C, glLightModelfv, "glLightModelfv");
-   pragma Import (C, glLightModeliv, "glLightModeliv");
-   pragma Import (C, glMaterialf, "glMaterialf");
-   pragma Import (C, glMateriali, "glMateriali");
-   pragma Import (C, glMaterialfv, "glMaterialfv");
-   pragma Import (C, glMaterialiv, "glMaterialiv");
-   pragma Import (C, glGetMaterialfv, "glGetMaterialfv");
-   pragma Import (C, glGetMaterialiv, "glGetMaterialiv");
-   pragma Import (C, glColorMaterial, "glColorMaterial");
-   pragma Import (C, glPixelZoom, "glPixelZoom");
-   pragma Import (C, glPixelStoref, "glPixelStoref");
-   pragma Import (C, glPixelStorei, "glPixelStorei");
-   pragma Import (C, glPixelTransferf, "glPixelTransferf");
-   pragma Import (C, glPixelTransferi, "glPixelTransferi");
-   pragma Import (C, glPixelMapfv, "glPixelMapfv");
-   pragma Import (C, glPixelMapuiv, "glPixelMapuiv");
-   pragma Import (C, glPixelMapusv, "glPixelMapusv");
-   pragma Import (C, glGetPixelMapfv, "glGetPixelMapfv");
-   pragma Import (C, glGetPixelMapuiv, "glGetPixelMapuiv");
-   pragma Import (C, glGetPixelMapusv, "glGetPixelMapusv");
-   pragma Import (C, glBitmap, "glBitmap");
-   pragma Import (C, glReadPixels, "glReadPixels");
-   pragma Import (C, glDrawPixels, "glDrawPixels");
-   pragma Import (C, glCopyPixels, "glCopyPixels");
-   pragma Import (C, glStencilFunc, "glStencilFunc");
-   pragma Import (C, glStencilMask, "glStencilMask");
-   pragma Import (C, glStencilOp, "glStencilOp");
-   pragma Import (C, glClearStencil, "glClearStencil");
-   pragma Import (C, glTexGend, "glTexGend");
-   pragma Import (C, glTexGenf, "glTexGenf");
-   pragma Import (C, glTexGeni, "glTexGeni");
-   pragma Import (C, glTexGendv, "glTexGendv");
-   pragma Import (C, glTexGenfv, "glTexGenfv");
-   pragma Import (C, glTexGeniv, "glTexGeniv");
-   pragma Import (C, glGetTexGendv, "glGetTexGendv");
-   pragma Import (C, glGetTexGenfv, "glGetTexGenfv");
-   pragma Import (C, glGetTexGeniv, "glGetTexGeniv");
-   pragma Import (C, glTexEnvf, "glTexEnvf");
-   pragma Import (C, glTexEnvi, "glTexEnvi");
-   pragma Import (C, glTexEnvfv, "glTexEnvfv");
-   pragma Import (C, glTexEnviv, "glTexEnviv");
-   pragma Import (C, glGetTexEnvfv, "glGetTexEnvfv");
-   pragma Import (C, glGetTexEnviv, "glGetTexEnviv");
-   pragma Import (C, glTexParameterf, "glTexParameterf");
-   pragma Import (C, glTexParameteri, "glTexParameteri");
-   pragma Import (C, glTexParameterfv, "glTexParameterfv");
-   pragma Import (C, glTexParameteriv, "glTexParameteriv");
-   pragma Import (C, glGetTexParameterfv, "glGetTexParameterfv");
-   pragma Import (C, glGetTexParameteriv, "glGetTexParameteriv");
-   pragma Import (C, glGetTexLevelParameterfv, "glGetTexLevelParameterfv");
-   pragma Import (C, glGetTexLevelParameteriv, "glGetTexLevelParameteriv");
-   pragma Import (C, glTexImage1D, "glTexImage1D");
-   pragma Import (C, glTexImage2D, "glTexImage2D");
-   pragma Import (C, glGetTexImage, "glGetTexImage");
-   pragma Import (C, glGenTextures, "glGenTextures");
-   pragma Import (C, glDeleteTextures, "glDeleteTextures");
-   pragma Import (C, glBindTexture, "glBindTexture");
-   pragma Import (C, glPrioritizeTextures, "glPrioritizeTextures");
-   pragma Import (C, glAreTexturesResident, "glAreTexturesResident");
-   pragma Import (C, glIsTexture, "glIsTexture");
-   pragma Import (C, glTexSubImage1D, "glTexSubImage1D");
-   pragma Import (C, glTexSubImage2D, "glTexSubImage2D");
-   pragma Import (C, glCopyTexImage1D, "glCopyTexImage1D");
-   pragma Import (C, glCopyTexImage2D, "glCopyTexImage2D");
-   pragma Import (C, glCopyTexSubImage1D, "glCopyTexSubImage1D");
-   pragma Import (C, glCopyTexSubImage2D, "glCopyTexSubImage2D");
-   pragma Import (C, glMap1d, "glMap1d");
-   pragma Import (C, glMap1f, "glMap1f");
-   pragma Import (C, glMap2d, "glMap2d");
-   pragma Import (C, glMap2f, "glMap2f");
-   pragma Import (C, glGetMapdv, "glGetMapdv");
-   pragma Import (C, glGetMapfv, "glGetMapfv");
-   pragma Import (C, glGetMapiv, "glGetMapiv");
-   pragma Import (C, glEvalCoord1d, "glEvalCoord1d");
-   pragma Import (C, glEvalCoord1f, "glEvalCoord1f");
-   pragma Import (C, glEvalCoord1dv, "glEvalCoord1dv");
-   pragma Import (C, glEvalCoord1fv, "glEvalCoord1fv");
-   pragma Import (C, glEvalCoord2d, "glEvalCoord2d");
-   pragma Import (C, glEvalCoord2f, "glEvalCoord2f");
-   pragma Import (C, glEvalCoord2dv, "glEvalCoord2dv");
-   pragma Import (C, glEvalCoord2fv, "glEvalCoord2fv");
-   pragma Import (C, glMapGrid1d, "glMapGrid1d");
-   pragma Import (C, glMapGrid1f, "glMapGrid1f");
-   pragma Import (C, glMapGrid2d, "glMapGrid2d");
-   pragma Import (C, glMapGrid2f, "glMapGrid2f");
-   pragma Import (C, glEvalPoint1, "glEvalPoint1");
-   pragma Import (C, glEvalPoint2, "glEvalPoint2");
-   pragma Import (C, glEvalMesh1, "glEvalMesh1");
-   pragma Import (C, glEvalMesh2, "glEvalMesh2");
    pragma Import (C, glFogf, "glFogf");
+
+   procedure glFogi (pname : GLenum; param : GLint);
    pragma Import (C, glFogi, "glFogi");
+
+   procedure glFogfv (pname : GLenum; params : access GLfloat);
    pragma Import (C, glFogfv, "glFogfv");
+
+   procedure glFogiv (pname : GLenum; params : access GLint);
    pragma Import (C, glFogiv, "glFogiv");
+
+  -- * Selection and Feedback
+  --
+
+   procedure glFeedbackBuffer
+     (size : GLsizei;
+      c_type : GLenum;
+      buffer : access GLfloat);
    pragma Import (C, glFeedbackBuffer, "glFeedbackBuffer");
+
+   procedure glPassThrough (token : GLfloat);
    pragma Import (C, glPassThrough, "glPassThrough");
+
+   procedure glSelectBuffer (size : GLsizei; buffer : access GLuint);
    pragma Import (C, glSelectBuffer, "glSelectBuffer");
+
+   procedure glInitNames;  -- /usr/include/GL/gl.h:1465
    pragma Import (C, glInitNames, "glInitNames");
+
+   procedure glLoadName (name : GLuint);
    pragma Import (C, glLoadName, "glLoadName");
+
+   procedure glPushName (name : GLuint);
    pragma Import (C, glPushName, "glPushName");
+
+   procedure glPopName;
    pragma Import (C, glPopName, "glPopName");
-   pragma Import (C, glBlendEquationEXT, "glBlendEquationEXT");
-   pragma Import (C, glBlendColorEXT, "glBlendColorEXT");
-   pragma Import (C, glPolygonOffsetEXT, "glPolygonOffsetEXT");
-   pragma Import (C, glVertexPointerEXT, "glVertexPointerEXT");
-   pragma Import (C, glNormalPointerEXT, "glNormalPointerEXT");
-   pragma Import (C, glColorPointerEXT, "glColorPointerEXT");
-   pragma Import (C, glIndexPointerEXT, "glIndexPointerEXT");
-   pragma Import (C, glTexCoordPointerEXT, "glTexCoordPointerEXT");
-   pragma Import (C, glEdgeFlagPointerEXT, "glEdgeFlagPointerEXT");
-   pragma Import (C, glGetPointervEXT, "glGetPointervEXT");
-   pragma Import (C, glArrayElementEXT, "glArrayElementEXT");
-   pragma Import (C, glDrawArraysEXT, "glDrawArraysEXT");
-   pragma Import (C, glGenTexturesEXT, "glGenTexturesEXT");
-   pragma Import (C, glDeleteTexturesEXT, "glDeleteTexturesEXT");
-   pragma Import (C, glBindTextureEXT, "glBindTextureEXT");
-   pragma Import (C, glPrioritizeTexturesEXT, "glPrioritizeTexturesEXT");
-   pragma Import (C, glAreTexturesResidentEXT, "glAreTexturesResidentEXT");
-   pragma Import (C, glIsTextureEXT, "glIsTextureEXT");
-   pragma Import (C, glTexImage3DEXT, "glTexImage3DEXT");
-   pragma Import (C, glTexSubImage3DEXT, "glTexSubImage3DEXT");
-   pragma Import (C, glCopyTexSubImage3DEXT, "glCopyTexSubImage3DEXT");
-   pragma Import (C, glColorTableEXT, "glColorTableEXT");
-   pragma Import (C, glColorSubTableEXT, "glColorSubTableEXT");
-   pragma Import (C, glGetColorTableEXT, "glGetColorTableEXT");
-   pragma Import (C,
-                  glGetColorTableParameterfvEXT,
-                  "glGetColorTableParameterfvEXT");
-   pragma Import (C,
-                  glGetColorTableParameterivEXT,
-                  "glGetColorTableParameterivEXT");
-   pragma Import (C, glMultiTexCoord1dSGIS, "glMultiTexCoord1dSGIS");
-   pragma Import (C, glMultiTexCoord1dvSGIS, "glMultiTexCoord1dvSGIS");
-   pragma Import (C, glMultiTexCoord1fSGIS, "glMultiTexCoord1fSGIS");
-   pragma Import (C, glMultiTexCoord1fvSGIS, "glMultiTexCoord1fvSGIS");
-   pragma Import (C, glMultiTexCoord1iSGIS, "glMultiTexCoord1iSGIS");
-   pragma Import (C, glMultiTexCoord1ivSGIS, "glMultiTexCoord1ivSGIS");
-   pragma Import (C, glMultiTexCoord1sSGIS, "glMultiTexCoord1sSGIS");
-   pragma Import (C, glMultiTexCoord1svSGIS, "glMultiTexCoord1svSGIS");
-   pragma Import (C, glMultiTexCoord2dSGIS, "glMultiTexCoord2dSGIS");
-   pragma Import (C, glMultiTexCoord2dvSGIS, "glMultiTexCoord2dvSGIS");
-   pragma Import (C, glMultiTexCoord2fSGIS, "glMultiTexCoord2fSGIS");
-   pragma Import (C, glMultiTexCoord2fvSGIS, "glMultiTexCoord2fvSGIS");
-   pragma Import (C, glMultiTexCoord2iSGIS, "glMultiTexCoord2iSGIS");
-   pragma Import (C, glMultiTexCoord2ivSGIS, "glMultiTexCoord2ivSGIS");
-   pragma Import (C, glMultiTexCoord2sSGIS, "glMultiTexCoord2sSGIS");
-   pragma Import (C, glMultiTexCoord2svSGIS, "glMultiTexCoord2svSGIS");
-   pragma Import (C, glMultiTexCoord3dSGIS, "glMultiTexCoord3dSGIS");
-   pragma Import (C, glMultiTexCoord3dvSGIS, "glMultiTexCoord3dvSGIS");
-   pragma Import (C, glMultiTexCoord3fSGIS, "glMultiTexCoord3fSGIS");
-   pragma Import (C, glMultiTexCoord3fvSGIS, "glMultiTexCoord3fvSGIS");
-   pragma Import (C, glMultiTexCoord3iSGIS, "glMultiTexCoord3iSGIS");
-   pragma Import (C, glMultiTexCoord3ivSGIS, "glMultiTexCoord3ivSGIS");
-   pragma Import (C, glMultiTexCoord3sSGIS, "glMultiTexCoord3sSGIS");
-   pragma Import (C, glMultiTexCoord3svSGIS, "glMultiTexCoord3svSGIS");
-   pragma Import (C, glMultiTexCoord4dSGIS, "glMultiTexCoord4dSGIS");
-   pragma Import (C, glMultiTexCoord4dvSGIS, "glMultiTexCoord4dvSGIS");
-   pragma Import (C, glMultiTexCoord4fSGIS, "glMultiTexCoord4fSGIS");
-   pragma Import (C, glMultiTexCoord4fvSGIS, "glMultiTexCoord4fvSGIS");
-   pragma Import (C, glMultiTexCoord4iSGIS, "glMultiTexCoord4iSGIS");
-   pragma Import (C, glMultiTexCoord4ivSGIS, "glMultiTexCoord4ivSGIS");
-   pragma Import (C, glMultiTexCoord4sSGIS, "glMultiTexCoord4sSGIS");
-   pragma Import (C, glMultiTexCoord4svSGIS, "glMultiTexCoord4svSGIS");
-   pragma Import (C,
-                  glMultiTexCoordPointerSGIS,
-                  "glMultiTexCoordPointerSGIS");
-   pragma Import (C, glSelectTextureSGIS, "glSelectTextureSGIS");
-   pragma Import (C,
-                  glSelectTextureCoordSetSGIS,
-                  "glSelectTextureCoordSetSGIS");
-   pragma Import (C, glMultiTexCoord1dEXT, "glMultiTexCoord1dEXT");
-   pragma Import (C, glMultiTexCoord1dvEXT, "glMultiTexCoord1dvEXT");
-   pragma Import (C, glMultiTexCoord1fEXT, "glMultiTexCoord1fEXT");
-   pragma Import (C, glMultiTexCoord1fvEXT, "glMultiTexCoord1fvEXT");
-   pragma Import (C, glMultiTexCoord1iEXT, "glMultiTexCoord1iEXT");
-   pragma Import (C, glMultiTexCoord1ivEXT, "glMultiTexCoord1ivEXT");
-   pragma Import (C, glMultiTexCoord1sEXT, "glMultiTexCoord1sEXT");
-   pragma Import (C, glMultiTexCoord1svEXT, "glMultiTexCoord1svEXT");
-   pragma Import (C, glMultiTexCoord2dEXT, "glMultiTexCoord2dEXT");
-   pragma Import (C, glMultiTexCoord2dvEXT, "glMultiTexCoord2dvEXT");
-   pragma Import (C, glMultiTexCoord2fEXT, "glMultiTexCoord2fEXT");
-   pragma Import (C, glMultiTexCoord2fvEXT, "glMultiTexCoord2fvEXT");
-   pragma Import (C, glMultiTexCoord2iEXT, "glMultiTexCoord2iEXT");
-   pragma Import (C, glMultiTexCoord2ivEXT, "glMultiTexCoord2ivEXT");
-   pragma Import (C, glMultiTexCoord2sEXT, "glMultiTexCoord2sEXT");
-   pragma Import (C, glMultiTexCoord2svEXT, "glMultiTexCoord2svEXT");
-   pragma Import (C, glMultiTexCoord3dEXT, "glMultiTexCoord3dEXT");
-   pragma Import (C, glMultiTexCoord3dvEXT, "glMultiTexCoord3dvEXT");
-   pragma Import (C, glMultiTexCoord3fEXT, "glMultiTexCoord3fEXT");
-   pragma Import (C, glMultiTexCoord3fvEXT, "glMultiTexCoord3fvEXT");
-   pragma Import (C, glMultiTexCoord3iEXT, "glMultiTexCoord3iEXT");
-   pragma Import (C, glMultiTexCoord3ivEXT, "glMultiTexCoord3ivEXT");
-   pragma Import (C, glMultiTexCoord3sEXT, "glMultiTexCoord3sEXT");
-   pragma Import (C, glMultiTexCoord3svEXT, "glMultiTexCoord3svEXT");
-   pragma Import (C, glMultiTexCoord4dEXT, "glMultiTexCoord4dEXT");
-   pragma Import (C, glMultiTexCoord4dvEXT, "glMultiTexCoord4dvEXT");
-   pragma Import (C, glMultiTexCoord4fEXT, "glMultiTexCoord4fEXT");
-   pragma Import (C, glMultiTexCoord4fvEXT, "glMultiTexCoord4fvEXT");
-   pragma Import (C, glMultiTexCoord4iEXT, "glMultiTexCoord4iEXT");
-   pragma Import (C, glMultiTexCoord4ivEXT, "glMultiTexCoord4ivEXT");
-   pragma Import (C, glMultiTexCoord4sEXT, "glMultiTexCoord4sEXT");
-   pragma Import (C, glMultiTexCoord4svEXT, "glMultiTexCoord4svEXT");
-   pragma Import (C,
-                  glInterleavedTextureCoordSetsEXT,
-                  "glInterleavedTextureCoordSetsEXT");
-   pragma Import (C, glSelectTextureEXT, "glSelectTextureEXT");
-   pragma Import (C,
-                  glSelectTextureCoordSetEXT,
-                  "glSelectTextureCoordSetEXT");
-   pragma Import (C,
-                  glSelectTextureTransformEXT,
-                  "glSelectTextureTransformEXT");
-   pragma Import (C, glPointParameterfEXT, "glPointParameterfEXT");
-   pragma Import (C, glPointParameterfvEXT, "glPointParameterfvEXT");
-   pragma Import (C, glWindowPos2iMESA, "glWindowPos2iMESA");
-   pragma Import (C, glWindowPos2sMESA, "glWindowPos2sMESA");
-   pragma Import (C, glWindowPos2fMESA, "glWindowPos2fMESA");
-   pragma Import (C, glWindowPos2dMESA, "glWindowPos2dMESA");
-   pragma Import (C, glWindowPos2ivMESA, "glWindowPos2ivMESA");
-   pragma Import (C, glWindowPos2svMESA, "glWindowPos2svMESA");
-   pragma Import (C, glWindowPos2fvMESA, "glWindowPos2fvMESA");
-   pragma Import (C, glWindowPos2dvMESA, "glWindowPos2dvMESA");
-   pragma Import (C, glWindowPos3iMESA, "glWindowPos3iMESA");
-   pragma Import (C, glWindowPos3sMESA, "glWindowPos3sMESA");
-   pragma Import (C, glWindowPos3fMESA, "glWindowPos3fMESA");
-   pragma Import (C, glWindowPos3dMESA, "glWindowPos3dMESA");
-   pragma Import (C, glWindowPos3ivMESA, "glWindowPos3ivMESA");
-   pragma Import (C, glWindowPos3svMESA, "glWindowPos3svMESA");
-   pragma Import (C, glWindowPos3fvMESA, "glWindowPos3fvMESA");
-   pragma Import (C, glWindowPos3dvMESA, "glWindowPos3dvMESA");
-   pragma Import (C, glWindowPos4iMESA, "glWindowPos4iMESA");
-   pragma Import (C, glWindowPos4sMESA, "glWindowPos4sMESA");
-   pragma Import (C, glWindowPos4fMESA, "glWindowPos4fMESA");
-   pragma Import (C, glWindowPos4dMESA, "glWindowPos4dMESA");
-   pragma Import (C, glWindowPos4ivMESA, "glWindowPos4ivMESA");
-   pragma Import (C, glWindowPos4svMESA, "glWindowPos4svMESA");
-   pragma Import (C, glWindowPos4fvMESA, "glWindowPos4fvMESA");
-   pragma Import (C, glWindowPos4dvMESA, "glWindowPos4dvMESA");
-   pragma Import (C, glResizeBuffersMESA, "glResizeBuffersMESA");
+
+   --  ---------
+   -- OpenGL 1.2
+   --  ---------
+   GL_RESCALE_NORMAL : constant := 16#803A#;
+   GL_CLAMP_TO_EDGE : constant := 16#812F#;
+   GL_MAX_ELEMENTS_VERTICES : constant := 16#80E8#;
+   GL_MAX_ELEMENTS_INDICES : constant := 16#80E9#;
+   GL_BGR : constant := 16#80E0#;
+   GL_BGRA : constant := 16#80E1#;
+   GL_UNSIGNED_BYTE_3_3_2 : constant := 16#8032#;
+   GL_UNSIGNED_BYTE_2_3_3_REV : constant := 16#8362#;
+   GL_UNSIGNED_SHORT_5_6_5 : constant := 16#8363#;
+   GL_UNSIGNED_SHORT_5_6_5_REV : constant := 16#8364#;
+   GL_UNSIGNED_SHORT_4_4_4_4 : constant := 16#8033#;
+   GL_UNSIGNED_SHORT_4_4_4_4_REV : constant := 16#8365#;
+   GL_UNSIGNED_SHORT_5_5_5_1 : constant := 16#8034#;
+   GL_UNSIGNED_SHORT_1_5_5_5_REV : constant := 16#8366#;
+   GL_UNSIGNED_INT_8_8_8_8 : constant := 16#8035#;
+   GL_UNSIGNED_INT_8_8_8_8_REV : constant := 16#8367#;
+   GL_UNSIGNED_INT_10_10_10_2 : constant := 16#8036#;
+   GL_UNSIGNED_INT_2_10_10_10_REV : constant := 16#8368#;
+   GL_LIGHT_MODEL_COLOR_CONTROL : constant := 16#81F8#;
+   GL_TEXTURE_MIN_LOD : constant := 16#813A#;
+   GL_TEXTURE_MAX_LOD : constant := 16#813B#;
+   GL_TEXTURE_BASE_LEVEL : constant := 16#813C#;
+   GL_TEXTURE_MAX_LEVEL : constant := 16#813D#;
+   GL_SMOOTH_POINT_SIZE_RANGE : constant := 16#0B12#;
+   GL_SMOOTH_POINT_SIZE_GRANULARITY : constant := 16#0B13#;
+   GL_SMOOTH_LINE_WIDTH_RANGE : constant := 16#0B22#;
+   GL_SMOOTH_LINE_WIDTH_GRANULARITY : constant := 16#0B23#;
+   GL_ALIASED_POINT_SIZE_RANGE : constant := 16#846D#;
+   GL_ALIASED_LINE_WIDTH_RANGE : constant := 16#846E#;
+   GL_PACK_SKIP_IMAGES : constant := 16#806B#;
+   GL_PACK_IMAGE_HEIGHT : constant := 16#806C#;
+   GL_UNPACK_SKIP_IMAGES : constant := 16#806D#;
+   GL_UNPACK_IMAGE_HEIGHT : constant := 16#806E#;
+   GL_TEXTURE_3D : constant := 16#806F#;
+   GL_PROXY_TEXTURE_3D : constant := 16#8070#;
+   GL_TEXTURE_DEPTH : constant := 16#8071#;
+   GL_TEXTURE_WRAP_R : constant := 16#8072#;
+   GL_MAX_3D_TEXTURE_SIZE : constant := 16#8073#;
+   GL_TEXTURE_BINDING_3D : constant := 16#806A#;
+
+   procedure glDrawRangeElements
+     (mode : GLenum;
+      start : GLuint;
+      c_end : GLuint;
+      count : GLsizei;
+      c_type : GLenum;
+      indices : System.Address);
    pragma Import (C, glDrawRangeElements, "glDrawRangeElements");
+
+   procedure glTexImage3D
+     (target : GLenum;
+      level : GLint;
+      internalFormat : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      depth : GLsizei;
+      border : GLint;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
    pragma Import (C, glTexImage3D, "glTexImage3D");
+
+   procedure glTexSubImage3D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      zoffset : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      depth : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      pixels : System.Address);
    pragma Import (C, glTexSubImage3D, "glTexSubImage3D");
+
+   procedure glCopyTexSubImage3D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      zoffset : GLint;
+      x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei);
    pragma Import (C, glCopyTexSubImage3D, "glCopyTexSubImage3D");
 
-end gl_h;
+   type PFNGLDRAWRANGEELEMENTSPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLuint;
+         arg3 : GLuint;
+         arg4 : GLsizei;
+         arg5 : GLenum;
+         arg6 : System.Address);
 
+   type PFNGLTEXIMAGE3DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLsizei;
+         arg5 : GLsizei;
+         arg6 : GLsizei;
+         arg7 : GLint;
+         arg8 : GLenum;
+         arg9 : GLenum;
+         arg10 : System.Address);
+
+   type PFNGLTEXSUBIMAGE3DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint;
+         arg5 : GLint;
+         arg6 : GLsizei;
+         arg7 : GLsizei;
+         arg8 : GLsizei;
+         arg9 : GLenum;
+         arg10 : GLenum;
+         arg11 : System.Address);
+
+   type PFNGLCOPYTEXSUBIMAGE3DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint;
+         arg5 : GLint;
+         arg6 : GLint;
+         arg7 : GLint;
+         arg8 : GLsizei;
+         arg9 : GLsizei);
+
+   --  ---------------
+   --  GL_ARB_imaging
+   --  ---------------
+
+   GL_CONSTANT_COLOR : constant := 16#8001#;
+   GL_ONE_MINUS_CONSTANT_COLOR : constant := 16#8002#;
+   GL_CONSTANT_ALPHA : constant := 16#8003#;
+   GL_ONE_MINUS_CONSTANT_ALPHA : constant := 16#8004#;
+   GL_COLOR_TABLE : constant :=  16#80D0#;
+   GL_POST_CONVOLUTION_COLOR_TABLE : constant :=  16#80D1#;
+   GL_POST_COLOR_MATRIX_COLOR_TABLE : constant :=  16#80D2#;
+   GL_PROXY_COLOR_TABLE	: constant :=  16#80D3#;
+   GL_PROXY_POST_CONVOLUTION_COLOR_TABLE : constant :=  16#80D4#;
+   GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE : constant :=  16#80D5#;
+   GL_COLOR_TABLE_SCALE : constant :=  16#80D6#;
+   GL_COLOR_TABLE_BIAS : constant :=  16#80D7#;
+   GL_COLOR_TABLE_FORMAT : constant :=  16#80D8#;
+   GL_COLOR_TABLE_WIDTH : constant :=  16#80D9#;
+   GL_COLOR_TABLE_RED_SIZE : constant :=  16#80DA#;
+   GL_COLOR_TABLE_GREEN_SIZE : constant :=  16#80DB#;
+   GL_COLOR_TABLE_BLUE_SIZE : constant :=  16#80DC#;
+   GL_COLOR_TABLE_ALPHA_SIZE : constant :=  16#80DD#;
+   GL_COLOR_TABLE_LUMINANCE_SIZE : constant :=  16#80DE#;
+   GL_COLOR_TABLE_INTENSITY_SIZE : constant :=  16#80DF#;
+   GL_CONVOLUTION_1D : constant :=  16#8010#;
+   GL_CONVOLUTION_2D : constant :=  16#8011#;
+   GL_SEPARABLE_2D : constant :=  16#8012#;
+   GL_CONVOLUTION_BORDER_MODE : constant :=  16#8013#;
+   GL_CONVOLUTION_FILTER_SCALE : constant :=  16#8014#;
+   GL_CONVOLUTION_FILTER_BIAS : constant :=  16#8015#;
+   GL_REDUCE : constant :=  16#8016#;
+   GL_CONVOLUTION_FORMAT : constant :=  16#8017#;
+   GL_CONVOLUTION_WIDTH : constant :=  16#8018#;
+   GL_CONVOLUTION_HEIGHT : constant :=  16#8019#;
+   GL_MAX_CONVOLUTION_WIDTH : constant :=  16#801A#;
+   GL_MAX_CONVOLUTION_HEIGHT : constant :=  16#801B#;
+   GL_POST_CONVOLUTION_RED_SCALE : constant :=  16#801C#;
+   GL_POST_CONVOLUTION_GREEN_SCALE : constant :=  16#801D#;
+   GL_POST_CONVOLUTION_BLUE_SCALE : constant :=  16#801E#;
+   GL_POST_CONVOLUTION_ALPHA_SCALE : constant :=  16#801F#;
+   GL_POST_CONVOLUTION_RED_BIAS	: constant :=  16#8020#;
+   GL_POST_CONVOLUTION_GREEN_BIAS : constant :=  16#8021#;
+   GL_POST_CONVOLUTION_BLUE_BIAS : constant :=  16#8022#;
+   GL_POST_CONVOLUTION_ALPHA_BIAS : constant :=  16#8023#;
+   GL_CONSTANT_BORDER : constant :=  16#8151#;
+   GL_REPLICATE_BORDER : constant :=  16#8153#;
+   GL_CONVOLUTION_BORDER_COLOR : constant :=  16#8154#;
+   GL_COLOR_MATRIX : constant :=  16#80B1#;
+   GL_COLOR_MATRIX_STACK_DEPTH : constant :=  16#80B2#;
+   GL_MAX_COLOR_MATRIX_STACK_DEPTH : constant :=  16#80B3#;
+   GL_POST_COLOR_MATRIX_RED_SCALE : constant :=  16#80B4#;
+   GL_POST_COLOR_MATRIX_GREEN_SCALE : constant :=  16#80B5#;
+   GL_POST_COLOR_MATRIX_BLUE_SCALE : constant :=  16#80B6#;
+   GL_POST_COLOR_MATRIX_ALPHA_SCALE : constant :=  16#80B7#;
+   GL_POST_COLOR_MATRIX_RED_BIAS : constant :=  16#80B8#;
+   GL_POST_COLOR_MATRIX_GREEN_BIAS : constant :=  16#80B9#;
+   GL_POST_COLOR_MATRIX_BLUE_BIAS : constant :=  16#80BA#;
+   GL_POST_COLOR_MATRIX_ALPHA_BIAS : constant :=  16#80BB#;
+   GL_HISTOGRAM	: constant :=  16#8024#;
+   GL_PROXY_HISTOGRAM : constant :=  16#8025#;
+   GL_HISTOGRAM_WIDTH : constant :=  16#8026#;
+   GL_HISTOGRAM_FORMAT : constant :=  16#8027#;
+   GL_HISTOGRAM_RED_SIZE : constant :=  16#8028#;
+   GL_HISTOGRAM_GREEN_SIZE : constant :=  16#8029#;
+   GL_HISTOGRAM_BLUE_SIZE : constant :=  16#802A#;
+   GL_HISTOGRAM_ALPHA_SIZE : constant :=  16#802B#;
+   GL_HISTOGRAM_LUMINANCE_SIZE : constant :=  16#802C#;
+   GL_HISTOGRAM_SINK : constant :=  16#802D#;
+   GL_MINMAX : constant :=  16#802E#;
+   GL_MINMAX_FORMAT : constant :=  16#802F#;
+   GL_MINMAX_SINK : constant :=  16#8030#;
+   GL_TABLE_TOO_LARGE : constant :=  16#8031#;
+   GL_BLEND_EQUATION : constant := 16#8009#;
+   GL_MIN : constant := 16#8007#;
+   GL_MAX : constant := 16#8008#;
+   GL_FUNC_ADD : constant := 16#8006#;
+   GL_FUNC_SUBTRACT : constant := 16#800A#;
+   GL_FUNC_REVERSE_SUBTRACT : constant := 16#800B#;
+   GL_BLEND_COLOR : constant := 16#8005#;
+
+   procedure glColorTable
+     (target : GLenum;
+      internalformat : GLenum;
+      width : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      table : System.Address);
+   pragma Import (C, glColorTable, "glColorTable");
+
+   procedure glColorSubTable
+     (target : GLenum;
+      start : GLsizei;
+      count : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      data : System.Address);
+   pragma Import (C, glColorSubTable, "glColorSubTable");
+
+   procedure glColorTableParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glColorTableParameteriv, "glColorTableParameteriv");
+
+   procedure glColorTableParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glColorTableParameterfv, "glColorTableParameterfv");
+
+   procedure glCopyColorSubTable
+     (target : GLenum;
+      start : GLsizei;
+      x : GLint;
+      y : GLint;
+      width : GLsizei);
+   pragma Import (C, glCopyColorSubTable, "glCopyColorSubTable");
+
+   procedure glCopyColorTable
+     (target : GLenum;
+      internalformat : GLenum;
+      x : GLint;
+      y : GLint;
+      width : GLsizei);
+   pragma Import (C, glCopyColorTable, "glCopyColorTable");
+
+   procedure glGetColorTable
+     (target : GLenum;
+      format : GLenum;
+      c_type : GLenum;
+      table : System.Address);
+   pragma Import (C, glGetColorTable, "glGetColorTable");
+
+   procedure glGetColorTableParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetColorTableParameterfv, "glGetColorTableParameterfv");
+
+   procedure glGetColorTableParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetColorTableParameteriv, "glGetColorTableParameteriv");
+
+   procedure glBlendEquation (mode : GLenum);
+   pragma Import (C, glBlendEquation, "glBlendEquation");
+
+   procedure glBlendColor
+     (red : GLclampf;
+      green : GLclampf;
+      blue : GLclampf;
+      alpha : GLclampf);
+   pragma Import (C, glBlendColor, "glBlendColor");
+
+   procedure glHistogram
+     (target : GLenum;
+      width : GLsizei;
+      internalformat : GLenum;
+      sink : GLboolean);
+   pragma Import (C, glHistogram, "glHistogram");
+
+   procedure glResetHistogram (target : GLenum);
+   pragma Import (C, glResetHistogram, "glResetHistogram");
+
+   procedure glGetHistogram
+     (target : GLenum;
+      reset : GLboolean;
+      format : GLenum;
+      c_type : GLenum;
+      values : System.Address);
+   pragma Import (C, glGetHistogram, "glGetHistogram");
+
+   procedure glGetHistogramParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetHistogramParameterfv, "glGetHistogramParameterfv");
+
+   procedure glGetHistogramParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetHistogramParameteriv, "glGetHistogramParameteriv");
+
+   procedure glMinmax
+     (target : GLenum;
+      internalformat : GLenum;
+      sink : GLboolean);
+   pragma Import (C, glMinmax, "glMinmax");
+
+   procedure glResetMinmax (target : GLenum);
+   pragma Import (C, glResetMinmax, "glResetMinmax");
+
+   procedure glGetMinmax
+     (target : GLenum;
+      reset : GLboolean;
+      format : GLenum;
+      types : GLenum;
+      values : System.Address);
+   pragma Import (C, glGetMinmax, "glGetMinmax");
+
+   procedure glGetMinmaxParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetMinmaxParameterfv, "glGetMinmaxParameterfv");
+
+   procedure glGetMinmaxParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetMinmaxParameteriv, "glGetMinmaxParameteriv");
+
+   procedure glConvolutionFilter1D
+     (target : GLenum;
+      internalformat : GLenum;
+      width : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      image : System.Address);
+   pragma Import (C, glConvolutionFilter1D, "glConvolutionFilter1D");
+
+   procedure glConvolutionFilter2D
+     (target : GLenum;
+      internalformat : GLenum;
+      width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      image : System.Address);
+   pragma Import (C, glConvolutionFilter2D, "glConvolutionFilter2D");
+
+   procedure glConvolutionParameterf
+     (target : GLenum;
+      pname : GLenum;
+      params : GLfloat);
+   pragma Import (C, glConvolutionParameterf, "glConvolutionParameterf");
+
+   procedure glConvolutionParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glConvolutionParameterfv, "glConvolutionParameterfv");
+
+   procedure glConvolutionParameteri
+     (target : GLenum;
+      pname : GLenum;
+      params : GLint);
+   pragma Import (C, glConvolutionParameteri, "glConvolutionParameteri");
+
+   procedure glConvolutionParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glConvolutionParameteriv, "glConvolutionParameteriv");
+
+   procedure glCopyConvolutionFilter1D
+     (target : GLenum;
+      internalformat : GLenum;
+      x : GLint;
+      y : GLint;
+      width : GLsizei);
+   pragma Import (C, glCopyConvolutionFilter1D, "glCopyConvolutionFilter1D");
+
+   procedure glCopyConvolutionFilter2D
+     (target : GLenum;
+      internalformat : GLenum;
+      x : GLint;
+      y : GLint;
+      width : GLsizei;
+      height : GLsizei);
+   pragma Import (C, glCopyConvolutionFilter2D, "glCopyConvolutionFilter2D");
+
+   procedure glGetConvolutionFilter
+     (target : GLenum;
+      format : GLenum;
+      c_type : GLenum;
+      image : System.Address);
+   pragma Import (C, glGetConvolutionFilter, "glGetConvolutionFilter");
+
+   procedure glGetConvolutionParameterfv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLfloat);
+   pragma Import (C, glGetConvolutionParameterfv, "glGetConvolutionParameterfv");
+
+   procedure glGetConvolutionParameteriv
+     (target : GLenum;
+      pname : GLenum;
+      params : access GLint);
+   pragma Import (C, glGetConvolutionParameteriv, "glGetConvolutionParameteriv");
+
+   procedure glSeparableFilter2D
+     (target : GLenum;
+      internalformat : GLenum;
+      width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      c_type : GLenum;
+      row : System.Address;
+      column : System.Address);
+   pragma Import (C, glSeparableFilter2D, "glSeparableFilter2D");
+
+   procedure glGetSeparableFilter
+     (target : GLenum;
+      format : GLenum;
+      c_type : GLenum;
+      row : System.Address;
+      column : System.Address;
+      span : System.Address);
+   pragma Import (C, glGetSeparableFilter, "glGetSeparableFilter");
+
+   type PFNGLBLENDCOLORPROC is access procedure
+        (arg1 : GLclampf;
+         arg2 : GLclampf;
+         arg3 : GLclampf;
+         arg4 : GLclampf);
+
+   type PFNGLBLENDEQUATIONPROC is access procedure (arg1 : GLenum);  -- /usr/include/GL/gl.h:1740
+
+   --  -----------
+   --  OpenGL 1.3
+   --  -----------
+
+  -- multitexture
+   GL_TEXTURE0 : constant := 16#84C0#;
+   GL_TEXTURE1 : constant := 16#84C1#;
+   GL_TEXTURE2 : constant := 16#84C2#;
+   GL_TEXTURE3 : constant := 16#84C3#;
+   GL_TEXTURE4 : constant := 16#84C4#;
+   GL_TEXTURE5 : constant := 16#84C5#;
+   GL_TEXTURE6 : constant := 16#84C6#;
+   GL_TEXTURE7 : constant := 16#84C7#;
+   GL_TEXTURE8 : constant := 16#84C8#;
+   GL_TEXTURE9 : constant := 16#84C9#;
+   GL_TEXTURE10 : constant := 16#84CA#;
+   GL_TEXTURE11 : constant := 16#84CB#;
+   GL_TEXTURE12 : constant := 16#84CC#;
+   GL_TEXTURE13 : constant := 16#84CD#;
+   GL_TEXTURE14 : constant := 16#84CE#;
+   GL_TEXTURE15 : constant := 16#84CF#;
+   GL_TEXTURE16 : constant := 16#84D0#;
+   GL_TEXTURE17 : constant := 16#84D1#;
+   GL_TEXTURE18 : constant := 16#84D2#;
+   GL_TEXTURE19 : constant := 16#84D3#;
+   GL_TEXTURE20 : constant := 16#84D4#;
+   GL_TEXTURE21 : constant := 16#84D5#;
+   GL_TEXTURE22 : constant := 16#84D6#;
+   GL_TEXTURE23 : constant := 16#84D7#;
+   GL_TEXTURE24 : constant := 16#84D8#;
+   GL_TEXTURE25 : constant := 16#84D9#;
+   GL_TEXTURE26 : constant := 16#84DA#;
+   GL_TEXTURE27 : constant := 16#84DB#;
+   GL_TEXTURE28 : constant := 16#84DC#;
+   GL_TEXTURE29 : constant := 16#84DD#;
+   GL_TEXTURE30 : constant := 16#84DE#;
+   GL_TEXTURE31 : constant := 16#84DF#;
+   GL_ACTIVE_TEXTURE : constant := 16#84E0#;
+   GL_CLIENT_ACTIVE_TEXTURE : constant := 16#84E1#;
+   GL_MAX_TEXTURE_UNITS : constant := 16#84E2#;
+
+   -- texture_cube_map
+   GL_NORMAL_MAP : constant := 16#8511#;
+   GL_REFLECTION_MAP : constant := 16#8512#;
+   GL_TEXTURE_CUBE_MAP : constant := 16#8513#;
+   GL_TEXTURE_BINDING_CUBE_MAP : constant := 16#8514#;
+   GL_TEXTURE_CUBE_MAP_POSITIVE_X : constant := 16#8515#;
+   GL_TEXTURE_CUBE_MAP_NEGATIVE_X : constant := 16#8516#;
+   GL_TEXTURE_CUBE_MAP_POSITIVE_Y : constant := 16#8517#;
+   GL_TEXTURE_CUBE_MAP_NEGATIVE_Y : constant := 16#8518#;
+   GL_TEXTURE_CUBE_MAP_POSITIVE_Z : constant := 16#8519#;
+   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z : constant := 16#851A#;
+   GL_PROXY_TEXTURE_CUBE_MAP : constant := 16#851B#;
+   GL_MAX_CUBE_MAP_TEXTURE_SIZE : constant := 16#851C#;
+
+   -- texture_compression
+   GL_COMPRESSED_ALPHA : constant := 16#84E9#;
+   GL_COMPRESSED_LUMINANCE : constant := 16#84EA#;
+   GL_COMPRESSED_LUMINANCE_ALPHA : constant := 16#84EB#;
+   GL_COMPRESSED_INTENSITY : constant := 16#84EC#;
+   GL_COMPRESSED_RGB : constant := 16#84ED#;
+   GL_COMPRESSED_RGBA : constant := 16#84EE#;
+   GL_TEXTURE_COMPRESSION_HINT : constant := 16#84EF#;
+   GL_TEXTURE_COMPRESSED_IMAGE_SIZE : constant := 16#86A0#;
+   GL_TEXTURE_COMPRESSED : constant := 16#86A1#;
+   GL_NUM_COMPRESSED_TEXTURE_FORMATS : constant := 16#86A2#;
+   GL_COMPRESSED_TEXTURE_FORMATS : constant := 16#86A3#;
+
+   -- multisample
+   GL_MULTISAMPLE : constant := 16#809D#;
+   GL_SAMPLE_ALPHA_TO_COVERAGE : constant := 16#809E#;
+   GL_SAMPLE_ALPHA_TO_ONE : constant := 16#809F#;
+   GL_SAMPLE_COVERAGE : constant := 16#80A0#;
+   GL_SAMPLE_BUFFERS : constant := 16#80A8#;
+   GL_SAMPLES : constant := 16#80A9#;
+   GL_SAMPLE_COVERAGE_VALUE : constant := 16#80AA#;
+   GL_SAMPLE_COVERAGE_INVERT : constant := 16#80AB#;
+   GL_MULTISAMPLE_BIT : constant := 16#20000000#;
+
+   -- transpose_matrix
+   GL_TRANSPOSE_MODELVIEW_MATRIX : constant := 16#84E3#;
+   GL_TRANSPOSE_PROJECTION_MATRIX : constant := 16#84E4#;
+   GL_TRANSPOSE_TEXTURE_MATRIX : constant := 16#84E5#;
+   GL_TRANSPOSE_COLOR_MATRIX : constant := 16#84E6#;
+
+   -- texture_env_combine
+   GL_COMBINE : constant := 16#8570#;
+   GL_COMBINE_RGB : constant := 16#8571#;
+   GL_COMBINE_ALPHA : constant := 16#8572#;
+   GL_SOURCE0_RGB : constant := 16#8580#;
+   GL_SOURCE1_RGB : constant := 16#8581#;
+   GL_SOURCE2_RGB : constant := 16#8582#;
+   GL_SOURCE0_ALPHA : constant := 16#8588#;
+   GL_SOURCE1_ALPHA : constant := 16#8589#;
+   GL_SOURCE2_ALPHA : constant := 16#858A#;
+   GL_OPERAND0_RGB : constant := 16#8590#;
+   GL_OPERAND1_RGB : constant := 16#8591#;
+   GL_OPERAND2_RGB : constant := 16#8592#;
+   GL_OPERAND0_ALPHA : constant := 16#8598#;
+   GL_OPERAND1_ALPHA : constant := 16#8599#;
+   GL_OPERAND2_ALPHA : constant := 16#859A#;
+   GL_RGB_SCALE : constant := 16#8573#;
+   GL_ADD_SIGNED : constant := 16#8574#;
+   GL_INTERPOLATE : constant := 16#8575#;
+   GL_SUBTRACT : constant := 16#84E7#;
+   GL_CONSTANT : constant := 16#8576#;
+   GL_PRIMARY_COLOR : constant := 16#8577#;
+   GL_PREVIOUS : constant := 16#8578#;
+
+   -- texture_env_dot3
+   GL_DOT3_RGB : constant := 16#86AE#;
+   GL_DOT3_RGBA : constant := 16#86AF#;
+
+  -- texture_border_clamp
+   GL_CLAMP_TO_BORDER : constant := 16#812D#;
+
+   procedure glActiveTexture (texture : GLenum);
+   pragma Import (C, glActiveTexture, "glActiveTexture");
+
+   procedure glClientActiveTexture (texture : GLenum);
+   pragma Import (C, glClientActiveTexture, "glClientActiveTexture");
+
+   procedure glCompressedTexImage1D
+     (target : GLenum;
+      level : GLint;
+      internalformat : GLenum;
+      width : GLsizei;
+      border : GLint;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexImage1D, "glCompressedTexImage1D");
+
+   procedure glCompressedTexImage2D
+     (target : GLenum;
+      level : GLint;
+      internalformat : GLenum;
+      width : GLsizei;
+      height : GLsizei;
+      border : GLint;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexImage2D, "glCompressedTexImage2D");
+
+   procedure glCompressedTexImage3D
+     (target : GLenum;
+      level : GLint;
+      internalformat : GLenum;
+      width : GLsizei;
+      height : GLsizei;
+      depth : GLsizei;
+      border : GLint;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexImage3D, "glCompressedTexImage3D");
+
+   procedure glCompressedTexSubImage1D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      width : GLsizei;
+      format : GLenum;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexSubImage1D, "glCompressedTexSubImage1D");
+
+   procedure glCompressedTexSubImage2D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      format : GLenum;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexSubImage2D, "glCompressedTexSubImage2D");
+
+   procedure glCompressedTexSubImage3D
+     (target : GLenum;
+      level : GLint;
+      xoffset : GLint;
+      yoffset : GLint;
+      zoffset : GLint;
+      width : GLsizei;
+      height : GLsizei;
+      depth : GLsizei;
+      format : GLenum;
+      imageSize : GLsizei;
+      data : System.Address);
+   pragma Import (C, glCompressedTexSubImage3D, "glCompressedTexSubImage3D");
+
+   procedure glGetCompressedTexImage
+     (target : GLenum;
+      lod : GLint;
+      img : System.Address);
+   pragma Import (C, glGetCompressedTexImage, "glGetCompressedTexImage");
+
+   procedure glMultiTexCoord1d (target : GLenum; s : GLdouble);
+   pragma Import (C, glMultiTexCoord1d, "glMultiTexCoord1d");
+
+   procedure glMultiTexCoord1dv (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord1dv, "glMultiTexCoord1dv");
+
+   procedure glMultiTexCoord1f (target : GLenum; s : GLfloat);
+   pragma Import (C, glMultiTexCoord1f, "glMultiTexCoord1f");
+
+   procedure glMultiTexCoord1fv (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord1fv, "glMultiTexCoord1fv");
+
+   procedure glMultiTexCoord1i (target : GLenum; s : GLint);
+   pragma Import (C, glMultiTexCoord1i, "glMultiTexCoord1i");
+
+   procedure glMultiTexCoord1iv (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord1iv, "glMultiTexCoord1iv");
+
+   procedure glMultiTexCoord1s (target : GLenum; s : GLshort);
+   pragma Import (C, glMultiTexCoord1s, "glMultiTexCoord1s");
+
+   procedure glMultiTexCoord1sv (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord1sv, "glMultiTexCoord1sv");
+
+   procedure glMultiTexCoord2d
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble);
+   pragma Import (C, glMultiTexCoord2d, "glMultiTexCoord2d");
+
+   procedure glMultiTexCoord2dv (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord2dv, "glMultiTexCoord2dv");
+
+   procedure glMultiTexCoord2f
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat);
+   pragma Import (C, glMultiTexCoord2f, "glMultiTexCoord2f");
+
+   procedure glMultiTexCoord2fv (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord2fv, "glMultiTexCoord2fv");
+
+   procedure glMultiTexCoord2i
+     (target : GLenum;
+      s : GLint;
+      t : GLint);
+   pragma Import (C, glMultiTexCoord2i, "glMultiTexCoord2i");
+
+   procedure glMultiTexCoord2iv (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord2iv, "glMultiTexCoord2iv");
+
+   procedure glMultiTexCoord2s
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort);
+   pragma Import (C, glMultiTexCoord2s, "glMultiTexCoord2s");
+
+   procedure glMultiTexCoord2sv (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord2sv, "glMultiTexCoord2sv");
+
+   procedure glMultiTexCoord3d
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble;
+      r : GLdouble);
+   pragma Import (C, glMultiTexCoord3d, "glMultiTexCoord3d");
+
+   procedure glMultiTexCoord3dv (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord3dv, "glMultiTexCoord3dv");
+
+   procedure glMultiTexCoord3f
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat;
+      r : GLfloat);
+   pragma Import (C, glMultiTexCoord3f, "glMultiTexCoord3f");
+
+   procedure glMultiTexCoord3fv (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord3fv, "glMultiTexCoord3fv");
+
+   procedure glMultiTexCoord3i
+     (target : GLenum;
+      s : GLint;
+      t : GLint;
+      r : GLint);
+   pragma Import (C, glMultiTexCoord3i, "glMultiTexCoord3i");
+
+   procedure glMultiTexCoord3iv (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord3iv, "glMultiTexCoord3iv");
+
+   procedure glMultiTexCoord3s
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort;
+      r : GLshort);
+   pragma Import (C, glMultiTexCoord3s, "glMultiTexCoord3s");
+
+   procedure glMultiTexCoord3sv (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord3sv, "glMultiTexCoord3sv");
+
+   procedure glMultiTexCoord4d
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble;
+      r : GLdouble;
+      q : GLdouble);
+   pragma Import (C, glMultiTexCoord4d, "glMultiTexCoord4d");
+
+   procedure glMultiTexCoord4dv (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord4dv, "glMultiTexCoord4dv");
+
+   procedure glMultiTexCoord4f
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat;
+      r : GLfloat;
+      q : GLfloat);
+   pragma Import (C, glMultiTexCoord4f, "glMultiTexCoord4f");
+
+   procedure glMultiTexCoord4fv (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord4fv, "glMultiTexCoord4fv");
+
+   procedure glMultiTexCoord4i
+     (target : GLenum;
+      s : GLint;
+      t : GLint;
+      r : GLint;
+      q : GLint);
+   pragma Import (C, glMultiTexCoord4i, "glMultiTexCoord4i");
+
+   procedure glMultiTexCoord4iv (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord4iv, "glMultiTexCoord4iv");
+
+   procedure glMultiTexCoord4s
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort;
+      r : GLshort;
+      q : GLshort);
+   pragma Import (C, glMultiTexCoord4s, "glMultiTexCoord4s");
+
+   procedure glMultiTexCoord4sv (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord4sv, "glMultiTexCoord4sv");
+
+   procedure glLoadTransposeMatrixd (m : access GLdouble);
+   pragma Import (C, glLoadTransposeMatrixd, "glLoadTransposeMatrixd");
+
+   procedure glLoadTransposeMatrixf (m : access GLfloat);
+   pragma Import (C, glLoadTransposeMatrixf, "glLoadTransposeMatrixf");
+
+   procedure glMultTransposeMatrixd (m : access GLdouble);
+   pragma Import (C, glMultTransposeMatrixd, "glMultTransposeMatrixd");
+
+   procedure glMultTransposeMatrixf (m : access GLfloat);
+   pragma Import (C, glMultTransposeMatrixf, "glMultTransposeMatrixf");
+
+   procedure glSampleCoverage (value : GLclampf; invert : GLboolean);
+   pragma Import (C, glSampleCoverage, "glSampleCoverage");
+
+   type PFNGLACTIVETEXTUREPROC is access procedure
+     (arg1 : GLenum);
+
+   type PFNGLSAMPLECOVERAGEPROC is access procedure
+     (arg1 : GLclampf; arg2 : GLboolean);
+
+   type PFNGLCOMPRESSEDTEXIMAGE3DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLenum;
+         arg4 : GLsizei;
+         arg5 : GLsizei;
+         arg6 : GLsizei;
+         arg7 : GLint;
+         arg8 : GLsizei;
+         arg9 : System.Address);
+
+   type PFNGLCOMPRESSEDTEXIMAGE2DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLenum;
+         arg4 : GLsizei;
+         arg5 : GLsizei;
+         arg6 : GLint;
+         arg7 : GLsizei;
+         arg8 : System.Address);
+
+   type PFNGLCOMPRESSEDTEXIMAGE1DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLenum;
+         arg4 : GLsizei;
+         arg5 : GLint;
+         arg6 : GLsizei;
+         arg7 : System.Address);
+
+   type PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint;
+         arg5 : GLint;
+         arg6 : GLsizei;
+         arg7 : GLsizei;
+         arg8 : GLsizei;
+         arg9 : GLenum;
+         arg10 : GLsizei;
+         arg11 : System.Address);
+
+   type PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint;
+         arg5 : GLsizei;
+         arg6 : GLsizei;
+         arg7 : GLenum;
+         arg8 : GLsizei;
+         arg9 : System.Address);
+
+   type PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLsizei;
+         arg5 : GLenum;
+         arg6 : GLsizei;
+         arg7 : System.Address);
+
+   type PFNGLGETCOMPRESSEDTEXIMAGEPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : System.Address);
+
+   --  -----------------------------------------------------
+   -- GL_ARB_multitexture (ARB extension 1 and OpenGL 1.2.1)
+   --  -----------------------------------------------------
+
+   GL_ARB_multitexture : constant := 1;
+
+   GL_TEXTURE0_ARB : constant := 16#84C0#;
+   GL_TEXTURE1_ARB : constant := 16#84C1#;
+   GL_TEXTURE2_ARB : constant := 16#84C2#;
+   GL_TEXTURE3_ARB : constant := 16#84C3#;
+   GL_TEXTURE4_ARB : constant := 16#84C4#;
+   GL_TEXTURE5_ARB : constant := 16#84C5#;
+   GL_TEXTURE6_ARB : constant := 16#84C6#;
+   GL_TEXTURE7_ARB : constant := 16#84C7#;
+   GL_TEXTURE8_ARB : constant := 16#84C8#;
+   GL_TEXTURE9_ARB : constant := 16#84C9#;
+   GL_TEXTURE10_ARB : constant := 16#84CA#;
+   GL_TEXTURE11_ARB : constant := 16#84CB#;
+   GL_TEXTURE12_ARB : constant := 16#84CC#;
+   GL_TEXTURE13_ARB : constant := 16#84CD#;
+   GL_TEXTURE14_ARB : constant := 16#84CE#;
+   GL_TEXTURE15_ARB : constant := 16#84CF#;
+   GL_TEXTURE16_ARB : constant := 16#84D0#;
+   GL_TEXTURE17_ARB : constant := 16#84D1#;
+   GL_TEXTURE18_ARB : constant := 16#84D2#;
+   GL_TEXTURE19_ARB : constant := 16#84D3#;
+   GL_TEXTURE20_ARB : constant := 16#84D4#;
+   GL_TEXTURE21_ARB : constant := 16#84D5#;
+   GL_TEXTURE22_ARB : constant := 16#84D6#;
+   GL_TEXTURE23_ARB : constant := 16#84D7#;
+   GL_TEXTURE24_ARB : constant := 16#84D8#;
+   GL_TEXTURE25_ARB : constant := 16#84D9#;
+   GL_TEXTURE26_ARB : constant := 16#84DA#;
+   GL_TEXTURE27_ARB : constant := 16#84DB#;
+   GL_TEXTURE28_ARB : constant := 16#84DC#;
+   GL_TEXTURE29_ARB : constant := 16#84DD#;
+   GL_TEXTURE30_ARB : constant := 16#84DE#;
+   GL_TEXTURE31_ARB : constant := 16#84DF#;
+   GL_ACTIVE_TEXTURE_ARB : constant := 16#84E0#;
+   GL_CLIENT_ACTIVE_TEXTURE_ARB : constant := 16#84E1#;
+   GL_MAX_TEXTURE_UNITS_ARB : constant := 16#84E2#;
+
+   procedure glActiveTextureARB (texture : GLenum);
+   pragma Import (C, glActiveTextureARB, "glActiveTextureARB");
+
+   procedure glClientActiveTextureARB (texture : GLenum);
+   pragma Import (C, glClientActiveTextureARB, "glClientActiveTextureARB");
+
+   procedure glMultiTexCoord1dARB (target : GLenum; s : GLdouble);
+   pragma Import (C, glMultiTexCoord1dARB, "glMultiTexCoord1dARB");
+
+   procedure glMultiTexCoord1dvARB (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord1dvARB, "glMultiTexCoord1dvARB");
+
+   procedure glMultiTexCoord1fARB (target : GLenum; s : GLfloat);
+   pragma Import (C, glMultiTexCoord1fARB, "glMultiTexCoord1fARB");
+
+   procedure glMultiTexCoord1fvARB (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord1fvARB, "glMultiTexCoord1fvARB");
+
+   procedure glMultiTexCoord1iARB (target : GLenum; s : GLint);
+   pragma Import (C, glMultiTexCoord1iARB, "glMultiTexCoord1iARB");
+
+   procedure glMultiTexCoord1ivARB (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord1ivARB, "glMultiTexCoord1ivARB");
+
+   procedure glMultiTexCoord1sARB (target : GLenum; s : GLshort);
+   pragma Import (C, glMultiTexCoord1sARB, "glMultiTexCoord1sARB");
+
+   procedure glMultiTexCoord1svARB (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord1svARB, "glMultiTexCoord1svARB");
+
+   procedure glMultiTexCoord2dARB
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble);
+   pragma Import (C, glMultiTexCoord2dARB, "glMultiTexCoord2dARB");
+
+   procedure glMultiTexCoord2dvARB (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord2dvARB, "glMultiTexCoord2dvARB");
+
+   procedure glMultiTexCoord2fARB
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat);
+   pragma Import (C, glMultiTexCoord2fARB, "glMultiTexCoord2fARB");
+
+   procedure glMultiTexCoord2fvARB (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord2fvARB, "glMultiTexCoord2fvARB");
+
+   procedure glMultiTexCoord2iARB
+     (target : GLenum;
+      s : GLint;
+      t : GLint);
+   pragma Import (C, glMultiTexCoord2iARB, "glMultiTexCoord2iARB");
+
+   procedure glMultiTexCoord2ivARB (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord2ivARB, "glMultiTexCoord2ivARB");
+
+   procedure glMultiTexCoord2sARB
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort);
+   pragma Import (C, glMultiTexCoord2sARB, "glMultiTexCoord2sARB");
+
+   procedure glMultiTexCoord2svARB (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord2svARB, "glMultiTexCoord2svARB");
+
+   procedure glMultiTexCoord3dARB
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble;
+      r : GLdouble);
+   pragma Import (C, glMultiTexCoord3dARB, "glMultiTexCoord3dARB");
+
+   procedure glMultiTexCoord3dvARB (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord3dvARB, "glMultiTexCoord3dvARB");
+
+   procedure glMultiTexCoord3fARB
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat;
+      r : GLfloat);
+   pragma Import (C, glMultiTexCoord3fARB, "glMultiTexCoord3fARB");
+
+   procedure glMultiTexCoord3fvARB (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord3fvARB, "glMultiTexCoord3fvARB");
+
+   procedure glMultiTexCoord3iARB
+     (target : GLenum;
+      s : GLint;
+      t : GLint;
+      r : GLint);
+   pragma Import (C, glMultiTexCoord3iARB, "glMultiTexCoord3iARB");
+
+   procedure glMultiTexCoord3ivARB (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord3ivARB, "glMultiTexCoord3ivARB");
+
+   procedure glMultiTexCoord3sARB
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort;
+      r : GLshort);
+   pragma Import (C, glMultiTexCoord3sARB, "glMultiTexCoord3sARB");
+
+   procedure glMultiTexCoord3svARB (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord3svARB, "glMultiTexCoord3svARB");
+
+   procedure glMultiTexCoord4dARB
+     (target : GLenum;
+      s : GLdouble;
+      t : GLdouble;
+      r : GLdouble;
+      q : GLdouble);
+   pragma Import (C, glMultiTexCoord4dARB, "glMultiTexCoord4dARB");
+
+   procedure glMultiTexCoord4dvARB (target : GLenum; v : access GLdouble);
+   pragma Import (C, glMultiTexCoord4dvARB, "glMultiTexCoord4dvARB");
+
+   procedure glMultiTexCoord4fARB
+     (target : GLenum;
+      s : GLfloat;
+      t : GLfloat;
+      r : GLfloat;
+      q : GLfloat);
+   pragma Import (C, glMultiTexCoord4fARB, "glMultiTexCoord4fARB");
+
+   procedure glMultiTexCoord4fvARB (target : GLenum; v : access GLfloat);
+   pragma Import (C, glMultiTexCoord4fvARB, "glMultiTexCoord4fvARB");
+
+   procedure glMultiTexCoord4iARB
+     (target : GLenum;
+      s : GLint;
+      t : GLint;
+      r : GLint;
+      q : GLint);
+   pragma Import (C, glMultiTexCoord4iARB, "glMultiTexCoord4iARB");
+
+   procedure glMultiTexCoord4ivARB (target : GLenum; v : access GLint);
+   pragma Import (C, glMultiTexCoord4ivARB, "glMultiTexCoord4ivARB");
+
+   procedure glMultiTexCoord4sARB
+     (target : GLenum;
+      s : GLshort;
+      t : GLshort;
+      r : GLshort;
+      q : GLshort);
+   pragma Import (C, glMultiTexCoord4sARB, "glMultiTexCoord4sARB");
+
+   procedure glMultiTexCoord4svARB (target : GLenum; v : access GLshort);
+   pragma Import (C, glMultiTexCoord4svARB, "glMultiTexCoord4svARB");
+
+   type PFNGLACTIVETEXTUREARBPROC is access procedure
+     (arg1 : GLenum);
+
+   type PFNGLCLIENTACTIVETEXTUREARBPROC is access procedure
+     (arg1 : GLenum);
+
+   type PFNGLMULTITEXCOORD1DARBPROC is access procedure
+     (arg1 : GLenum; arg2 : GLdouble);
+
+   type PFNGLMULTITEXCOORD1DVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLdouble);
+
+   type PFNGLMULTITEXCOORD1FARBPROC is access procedure
+     (arg1 : GLenum; arg2 : GLfloat);
+
+   type PFNGLMULTITEXCOORD1FVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLfloat);
+
+   type PFNGLMULTITEXCOORD1IARBPROC is access procedure
+     (arg1 : GLenum; arg2 : GLint);
+
+   type PFNGLMULTITEXCOORD1IVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLint);
+
+   type PFNGLMULTITEXCOORD1SARBPROC is access procedure
+     (arg1 : GLenum; arg2 : GLshort);
+
+   type PFNGLMULTITEXCOORD1SVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLshort);
+
+   type PFNGLMULTITEXCOORD2DARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLdouble;
+         arg3 : GLdouble);
+
+   type PFNGLMULTITEXCOORD2DVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLdouble);
+
+   type PFNGLMULTITEXCOORD2FARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLfloat;
+         arg3 : GLfloat);
+
+   type PFNGLMULTITEXCOORD2FVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLfloat);
+
+   type PFNGLMULTITEXCOORD2IARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint);
+
+   type PFNGLMULTITEXCOORD2IVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLint);
+
+   type PFNGLMULTITEXCOORD2SARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLshort;
+         arg3 : GLshort);
+
+   type PFNGLMULTITEXCOORD2SVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLshort);
+
+   type PFNGLMULTITEXCOORD3DARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLdouble;
+         arg3 : GLdouble;
+         arg4 : GLdouble);
+
+   type PFNGLMULTITEXCOORD3DVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLdouble);
+
+   type PFNGLMULTITEXCOORD3FARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLfloat;
+         arg3 : GLfloat;
+         arg4 : GLfloat);
+
+   type PFNGLMULTITEXCOORD3FVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLfloat);
+
+   type PFNGLMULTITEXCOORD3IARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint);
+
+   type PFNGLMULTITEXCOORD3IVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLint);
+
+   type PFNGLMULTITEXCOORD3SARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLshort;
+         arg3 : GLshort;
+         arg4 : GLshort);
+
+   type PFNGLMULTITEXCOORD3SVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLshort);
+
+   type PFNGLMULTITEXCOORD4DARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLdouble;
+         arg3 : GLdouble;
+         arg4 : GLdouble;
+         arg5 : GLdouble);
+
+   type PFNGLMULTITEXCOORD4DVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLdouble);
+
+   type PFNGLMULTITEXCOORD4FARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLfloat;
+         arg3 : GLfloat;
+         arg4 : GLfloat;
+         arg5 : GLfloat);
+
+   type PFNGLMULTITEXCOORD4FVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLfloat);
+
+   type PFNGLMULTITEXCOORD4IARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLint;
+         arg3 : GLint;
+         arg4 : GLint;
+         arg5 : GLint);
+
+   type PFNGLMULTITEXCOORD4IVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLint);
+
+   type PFNGLMULTITEXCOORD4SARBPROC is access procedure
+        (arg1 : GLenum;
+         arg2 : GLshort;
+         arg3 : GLshort;
+         arg4 : GLshort;
+         arg5 : GLshort);
+
+   type PFNGLMULTITEXCOORD4SVARBPROC is access procedure
+     (arg1 : GLenum; arg2 : access GLshort);
+
+
+   GL_ATI_blend_equation_separate : constant := 1;
+
+   GL_ALPHA_BLEND_EQUATION_ATI : constant := 16#883D#;
+
+
+   procedure glBlendEquationSeparateATI (modeRGB : GLenum; modeA : GLenum);
+   pragma Import (C, glBlendEquationSeparateATI, "glBlendEquationSeparateATI");
+
+   type PFNGLBLENDEQUATIONSEPARATEATIPROC is access procedure
+     (arg1 : GLenum; arg2 : GLenum);
+
+   --  ---------------
+   -- GL_OES_EGL_image
+   --  ---------------
+
+   GL_OES_EGL_image : constant := 1;
+
+
+   type GLeglImageOES is new System.Address;
+
+   --  #ifdef GL_GLEXT_PROTOTYPES
+   procedure glEGLImageTargetTexture2DOES
+     (target : GLenum; image: GLeglImageOES);
+   pragma Import (C, glEGLImageTargetTexture2DOES,
+                  "glEGLImageTargetTexture2DOES");
+   procedure glEGLImageTargetRenderbufferStorageOES
+     (target: GLenum; image: GLeglImageOES );
+   pragma Import (C, glEGLImageTargetRenderbufferStorageOES,
+                  "glEGLImageTargetRenderbufferStorageOES");
+   --  #endif
+
+   type PFNGLEGLIMAGETARGETTEXTURE2DOESPROC is access procedure
+     (arg1 : GLenum; arg2 : GLeglImageOES);
+
+   type PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC is access procedure
+     (arg1 : GLenum; arg2 : GLeglImageOES);
+
+  end gl_h;

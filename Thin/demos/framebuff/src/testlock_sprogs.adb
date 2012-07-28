@@ -25,6 +25,7 @@
 -- ----------------------------------------------------------------- --
 
 with System.OS_Interface;
+with Ada.Interrupts.Names;
 with Interfaces.C.Strings;
 with Ada.Text_IO; use Ada.Text_IO;
 with GNAT.OS_Lib;

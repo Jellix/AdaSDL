@@ -52,6 +52,7 @@ procedure Lesson10 is
    use Math;
    use type C.unsigned;
    use type C.int;
+   use type C.double;
    use type SDL.Init_Flags;
    package Vd  renames SDL.Video;
    use type Vd.Surface_ptr;
@@ -100,8 +101,8 @@ procedure Lesson10 is
 
    type Sector_Type is array(Natural range <>) of Triangle_Type_Access;
    type Sector_Access_Type is access Sector_Type;
-   --  procedure Free_Sector is new Unchecked_Deallocation(Sector_Type,
-   --                                                    Sector_Access_Type);
+   procedure Free_Sector is new Unchecked_Deallocation(Sector_Type,
+                                                       Sector_Access_Type);
 
    --  Our sector
    Sector1 : Sector_Access_Type;
@@ -135,6 +136,21 @@ procedure Lesson10 is
 
    --  ===================================================================
 
+   procedure Show_Sector1 is
+   begin
+      for Triangle_I in Sector1'Range loop
+         for J in Sector1(Triangle_I).Vertex'Range loop
+            Put_Line(  Float'Image(Sector1(Triangle_I).Vertex(J).x)
+                     & Float'Image(Sector1(Triangle_I).Vertex(J).y)
+                     & Float'Image(Sector1(Triangle_I).Vertex(J).z)
+                     & Float'Image(Sector1(Triangle_I).Vertex(J).u)
+                     & Float'Image(Sector1(Triangle_I).Vertex(J).v));
+         end loop;
+      end loop;
+   end;
+
+   --  ===================================================================
+
    --  procedure to release/destroy our resources and restoring the old desktop
    procedure Quit (Return_Code : Integer) is
    begin
@@ -142,10 +158,10 @@ procedure Lesson10 is
       Done := True;
 
       -- Deallocate things we allocated
---        if  Sector1 /= null then
---           --  null;
---           Free_Sector(Sector1);
---        end if;
+      if  Sector1 /= null then
+         --  null;
+         Free_Sector(Sector1);
+      end if;
 
       --  and exit appropriately
       GNAT.OS_Lib.OS_Exit (Return_Code);
@@ -209,7 +225,7 @@ procedure Lesson10 is
 
 	    -- Load in texture 2
 	    -- Typical Texture Generation Using Data From The Bitmap
-	    glBindTexture( GL_TEXTURE_2D, texture(1) );
+	    glBindTexture( GL_TEXTURE_2D, Texture(1) );
 
 	    -- Linear Filtering
 	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -227,7 +243,7 @@ procedure Lesson10 is
 
 	    -- Load in texture 3
 	    -- Typical Texture Generation Using Data From The Bitmap
-	    glBindTexture( GL_TEXTURE_2D, texture(2) );
+	    glBindTexture( GL_TEXTURE_2D, Texture(2) );
 
 	    -- Mipmapped Filtering
 	    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -333,9 +349,6 @@ procedure Lesson10 is
       --  sector1.triangle     = malloc( numTriangles * sizeof( triangle ) );
       Sector1 := new Sector_Type(1..Integer(Num_Triangles));
       Sector1.all:=(others=>new Triangle_Type);
-      --  for I in Sector1'Range loop
-      --     Sector1(I):= new Triangle_Type;
-      --  end Loop;
 
 	--  Get coords for each triangle
       for Triangle_I in Sector1'Range loop
@@ -383,6 +396,8 @@ end Setup_World;
 
       -- Really Nice Perspective Calculations
       glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+
+      --  glEnable(GL_LIGHTING);
 
       -- Setup The Ambient Light
       glLightfv( GL_LIGHT1, GL_AMBIENT, LightAmbient );
@@ -472,51 +487,51 @@ end Setup_World;
       glBindTexture( GL_TEXTURE_2D, texture(Integer(Filter)) );
 
       --  Process Each Triangle */
-      for loop_m in sector1.all'Range loop
+      for Triangle_I in sector1.all'Range loop
          --  Start Drawing Triangles
          glBegin(GL_TRIANGLES);
          --  Normal Pointing Forward
          glNormal3f( 0.0, 0.0, 1.0);
          -- X Vertex Of 1st Point
-         x_m := sector1(loop_m).vertex(1).x;
+         x_m := sector1(Triangle_I).vertex(1).x;
          -- Y Vertex Of 1st Point
-         y_m := sector1(loop_m).vertex(1).y;
+         y_m := sector1(Triangle_I).vertex(1).y;
          -- Z Vertex Of 1st Point
-         z_m := sector1(loop_m).vertex(1).z;
+         z_m := sector1(Triangle_I).vertex(1).z;
          -- U Texture Coord Of 1st Point
-         u_m := sector1(loop_m).vertex(1).u;
+         u_m := sector1(Triangle_I).vertex(1).u;
          -- V Texture Coord Of 1st Point
-         v_m := sector1(loop_m).vertex(1).v;
+         v_m := sector1(Triangle_I).vertex(1).v;
 
          --  Set The TexCoord And Vertice
          glTexCoord2f( u_m, v_m );
          glVertex3f( x_m, y_m, z_m );
 
          -- X Vertex Of 2nd Point
-         x_m := sector1(loop_m).vertex(2).x;
+         x_m := sector1(Triangle_I).vertex(2).x;
          -- Y Vertex Of 2nd Point
-         y_m := sector1(loop_m).vertex(2).y;
+         y_m := sector1(Triangle_I).vertex(2).y;
          -- Z Vertex Of 2nd Point
-         z_m := sector1(loop_m).vertex(2).z;
+         z_m := sector1(Triangle_I).vertex(2).z;
          -- U Texture Coord Of 2nd Point
-         u_m := sector1(loop_m).vertex(2).u;
+         u_m := sector1(Triangle_I).vertex(2).u;
          -- V Texture Coord Of 2nd Point
-         v_m := sector1(loop_m).vertex(2).v;
+         v_m := sector1(Triangle_I).vertex(2).v;
 
          -- Set The TexCoord And Vertice
          glTexCoord2f( u_m, v_m );
          glVertex3f( x_m, y_m, z_m );
 
          -- X Vertex Of 3rd Point
-         x_m := sector1(loop_m).vertex(3).x;
+         x_m := sector1(Triangle_I).vertex(3).x;
          -- Y Vertex Of 3rd Point
-         y_m := sector1(loop_m).vertex(3).y;
+         y_m := sector1(Triangle_I).vertex(3).y;
          -- Z Vertex Of 3rd Point
-         z_m := sector1(loop_m).vertex(3).z;
+         z_m := sector1(Triangle_I).vertex(3).z;
          --  Texture Coord Of 3rd Point
-         u_m := sector1(loop_m).vertex(3).u;
+         u_m := sector1(Triangle_I).vertex(3).u;
          -- V Texture Coord Of 3rd Point
-         v_m := sector1(loop_m).vertex(3).v;
+         v_m := sector1(Triangle_I).vertex(3).v;
 
          -- Set The TexCoord And Vertice
          glTexCoord2f( u_m, v_m );
@@ -538,7 +553,7 @@ end Setup_World;
          then
             seconds := GLfloat(t - T0) / 1000.0;
             fps := GLfloat(Frames) / GLfloat(seconds);
-            Put_Line(Integer'Image(Frames) & " frames in "
+            Put_Line(GLint'Image(Frames) & " frames in "
                      & GLfloat'Image(seconds) & " seconds = "
                      & GLfloat'Image(fps) & " FPS");
             T0 := t;
@@ -591,6 +606,13 @@ end Setup_World;
             if Vd.WM_ToggleFullScreen( screen ) = 0 then
                Put_Line("Sorry: FullScreen not available!");
             end if;
+         when Ks.K_z =>
+            --  If not Load_Textures then
+            --     Put_Line("Que grande chatisse!");
+            --  end if;
+            --  Show_Sector1;
+            --  Vd.GL_SwapBuffers;
+            null;
          when Ks.K_RIGHT =>
             --  Right arrow key was pressed
             --  this effectively turns the camera right, but does it by
@@ -741,9 +763,18 @@ begin
    Setup_World("data/world.txt");
 
    Resize_Window (screen.w, screen.h);
+
    done := False;
 
+   Put_Line("Initial position: yrot=" & GLfloat'Image(yrot)
+            & " xpos=" & GLfloat'Image(xpos)
+            & " zpos=" & GLfloat'Image(zpos));
+
    Main_System_Loop;
+
+   Put_Line("Final position:   yrot=" & GLfloat'Image(yrot)
+            & " xpos=" & GLfloat'Image(xpos)
+            & " zpos=" & GLfloat'Image(zpos));
 
    Quit(0);
 end Lesson10;

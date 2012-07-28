@@ -39,6 +39,7 @@ procedure GenericGLS is
    package C  renames Interfaces.C;
    use type C.unsigned;
    use type C.int;
+   use type C.double;
    use type SDL.Init_Flags;
    package Vd  renames SDL.Video;
    use type Vd.Surface_ptr;

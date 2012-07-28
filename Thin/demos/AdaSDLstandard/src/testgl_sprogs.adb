@@ -41,6 +41,7 @@ package body TestGL_Sprogs is
 
    use type C.unsigned;
    use type C.int;
+   use type C.double;
    use type C.C_float;
 
    package Ks renames SDL.Keysym;

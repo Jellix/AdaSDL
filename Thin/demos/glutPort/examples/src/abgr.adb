@@ -52,12 +52,10 @@ with Ada.Text_IO;
 use  Ada.Text_IO;
 with Ada.Command_Line;
 with GNAT.OS_Lib;
-with gl_h;
-use  gl_h;
-with glu_h;
-use  glu_h;
-with AdaGL;
-use  AdaGL;
+with gl_h; use  gl_h;
+with glext_h; use glext_h;
+with glu_h; use  glu_h;
+with AdaGL; use  AdaGL;
 with SDL.Types; use SDL.Types;
 with SDL.Video;
 with SDL.Error;
@@ -70,6 +68,8 @@ procedure abgr is
 
    package C  renames Interfaces.C;
    use type C.int;
+   use type C.double;
+   use type C.unsigned;
    package CL renames Ada.Command_Line;
    package Vd renames SDL.Video;
    use type Vd.Surface_Flags;
