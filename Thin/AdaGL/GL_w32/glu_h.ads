@@ -7,31 +7,31 @@ package glu_h is
    --  Extensions
    GLU_EXT_object_space_tess : constant := 1;
    GLU_EXT_nurbs_tessellator : constant := 1;
-   
+
    --  Boolean
    GLU_FALSE : constant := 0;
    GLU_TRUE : constant := 1;
-   
+
    --  Version
    GLU_VERSION_1_1 : constant := 1;
    GLU_VERSION_1_2 : constant := 1;
    GLU_VERSION_1_3 : constant := 1;
-   
+
    --  StringName
    GLU_VERSION : constant := 100800;
    GLU_EXTENSIONS : constant := 100801;
-   
+
    --  ErrorCode
    GLU_INVALID_ENUM : constant := 100900;
    GLU_INVALID_VALUE : constant := 100901;
    GLU_OUT_OF_MEMORY : constant := 100902;
    GLU_INCOMPATIBLE_GL_VERSION : constant := 100903;
    GLU_INVALID_OPERATION : constant := 100904;
-   
+
    --  NurbsDisplay
    GLU_OUTLINE_POLYGON : constant := 100240;
    GLU_OUTLINE_PATCH : constant := 100241;
-   
+
    --  NurbsCallback
    GLU_NURBS_ERROR : constant := 100103;
    GLU_ERROR : constant := 100103;
@@ -59,7 +59,7 @@ package glu_h is
    GLU_NURBS_TEX_COORD_DATA_EXT : constant := 100174;
    GLU_NURBS_END_DATA : constant := 100175;
    GLU_NURBS_END_DATA_EXT : constant := 100175;
-   
+
    --  NurbsError
    GLU_NURBS_ERROR1 : constant := 100251;
    GLU_NURBS_ERROR2 : constant := 100252;
@@ -98,7 +98,7 @@ package glu_h is
    GLU_NURBS_ERROR35 : constant := 100285;
    GLU_NURBS_ERROR36 : constant := 100286;
    GLU_NURBS_ERROR37 : constant := 100287;
-   
+
    --  NurbsProperty
    GLU_AUTO_LOAD_MATRIX : constant := 100200;
    GLU_CULLING : constant := 100201;
@@ -114,7 +114,7 @@ package glu_h is
    GLU_NURBS_TESSELLATOR_EXT : constant := 100161;
    GLU_NURBS_RENDERER : constant := 100162;
    GLU_NURBS_RENDERER_EXT : constant := 100162;
-   
+
    --  NurbsSampling
    GLU_OBJECT_PARAMETRIC_ERROR : constant := 100208;
    GLU_OBJECT_PARAMETRIC_ERROR_EXT : constant := 100208;
@@ -123,29 +123,29 @@ package glu_h is
    GLU_PATH_LENGTH : constant := 100215;
    GLU_PARAMETRIC_ERROR : constant := 100216;
    GLU_DOMAIN_DISTANCE : constant := 100217;
-   
+
    --  NurbsTrim
    GLU_MAP1_TRIM_2 : constant := 100210;
    GLU_MAP1_TRIM_3 : constant := 100211;
-   
+
    --  QuadricDrawStyle
    GLU_POINT : constant := 100010;
-   GLU_LINE : constant := 100011
-   GLU_FILL : constant := 100012; 
+   GLU_LINE : constant := 100011;
+   GLU_FILL : constant := 100012;
    GLU_SILHOUETTE : constant := 100013;
-   
+
    -- QuadricCallback
    --      GLU_ERROR
 
-   --  QuadricNormal   
+   --  QuadricNormal
    GLU_SMOOTH : constant := 100000;
    GLU_FLAT : constant := 100001;
    GLU_NONE : constant := 100002;
-   
+
    --  QuadricOrientation
    GLU_OUTSIDE : constant := 100020;
    GLU_INSIDE : constant := 100021;
-   
+
    --  TessCallback
    GLU_TESS_BEGIN : constant := 100100;
    GLU_BEGIN : constant := 100100;
@@ -163,19 +163,19 @@ package glu_h is
    GLU_TESS_ERROR_DATA : constant := 100109;
    GLU_TESS_EDGE_FLAG_DATA : constant := 100110;
    GLU_TESS_COMBINE_DATA : constant := 100111;
-   
+
    --  TessContour
    GLU_CW : constant := 100120;
    GLU_CCW : constant := 100121;
    GLU_INTERIOR : constant := 100122;
    GLU_EXTERIOR : constant := 100123;
    GLU_UNKNOWN : constant := 100124;
-   
+
    --  TessProperty
    GLU_TESS_WINDING_RULE : constant := 100140;
    GLU_TESS_BOUNDARY_ONLY : constant := 100141;
    GLU_TESS_TOLERANCE : constant := 100142;
-   
+
    --  TessError
    GLU_TESS_ERROR1 : constant := 100151;
    GLU_TESS_ERROR2 : constant := 100152;
@@ -191,7 +191,7 @@ package glu_h is
    GLU_TESS_MISSING_END_CONTOUR : constant := 100154;
    GLU_TESS_COORD_TOO_LARGE : constant := 100155;
    GLU_TESS_NEED_COMBINE_CALLBACK : constant := 100156;
-   
+
    --  TessWinding
    GLU_TESS_WINDING_ODD : constant := 100130;
    GLU_TESS_WINDING_NONZERO : constant := 100131;
