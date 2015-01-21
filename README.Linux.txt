@@ -1,4 +1,4 @@
-In you linux distribution install:
+In your linux distribution install:
 
 gnat 4.6+ (I use gnat 2012)
 gnat-gps
@@ -8,6 +8,9 @@ libsdl-mixer
 libsdl-image
 libsdl-ttf
 freeglut
+
+Ubuntu 14.10 example:
+  sudo apt-get install libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev libsdl-ttf2.0-dev freeglut3-dev
 
 2. Go to Thin/
 3. Execute PosixDevelConsole.sh
